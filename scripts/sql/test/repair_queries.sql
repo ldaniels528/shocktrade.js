@@ -1,14 +1,13 @@
 USE shocktrade;
 
-update stocks_eoddata set prevClose = `close` - `change`;
-update stocks_eoddata set prevClose = `close` - `change`;
-update stocks_eoddata set changePct = `change` / prevClose WHERE prevClose > 0;
-update stocks_eoddata set spread = 100.0 * (high - low)/high;
-update stocks_eoddata set lastTrade = (high + low) / 2, tradeDateTime = '2020-02-21 16:59:59' where lastTrade is null;
-update stocks_eoddata set `open` = prevClose - `change` where open is null;
+update mock_stocks set prevClose = `close` - `change`;
+update mock_stocks set prevClose = `close` - `change`;
+update mock_stocks set changePct = `change` / prevClose WHERE prevClose > 0;
+update mock_stocks set spread = 100.0 * (high - low)/high;
+update mock_stocks set `open` = prevClose - `change` where open is null;
 
 update mock_stocks MS
-inner join stocks_eoddata S ON S.symbol = MS.symbol
+inner join mock_stocks S ON S.symbol = MS.symbol
 set MS.lastTrade = S.lastTrade;
 
 SELECT * FROM stocks

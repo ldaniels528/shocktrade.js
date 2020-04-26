@@ -80,7 +80,7 @@ class TradingClockRoutes(app: Application)(implicit ec: ExecutionContext, tradin
     } catch {
       case e: Throwable =>
         e.printStackTrace()
-        response.internalServerError(e)
+        response.showException(e).internalServerError(e)
     } finally {
       next()
     }

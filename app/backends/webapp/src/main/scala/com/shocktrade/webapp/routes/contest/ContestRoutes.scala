@@ -6,10 +6,13 @@ import com.shocktrade.common.api.ContestAPI
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchForm, ValidationErrors}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
+import com.shocktrade.webapp.routes
+import com.shocktrade.webapp.routes.account.UserRoutes
 import com.shocktrade.webapp.routes.contest.dao._
+import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
@@ -33,6 +36,9 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   // collections of contests
   app.put(contestSearchURL, (request: Request, response: Response, next: NextFunction) => contestSearch(request, response, next))
   app.get(findContestRankingsURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestRankings(request, response, next))
+
+  // administrative routes
+  app.get(getUpdateUserIconsURL, (request: Request, response: Response, next: NextFunction) => updateUserIcons(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -77,7 +83,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     val contestID = request.params("id")
     contestDAO.findChatMessages(contestID) onComplete {
       case Success(messages) => response.setContentType("application/json"); response.send(messages); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -89,7 +95,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     contestDAO.findOneByID(contestID) onComplete {
       case Success(Some(contest)) => response.send(contest); next()
       case Success(None) => response.notFound(contestID); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -133,7 +139,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
             next()
           // HTTP/500 ERROR
           case Failure(e) =>
-            response.internalServerError(e); next()
+            response.showException(e).internalServerError(e); next()
         }
       // HTTP/404 NOT FOUND
       case None =>
@@ -146,6 +152,40 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     contestDAO.quit(contestID, userID) onComplete {
       case Success(data) => response.send(Ok(data)); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
+    }
+  }
+
+  def updateUserIcons(request: Request, response: Response, next: NextFunction): Unit = {
+    uploadUserIcons onComplete {
+      case Success(values) => response.send(s"${values.length} user icons loaded"); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
+    }
+  }
+
+  private def uploadUserIcons: Future[Seq[Int]] = {
+    import routes.dao._
+    Future.sequence {
+      Seq(
+        ("ldaniels", "./public/images/avatars/gears.jpg"),
+        ("natech", "./public/images/avatars/dcu.png"),
+        ("gunst4rhero", "./public/images/avatars/gunstar-heroes.jpg"),
+        ("gadget", "./public/images/avatars/sickday.jpg"),
+        ("daisy", "./public/images/avatars/daisy.jpg"),
+        ("teddy", "./public/images/avatars/teddy.jpg"),
+        ("joey", "./public/images/avatars/joey.jpg"),
+        ("dizorganizer", "./public/images/avatars/bkjk.jpg"),
+        ("naughtymonkey", "./public/images/avatars/naughtymonkey.jpg"),
+        ("seralovett", "./public/images/avatars/hearts.jpg"),
+        ("fugitive528", "./public/images/avatars/fugitive528.jpg")) map { case (name, path) if Fs.existsSync(path) =>
+        val outcome = UserRoutes.writeImage(name = name, path = path)
+        outcome onComplete {
+          case Success(value) => println(s"$name ~> $path: count = $value")
+          case Failure(e) =>
+            println(s"Failed to set icon for user '$name':")
+            e.printStackTrace()
+        }
+        outcome
+      }
     }
   }
 

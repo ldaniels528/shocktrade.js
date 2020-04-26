@@ -10,7 +10,8 @@ import scala.scalajs.js
  * Contest Creation Request
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestCreationRequest(val name: js.UndefOr[String] = js.undefined,
+class ContestCreationRequest(val contestID: js.UndefOr[String] = js.undefined,
+                             val name: js.UndefOr[String] = js.undefined,
                              val userID: js.UndefOr[String] = js.undefined,
                              val startingBalance: js.UndefOr[Double] = js.undefined,
                              val startAutomatically: js.UndefOr[Boolean] = js.undefined,

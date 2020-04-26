@@ -41,8 +41,8 @@ INSERT INTO contest_statuses (status) VALUES ('CLOSED');
 -- Chat tables
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS contest_chats;
-CREATE TABLE contest_chats (
+DROP TABLE IF EXISTS messages;
+CREATE TABLE messages (
      messageID CHAR(36) PRIMARY KEY,
      contestID CHAR(36) NOT NULL,
      userID CHAR(36) NOT NULL,
@@ -95,9 +95,8 @@ CREATE TABLE order_price_types (
 
 CREATE UNIQUE INDEX order_price_types_xpk_name ON order_price_types (name);
 
-INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'LIMIT', 14.99);
-INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'MARKET', 9.99);
-INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'MARKET_AT_CLOSE', 6.99);
+INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'LIMIT', 9.99);
+INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'MARKET', 4.99);
 
 -- ------------------------------------------------------------
 -- Positions
@@ -105,22 +104,14 @@ INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 
 
 DROP TABLE IF EXISTS positions;
 CREATE TABLE positions (
-     positionID CHAR(36) PRIMARY KEY,
+     positionID CHAR(36) NOT NULL,
      portfolioID CHAR(36) NOT NULL,
-     orderID CHAR(36) NOT NULL,
      symbol VARCHAR(12) NOT NULL,
      exchange VARCHAR(12) NOT NULL,
-     price DECIMAL(12,5) NOT NULL,
      quantity INTEGER NOT NULL,
-     commission DECIMAL(5,2) NOT NULL,
-     netValue DECIMAL(12,5) NOT NULL,
-     cost DECIMAL(12,5) NOT NULL,
-     tradeDateTime DATETIME NOT NULL,
-     processedTime DATETIME NULL,
-     creationTime DATETIME NOT NULL DEFAULT now(),
-     active TINYINT NOT NULL DEFAULT 1
+     processedTime DATETIME NULL DEFAULT now(),
+     PRIMARY KEY(portfolioID, symbol)
 );
-CREATE UNIQUE INDEX positions_xpk ON positions (orderID);
 
 -- ------------------------------------------------------------
 -- Contest Ranking view

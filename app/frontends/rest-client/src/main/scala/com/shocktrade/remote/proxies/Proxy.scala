@@ -2,6 +2,7 @@ package com.shocktrade.remote.proxies
 
 import io.scalajs.JSON
 import io.scalajs.nodejs.http.IncomingMessage
+import io.scalajs.nodejs.util.Util
 import io.scalajs.npm.request.{Request, RequestOptions}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -15,10 +16,9 @@ trait Proxy {
 
   private def handler[R <: js.Any](input: (IncomingMessage, R)): R = input match {
     case (response, _) if response.statusCode >= 400 => throw js.JavaScriptException(response.statusMessage)
-    case (_, body) => body match {
-      case o if o.toString.startsWith("{") => JSON.parseAs[R](o.toString)
-      case o => o
-    }
+    case (_, body) if js.Array.isArray(body) | Util.isObject(body) => body.asInstanceOf[R]
+    case (_, body) if Util.isString(body) =>JSON.parseAs[R](body.toString)
+    case (_, body) => body.asInstanceOf[R]
   }
 
   protected def delete[R <: js.Any](url: String)(implicit ec: ExecutionContext): Future[R] = {

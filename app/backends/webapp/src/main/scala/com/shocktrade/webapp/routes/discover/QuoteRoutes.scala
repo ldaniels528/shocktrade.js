@@ -44,7 +44,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteD
     outcome onComplete {
       case Success(Some(quote)) => response.send(quote); next()
       case Success(None) => response.notFound(); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -53,7 +53,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteD
     stockQuoteDAO.findQuote(symbol) onComplete {
       case Success(Some(quote)) => response.send(quote); next()
       case Success(None) => response.notFound(); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -62,7 +62,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteD
     stockQuoteDAO.findQuote(symbol) onComplete {
       case Success(Some(quote)) => response.send(quote); next()
       case Success(None) => response.notFound(); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -71,7 +71,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteD
     stockQuoteDAO.findQuote[OrderQuote](symbol) onComplete {
       case Success(Some(quote)) => response.send(quote); next()
       case Success(None) => response.notFound(); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -79,7 +79,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteD
     val symbols = request.bodyAs[js.Array[String]]
     stockQuoteDAO.findQuotes[OrderQuote](symbols) onComplete {
       case Success(quotes) => response.send(quotes); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -89,7 +89,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteD
     keyStatisticsDAO.flatMap(_.findBySymbol(symbol)) onComplete {
       case Success(Some(keystats)) => response.send(keystats); next()
       case Success(None) => response.notFound(); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }*/
     response.internalServerError("Not implemented")
     next()

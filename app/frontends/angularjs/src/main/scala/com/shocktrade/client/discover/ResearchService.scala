@@ -1,5 +1,6 @@
 package com.shocktrade.client.discover
 
+import com.shocktrade.common.api.ResearchAPI
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
 import io.scalajs.npm.angularjs.Service
@@ -11,11 +12,9 @@ import scala.scalajs.js
  * Research Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ResearchService($http: Http) extends Service {
+class ResearchService($http: Http) extends Service with ResearchAPI {
 
-  def search(options: ResearchOptions): js.Promise[HttpResponse[js.Array[ResearchQuote]]] = {
-    $http.get[js.Array[ResearchQuote]](s"/api/research/search?${options.toQueryString}")
-  }
+  def research(options: ResearchOptions): js.Promise[HttpResponse[js.Array[ResearchQuote]]] = $http.get(researchURL(options))
 
 }
 

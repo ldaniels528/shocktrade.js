@@ -5,7 +5,7 @@ import com.shocktrade.common.api.UserAPI
 import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
 import com.shocktrade.common.forms.SignUpForm
 import com.shocktrade.common.models.user.OnlineStatus
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.account.dao.{AuthenticationDAO, UserAccountData, UserDAO, UserIconData}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -57,7 +57,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     val (userID, symbol) = (request.params("userID"), request.params("symbol"))
     userDAO.addFavoriteSymbol(userID, symbol) onComplete {
       case Success(result) => response.send(new Ok(result)); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -65,7 +65,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     val userID = request.params("userID")
     userDAO.findMyAwards(userID) onComplete {
       case Success(results) => response.send(results); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -73,7 +73,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     val userID = request.params("userID")
     userDAO.findFavoriteSymbols(userID) onComplete {
       case Success(results) => response.send(results); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -85,7 +85,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
       case Success(_) =>
         response.badRequest(request.params); next()
       case Failure(e) =>
-        response.internalServerError(e); next()
+        response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -93,7 +93,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     val userID = request.params("userID")
     userDAO.findRecentSymbols(userID) onComplete {
       case Success(results) => response.send(results); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -132,7 +132,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     userDAO.findUserByID(userID) onComplete {
       case Success(Some(user)) => response.send(user); next()
       case Success(None) => response.notFound(request.params); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -140,7 +140,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     val userIDs = request.query.get("ids").toList.flatMap(_.split("[+]"))
     userDAO.findUsersByIDs(userIDs) onComplete {
       case Success(users) => response.send(users); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -160,7 +160,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
         response.send(image)
         next()
       case Failure(e) =>
-        response.internalServerError(e); next()
+        response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -172,7 +172,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     userDAO.findUserByName(username) onComplete {
       case Success(Some(user)) => response.setContentType("application/json"); response.send(user); next()
       case Success(None) => response.notFound(request.params); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -205,7 +205,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
               username = accountData.username,
               email = accountData.email,
               wallet = accountData.wallet
-            ));
+            ))
             next()
           case Success(None) =>
             response.notFound(form); next()

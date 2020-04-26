@@ -5,11 +5,10 @@ import java.util.UUID
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.server.common.LoggerFactory
 import io.scalajs.nodejs._
-import io.scalajs.nodejs.timers.Timeout
+import io.scalajs.nodejs.timers.Immediate
 import io.scalajs.npm.express.Request
 import io.scalajs.npm.expressws.WebSocket
 
-import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.JSON
 import scala.util.{Failure, Success, Try}
@@ -36,8 +35,8 @@ object WebSocketHandler {
     ()
   }
 
-  def emit(action: String, data: String): Timeout = {
-    setTimeout(() => {
+  def emit(action: String, data: String): Immediate = {
+    setImmediate { () =>
       logger.log(s"Broadcasting action '$action' with data '$data'...")
       clients.foreach(client => Try(client.send(action, data)) match {
         case Success(_) =>
@@ -48,7 +47,7 @@ object WebSocketHandler {
             case index => clients.remove(index)
           }
       })
-    }, 0.seconds)
+    }
   }
 
   /**

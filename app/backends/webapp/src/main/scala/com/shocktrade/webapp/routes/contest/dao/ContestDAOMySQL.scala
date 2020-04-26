@@ -23,7 +23,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
 
   override def create(request: ContestCreationRequest): Future[ContestCreationResponse] = {
     // define the contestID, portfolioID and required parameters
-    val (contestID, portfolioID) = (UUID.randomUUID().toString, UUID.randomUUID().toString)
+    val (contestID, portfolioID) = (request.contestID.getOrElse(UUID.randomUUID().toString), UUID.randomUUID().toString)
     val params = for {
       name <- request.name.flat.toOption
       userID <- request.userID.flat.toOption
@@ -165,7 +165,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
 
   override def putChatMessage(contestID: String, userID: String, message: String): Future[Int] = {
     conn.executeFuture(
-      """|INSERT INTO contest_chats (messageID, contestID, userID, message)
+      """|INSERT INTO messages (messageID, contestID, userID, message)
          |VALUES (uuid(), ?, ?, ?)
          |""".stripMargin,
       js.Array(contestID, userID, message)) map (_.affectedRows)
@@ -174,7 +174,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
   override def findChatMessages(contestID: String): Future[js.Array[ChatMessage]] = {
     conn.queryFuture[ChatMessage](
       """|SELECT CC.*, U.username
-         |FROM contest_chats CC
+         |FROM messages CC
          |INNER JOIN users U ON U.userID = CC.userID
          |WHERE CC.contestID = ?
          |ORDER BY CC.creationTime ASC

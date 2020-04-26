@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.discover
 
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.discover.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
 
@@ -28,7 +28,7 @@ class ExploreRoutes(app: Application)(implicit ec: ExecutionContext, exploreDAO:
       case Some(sector) =>
         exploreDAO.exploreIndustries(sector) onComplete {
           case Success(results) => response.send(results); next()
-          case Failure(e) => response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
       case None =>
         response.badRequest("One or more required parameters (sector) is missing"); next()
@@ -51,7 +51,7 @@ class ExploreRoutes(app: Application)(implicit ec: ExecutionContext, exploreDAO:
 
         outcome onComplete {
           case Success(quotes) => response.send(quotes); next()
-          case Failure(e) => response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
       case None =>
         response.badRequest("One or more required parameters (sector, industry) is missing"); next()
@@ -63,14 +63,14 @@ class ExploreRoutes(app: Application)(implicit ec: ExecutionContext, exploreDAO:
     stockQuoteDAO.findQuote(symbol) onComplete {
       case Success(Some(quote)) => response.send(quote); next()
       case Success(None) => response.notFound(symbol); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
   def sectors(request: Request, response: Response, next: NextFunction): Unit = {
     exploreDAO.exploreSectors onComplete {
       case Success(results) => response.send(results); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -84,7 +84,7 @@ class ExploreRoutes(app: Application)(implicit ec: ExecutionContext, exploreDAO:
       case Some((sector, industry)) =>
         exploreDAO.exploreSubIndustries(sector, industry) onComplete {
           case Success(results) => response.send(results); next()
-          case Failure(e) => response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
       case None =>
         response.badRequest("One or more required parameters (sector, industry) is missing"); next()

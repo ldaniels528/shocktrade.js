@@ -92,7 +92,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |LEFT JOIN stocks SO ON SO.symbol = O.symbol
          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
          |LEFT JOIN stocks SP ON SP.symbol = PS.symbol
-         |WHERE C.contestID = ? AND U.userID = ? AND PS.active = 1
+         |WHERE C.contestID = ? AND U.userID = ? AND PS.quantity > 0
          |GROUP BY C.contestID, C.name, U.userID, U.username, U.wallet, P.funds
          |""".stripMargin,
       js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
@@ -155,7 +155,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
           |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
           |LEFT JOIN stocks S ON S.symbol = PS.symbol
           |LEFT JOIN users U ON U.userID = P.userID
-          |WHERE C.contestID = ? AND PS.active = 1
+          |WHERE C.contestID = ? AND PS.quantity > 0
           |GROUP BY U.username, P.funds
           |""".stripMargin, js.Array(contestID)).map { case (rows, _) => rows }
   }
@@ -176,7 +176,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
           |INNER JOIN portfolios P ON P.userID = U.userID
           |INNER JOIN contests C ON C.contestID = P.contestID
           |WHERE C.contestID = ? AND U.userID = ?
-          |AND PS.active = 1
+          |AND PS.quantity > 0
           |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map { case (rows, _) => rows }
   }
 
@@ -187,20 +187,26 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
          |INNER JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
          |WHERE P.portfolioID = ?
-         |AND PS.active = 1
+         |AND PS.quantity > 0
          |""".stripMargin,
       js.Array(portfolioID)) map { case (rows, _) => rows }
   }
 
   override def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]] = {
     conn.queryFuture[PositionData](
-      """|SELECT PS.*, S.lastTrade, (S.lastTrade - PS.price)/PS.price AS gainLossPct
+      """|SELECT PS.*, S.lastTrade, PS.quantity * S.lastTrade AS marketValue, ((S.lastTrade - O.price) / O.price)*100 AS gainLossPct
          |FROM positions PS
          |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
-         |LEFT  JOIN stocks S ON S.symbol = PS.symbol
+         |LEFT  JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+         |LEFT  JOIN (
+         |  SELECT portfolioID, symbol, exchange, AVG(price) AS price
+         |  FROM orders
+         |  WHERE orderType = 'BUY' AND fulfilled = 1
+         |  GROUP BY portfolioID, symbol, exchange
+         |) O ON O.portfolioID = PS.portfolioID AND O.symbol = PS.symbol AND O.exchange = PS.exchange
          |WHERE P.contestID = ?
          |AND P.userID = ?
-         |AND PS.active = 1
+         |AND PS.quantity > 0
          |""".stripMargin, js.Array(contestID, userID)) map { case (rows, _) => rows }
   }
 

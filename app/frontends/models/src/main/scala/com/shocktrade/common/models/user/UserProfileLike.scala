@@ -14,8 +14,6 @@ trait UserProfileLike extends js.Object {
 
   def equity: js.UndefOr[Double]
 
-  def funds: js.UndefOr[Double]
-
   def level: js.UndefOr[Int]
 
   def wallet: js.UndefOr[Double]

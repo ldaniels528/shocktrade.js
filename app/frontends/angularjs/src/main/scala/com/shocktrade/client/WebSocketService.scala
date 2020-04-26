@@ -1,10 +1,10 @@
 package com.shocktrade.client
 
 import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client.users.UserService
 import com.shocktrade.common.events.RemoteEvent
 import io.scalajs.dom.html.browser.{console, window}
 import io.scalajs.dom.ws._
-import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Location, Service, Timeout, _}
 import io.scalajs.util.DurationHelper._
@@ -14,10 +14,11 @@ import scala.scalajs.js
 import scala.scalajs.js.JSON
 
 /**
- * Web Socket Service
+ * WebSocket Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class WebSocketService($rootScope: RootScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster) extends Service {
+class WebSocketService($rootScope: RootScope, $location: Location, $timeout: Timeout, toaster: Toaster,
+                       @injected("UserService") userService: UserService) extends Service {
   private var socket: WebSocket = _
   private var connected: Boolean = false
   private var attemptsLeft: Int = 3
@@ -35,7 +36,7 @@ class WebSocketService($rootScope: RootScope, $http: Http, $location: Location, 
     window.WebSocket.toOption match {
       case Some(_) => connect()
       case None =>
-        toaster.pop("Info", "Your browser does not support Web Sockets.")
+        toaster.pop(`type` = "Info", title = "Your browser does not support Web Sockets.")
     }
   }
 
@@ -128,8 +129,8 @@ class WebSocketService($rootScope: RootScope, $http: Http, $location: Location, 
     $rootScope.userProfile.flatMap(_.userID).toOption match {
       case Some(userID) =>
         console.log(s"Sending connected status for user $userID ...")
-        if (connected) $http.put(s"/api/online/$userID")
-        else $http.delete(s"/api/online/$userID")
+        if (connected) userService.setIsOnline(userID)
+        else userService.setIsOffline(userID)
       case None =>
         console.log(s"User unknown, waiting 5 seconds ($attemptsLeft attempts remaining)...")
         if (attemptsLeft > 0) {

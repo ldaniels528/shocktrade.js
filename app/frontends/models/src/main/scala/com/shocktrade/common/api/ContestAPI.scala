@@ -38,4 +38,10 @@ trait ContestAPI extends BaseAPI {
 
   def putChatMessageURL(contestID: String) = s"$baseURL/api/contest/$contestID/chat"
 
+  ///////////////////////////////////////////////////////////////
+  //          Administrative Routes
+  ///////////////////////////////////////////////////////////////
+
+  def getUpdateUserIconsURL: String = s"$baseURL/api/contest/users/icon/update"
+
 }

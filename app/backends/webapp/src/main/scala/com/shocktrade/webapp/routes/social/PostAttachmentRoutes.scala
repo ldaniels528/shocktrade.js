@@ -2,7 +2,7 @@ package com.shocktrade.webapp.routes.social
 
 import com.shocktrade.common.Ok
 import com.shocktrade.server.common.LoggerFactory
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import io.scalajs.npm.express.fileupload.UploadedFiles
 import io.scalajs.npm.express.{Application, Request, Response}
 
@@ -30,7 +30,7 @@ class PostAttachmentRoutes(app: Application)(implicit ec: ExecutionContext) {
     /*
     attachmentDAO map (_.openDownloadStream(attachmentID.$oid).pipe(response)) onComplete {
       case Success(downloadStream) => downloadStream.onEnd(() => next())
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }*/
     response.internalServerError("Not yet implemented"); next()
   }
@@ -44,7 +44,7 @@ class PostAttachmentRoutes(app: Application)(implicit ec: ExecutionContext) {
     /*
     attachmentDAO.flatMap(_.find[Attachment]("metadata.userID" $eq userID.$oid).toArray()) onComplete {
       case Success(attachments) => response.send(attachments); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }*/
     response.internalServerError("Not yet implemented"); next()
   }
@@ -69,7 +69,7 @@ class PostAttachmentRoutes(app: Application)(implicit ec: ExecutionContext) {
 
       outcome onComplete {
         case Success(result) => response.send(result.value); next()
-        case Failure(e) => response.internalServerError(e); next()
+        case Failure(e) => response.showException(e).internalServerError(e); next()
       }*/
     }
     response.send(new Ok()); next()

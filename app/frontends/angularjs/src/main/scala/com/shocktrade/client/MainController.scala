@@ -12,9 +12,8 @@ import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
-import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster._
-import io.scalajs.npm.angularjs.uibootstrap.Modal
 import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
@@ -32,8 +31,7 @@ import scala.util.{Failure, Success}
  * Main Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http, $location: Location,
-                     $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
+class MainController($scope: MainControllerScope, $cookies: Cookies, $location: Location, $timeout: Timeout, toaster: Toaster,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
                      @injected("UserService") userService: UserService)

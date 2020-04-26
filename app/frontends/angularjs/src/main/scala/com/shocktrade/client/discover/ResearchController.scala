@@ -95,7 +95,7 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
     searchResults = emptyArray
 
     // execute the search
-    val outcome = researchService.search(searchOptions)
+    val outcome = researchService.research(searchOptions)
     asyncLoading($scope)(outcome) onComplete {
       case Success(response) =>
         val results = response.data

@@ -1,5 +1,7 @@
 package com.shocktrade.server.dao
 
+import java.util.UUID
+
 import io.scalajs.npm.mysql.{MySQL, MySQLConnection, MySQLConnectionOptions}
 
 import scala.scalajs.js
@@ -12,6 +14,13 @@ class MySQLDAO(options: MySQLConnectionOptions) {
   protected lazy val conn: MySQLConnection = MySQL.createConnection(options)
 
   def shutdown(): Unit = conn.destroy()
+
+  protected def newID: String = UUID.randomUUID().toString
+
+  protected def checkCount(message: Int => String): Int => Int = {
+    case count if count < 1 => throw js.JavaScriptException(message(count))
+    case count => count
+  }
 
   protected def checkInsertCount: Int => Int = {
     case count if count < 1 => throw js.JavaScriptException(s"Record could not inserted (count = $count)")

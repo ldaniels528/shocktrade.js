@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes
 package research
 
+import com.shocktrade.common.api.ResearchAPI
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.webapp.routes.research.dao.ResearchDAO
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -13,9 +14,9 @@ import scala.util.{Failure, Success}
  * Research Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ResearchRoutes(app: Application)(implicit ec: ExecutionContext, researchDAO: ResearchDAO) {
+class ResearchRoutes(app: Application)(implicit ec: ExecutionContext, researchDAO: ResearchDAO) extends ResearchAPI {
   // API routes
-  app.get("/api/research/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
+  app.get(researchURLPrefix, (request: Request, response: Response, next: NextFunction) => research(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -24,7 +25,7 @@ class ResearchRoutes(app: Application)(implicit ec: ExecutionContext, researchDA
   /**
    * Searches symbols and company names for a match to the specified search term
    */
-  def search(request: Request, response: Response, next: NextFunction): Unit = {
+  def research(request: Request, response: Response, next: NextFunction): Unit = {
     val nullFilter = (s: String) => if (s == "" || s == "null") None else Some(s)
     val options = new ResearchOptions(
       changeMax = request.query.get("changeMax").flatMap(nullFilter).map(_.toDouble).orUndefined,
@@ -42,7 +43,7 @@ class ResearchRoutes(app: Application)(implicit ec: ExecutionContext, researchDA
 
     researchDAO.research(options) onComplete {
       case Success(results) => response.send(results); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 

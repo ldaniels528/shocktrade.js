@@ -21,11 +21,19 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
   ///////////////////////////////////////////////////////////////
 
   /**
-   * Retrieves a portfolio by a contest ID and player ID
-   * @param portfolioID the given player ID
+   * Retrieves a portfolio by ID
+   * @param portfolioID the given portfolio ID
    * @return the promise of a [[Portfolio portfolio]]
    */
   def findPortfolioByID(portfolioID: String): Future[Portfolio] = get(findPortfolioByIDURL(portfolioID))
+
+  /**
+   * Retrieves a portfolio by a contest ID and user ID
+   * @param contestID the given contest ID
+   * @param userID the given user ID
+   * @return the promise of a [[Portfolio portfolio]]
+   */
+  def findPortfolioByUser(contestID: String, userID: String): Future[Portfolio] = get(findPortfolioByUserURL(contestID, userID))
 
   /**
    * Retrieves a collection of portfolios by a contest ID

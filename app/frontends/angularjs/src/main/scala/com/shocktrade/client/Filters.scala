@@ -12,6 +12,7 @@ import scala.util.Try
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object Filters {
+
   /**
    * Absolute Value
    */
@@ -22,6 +23,7 @@ object Filters {
       case _ => 0.0d
     } getOrElse value
   }: js.Function
+
   /**
    * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
    */
@@ -38,24 +40,29 @@ object Filters {
       case _ => 0.0d
     } getOrElse ""
   }: js.Function
+
   /**
    * Capitalize: Returns the capitalize representation of a given string
    */
   val capitalize: js.Function = () => { value: js.UndefOr[String] =>
     value map { s => if (s.nonEmpty) s.head.toUpper + s.tail else "" }
   }: js.Function
+
   /**
    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
    */
   val duration: js.Function = () => { time: js.UndefOr[js.Any] => toDuration(time, noFuture = false) }: js.Function
+
   /**
    * Escape: Performs an escape
    */
   val escape: js.Function = () => { () => g.window.escape }: js.Function
+
   /**
    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
    */
   val newsDuration: js.Function = () => { time: js.UndefOr[js.Any] => toDuration(time, noFuture = true) }: js.Function
+
   /**
    * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
    */
@@ -70,6 +77,7 @@ object Filters {
       case _ => ""
     } getOrElse ""
   }: js.Function
+
   /**
    * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
    */
@@ -84,6 +92,7 @@ object Filters {
       case _ => ""
     } getOrElse ""
   }: js.Function
+
   /**
    * Yes/No: Converts a boolean value into 'Yes' or 'No'
    */

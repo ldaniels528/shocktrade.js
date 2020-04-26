@@ -9,6 +9,5 @@ object PriceTypes {
 
   val Limit: PriceType = "LIMIT"
   val Market: PriceType = "MARKET"
-  val MarketAtClose: PriceType = "MARKET_AT_CLOSE"
 
 }

@@ -51,7 +51,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val (contestID, userID) = (request.params("contestID"), request.params("userID"))
     val form = request.bodyAs[NewOrderForm]
     form.validate match {
-      case messages if messages.nonEmpty => response.badRequest(messages)
+      case messages if messages.nonEmpty => response.badRequest(messages); next()
       case _ =>
         portfolioDAO.createOrder(contestID, userID, order = form.toOrder) onComplete {
           case Success(count) => response.send(Ok(count)); next()
@@ -71,12 +71,12 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
       case _ =>
         val order = form.toOrder
         portfolioDAO.createOrder(portfolioID, order) onComplete {
-          case Success(count) if count == 1 => response.send(new Ok(count)); next()
+          case Success(count) if count == 1 => response.send(Ok(count)); next()
           case Success(count) =>
             console.error(s"failed result = $count")
             response.notFound(s"Order for portfolio # $portfolioID")
             next()
-          case Failure(e) => response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
   }
@@ -96,7 +96,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val portfolioID = request.params("portfolioID")
     portfolioDAO.findHeldSecurities(portfolioID) onComplete {
       case Success(tickers) => response.send(tickers); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -111,7 +111,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
         console.error(s"update result = $count")
         response.notFound(request.params)
         next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -122,7 +122,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val (contestID, userID) = (request.params("contestID"), request.params("userID"))
     portfolioDAO.findOrders(contestID, userID) onComplete {
       case Success(orders) => response.send(orders); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -131,7 +131,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     portfolioDAO.findPortfolioByUser(contestID, userID) onComplete {
       case Success(Some(portfolio)) => response.send(portfolio); next()
       case Success(None) => response.notFound(request.params); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -140,7 +140,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     portfolioDAO.findPortfolioBalance(contestID, userID) onComplete {
       case Success(Some(balance)) => response.send(balance); next()
       case Success(None) => response.notFound(request.params); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -150,7 +150,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   def findAvailablePerks(request: Request, response: Response, next: NextFunction): Unit = {
     portfolioDAO.findAvailablePerks onComplete {
       case Success(perks) => response.send(perks); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -161,7 +161,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val portfolioID = request.params("portfolioID")
     portfolioDAO.findPurchasedPerks(portfolioID) onComplete {
       case Success(perks) => response.send(perks); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -180,7 +180,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
 
     outcome onComplete {
       case Success(updated) => response.send(new Ok(updated)); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -191,7 +191,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val (contestID, userID) = (request.params("contestID"), request.params("userID"))
     portfolioDAO.findPositions(contestID, userID) onComplete {
       case Success(positions) => response.send(positions); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -203,7 +203,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     portfolioDAO.findPortfolioByID(portfolioID) onComplete {
       case Success(Some(portfolio)) => response.send(portfolio); next()
       case Success(None) => response.notFound(request.params); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -214,7 +214,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val contestID = request.params("contestID")
     portfolioDAO.findPortfoliosByContest(contestID) onComplete {
       case Success(portfolios) => response.send(portfolios); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -225,7 +225,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val userID = request.params("userID")
     portfolioDAO.findPortfoliosByUser(userID) onComplete {
       case Success(portfolios) => response.send(portfolios); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 

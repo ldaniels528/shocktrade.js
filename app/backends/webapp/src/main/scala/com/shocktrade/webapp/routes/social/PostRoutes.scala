@@ -46,7 +46,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
     postDAO.insertOne(post) onComplete {
       case Success(count) if count == 1 => response.send(new Ok(count)); next()
       case Success(_) => response.badRequest("Post could not be created"); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -59,7 +59,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
     postDAO.deleteOne(postID) onComplete {
       case Success(count) if count == 1 => response.send(new Ok(count)); next()
       case Success(_) => response.notFound(postID); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -72,7 +72,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
     postDAO.findOneByID(postID) onComplete {
       case Success(Some(post)) => response.send(post); next()
       case Success(None) => response.notFound(); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -93,7 +93,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
         console.log(s"models = ${JSON.stringify(models)}")
         response.send(models)
         next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -106,7 +106,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
     val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
     postDAO.findByUser(userID, limit = maxResults) onComplete {
       case Success(posts) => response.send(posts); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -119,7 +119,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
     postDAO.like(postID, userID) onComplete {
       case Success(Some(likes)) if likes > 0 => response.send(new Ok(likes)); next()
       case Success(None) => response.notFound(postID); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -132,7 +132,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
     postDAO.unlike(postID, userID) onComplete {
       case Success(Some(likes)) if likes > 0 => response.send(new Ok(likes)); next()
       case Success(None) => response.notFound(postID); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -144,7 +144,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
     val (userID, maxResults) = (request.params("userID"), request.queryAs[MaxResultsForm].getMaxResults())
     postDAO.findNewsFeed(userID, limit = maxResults) onComplete {
       case Success(posts) => response.send(posts); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -160,7 +160,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostD
         postDAO.updateOne(post) onComplete {
           case Success(count) if count == 1 => response.send(post.toModel()); next()
           case Success(_) => response.notFound(_id); next()
-          case Failure(e) => response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
       case None => response.badRequest("Post has no _id field"); next()
     }

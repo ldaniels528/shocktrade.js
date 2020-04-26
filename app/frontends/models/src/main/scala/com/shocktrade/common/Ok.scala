@@ -20,4 +20,6 @@ object Ok {
    */
   def apply(updateCount: js.UndefOr[Int] = js.undefined): Ok = new Ok(updateCount)
 
+  def unapply(ok: Ok): Option[Int] = ok.updateCount.toOption
+
 }

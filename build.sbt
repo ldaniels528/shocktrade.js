@@ -90,68 +90,6 @@ lazy val utils = (project in file("./app/shared/utils"))
     ))
 
 /////////////////////////////////////////////////////////////////////////////////
-//      Back-end projects
-/////////////////////////////////////////////////////////////////////////////////
-
-lazy val onetime = (project in file("./app/backends/onetime"))
-  .settings(
-    name := "shocktrade-onetime",
-    organization := "com.shocktrade",
-    version := appVersion,
-    scalaVersion := "2.13.1",
-    javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint"),
-    libraryDependencies ++= Seq(
-      "log4j" % "log4j" % "1.2.17",
-      "org.slf4j" % "slf4j-api" % "1.7.25",
-      "org.slf4j" % "slf4j-log4j12" % "1.7.25"
-    ))
-
-lazy val ingestion = (project in file("./app/backends/ingestion"))
-  .aggregate(models, server_common, services)
-  .dependsOn(models, server_common, services)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(appSettings: _*)
-  .settings(
-    name := "shocktrade-ingest",
-    organization := "com.shocktrade",
-    version := appVersion,
-    mainClass := Some("com.shocktrade.ingestion.IngestionJsApp"),
-    libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIOVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
-    ))
-
-lazy val webapp = (project in file("./app/backends/webapp"))
-  .aggregate(models, server_common)
-  .dependsOn(models, server_common)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(appSettings: _*)
-  .settings(
-    name := "shocktrade-webapp",
-    organization := "com.shocktrade",
-    version := appVersion,
-    mainClass := Some("com.shocktrade.webapp.WebServerJsApp"),
-    libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIOVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "connect-timeout" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "express-csv" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "express-fileupload" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "express-ws" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "feedparser-promised" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "md5" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "splitargs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "xml2js" % scalaJsIOVersion
-    ))
-
-/////////////////////////////////////////////////////////////////////////////////
 //      Front-end projects
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -214,6 +152,88 @@ lazy val models = (project in file("./app/frontends/models"))
     version := appVersion,
     libraryDependencies ++= Seq(
       "io.scalajs" %%% "core" % scalaJsIOVersion
+    ))
+
+/////////////////////////////////////////////////////////////////////////////////
+//      Back-end projects
+/////////////////////////////////////////////////////////////////////////////////
+
+lazy val onetime = (project in file("./app/backends/onetime"))
+  .settings(
+    name := "shocktrade-onetime",
+    organization := "com.shocktrade",
+    version := appVersion,
+    scalaVersion := "2.13.1",
+    javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint"),
+    libraryDependencies ++= Seq(
+      "log4j" % "log4j" % "1.2.17",
+      "org.slf4j" % "slf4j-api" % "1.7.25",
+      "org.slf4j" % "slf4j-log4j12" % "1.7.25"
+    ))
+
+lazy val ingestion = (project in file("./app/backends/ingestion"))
+  .aggregate(models, server_common, services)
+  .dependsOn(models, server_common, services)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(appSettings: _*)
+  .settings(
+    name := "shocktrade-ingest",
+    organization := "com.shocktrade",
+    version := appVersion,
+    mainClass := Some("com.shocktrade.ingestion.IngestionJsApp"),
+    libraryDependencies ++= Seq(
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
+    ))
+
+lazy val robots = (project in file("./app/backends/robots"))
+  .aggregate(models, server_common, rest_client)
+  .dependsOn(models, server_common, rest_client)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(appSettings: _*)
+  .settings(
+    name := "shocktrade-robots",
+    organization := "com.shocktrade",
+    version := appVersion,
+    mainClass := Some("com.shocktrade.robots.RobotsJsApp"),
+    libraryDependencies ++= Seq(
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "md5" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
+    ))
+
+lazy val webapp = (project in file("./app/backends/webapp"))
+  .aggregate(models, server_common)
+  .dependsOn(models, server_common)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(appSettings: _*)
+  .settings(
+    name := "shocktrade-webapp",
+    organization := "com.shocktrade",
+    version := appVersion,
+    mainClass := Some("com.shocktrade.webapp.WebServerJsApp"),
+    libraryDependencies ++= Seq(
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "connect-timeout" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "express-csv" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "express-fileupload" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "express-ws" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "feedparser-promised" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "md5" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "splitargs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "xml2js" % scalaJsIOVersion
     ))
 
 /////////////////////////////////////////////////////////////////////////////////

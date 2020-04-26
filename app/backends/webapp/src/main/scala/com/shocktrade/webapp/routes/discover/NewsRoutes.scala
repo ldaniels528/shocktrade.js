@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.discover
 
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.discover.dao.NewsSourceDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 
@@ -33,7 +33,7 @@ class NewsRoutes(app: Application)(implicit ec: ExecutionContext, newsDAO: NewsS
 
     outcome onComplete {
       case Success(feeds) => response.send(feeds); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -42,14 +42,14 @@ class NewsRoutes(app: Application)(implicit ec: ExecutionContext, newsDAO: NewsS
     newsDAO.findByID(id) onComplete {
       case Success(Some(source)) => response.send(source); next()
       case Success(None) => response.notFound(id); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
   def sources(request: Request, response: Response, next: NextFunction): Unit = {
     newsDAO.findSources onComplete {
       case Success(sources) => response.send(sources); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 

@@ -18,7 +18,7 @@ import scala.util.{Failure, Random, Success}
 class MockStockUpdateDaemon(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions) extends MySQLDAO(options) {
   private val logger = LoggerFactory.getLogger(getClass)
   private val random = new Random()
-  import random.{nextBoolean, nextDouble}
+  import random.nextDouble
 
   /**
    * Updates all stocks to simulate an active market
@@ -43,18 +43,9 @@ class MockStockUpdateDaemon(options: MySQLConnectionOptions = DataAccessObjectHe
     }
   }
 
-  private def smallDelta: Double = if (nextBoolean()) nextDouble() else -nextDouble()
-
   def randomize(stock: StockData): StockData = {
-    val change = smallDelta
-    val lastTrade = stock.lastTrade.map(_ + change)
-
     stock.copy(
-      lastTrade = lastTrade,
-      change = change,
-      changePct = lastTrade.map(change / _),
-      high = for (a <- lastTrade; b <- stock.high) yield Math.max(a, b),
-      low = for (a <- lastTrade; b <- stock.low) yield Math.min(a, b),
+      lastTrade = for {high <- stock.high; low <- stock.low} yield nextDouble() * (high - low) + low,
       tradeDateTime = new js.Date()
     )
   }

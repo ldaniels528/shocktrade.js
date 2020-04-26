@@ -13,7 +13,7 @@ class ScopeTest extends AnyFunSpec {
 
     it("should identify variable references") {
       val line = """putChatMessage $$1.contestID { "userID":"$$2.userID", "username":"fugitive528", "message":"Hello World" }"""
-      val results = Scope.findVariables(line, correlationID = "1")
+      val results = Scope.findVariables(line)
       info(s"reference: ${results.mkString(",")}")
       info(s"indices: ${results.map(_.getInstanceKey).mkString(",")}")
       assert(results.size == 2)

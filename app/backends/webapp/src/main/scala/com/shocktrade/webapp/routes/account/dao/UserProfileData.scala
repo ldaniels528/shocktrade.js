@@ -12,7 +12,6 @@ class UserProfileData(val userID: js.UndefOr[String],
                       val username: js.UndefOr[String],
                       val level: js.UndefOr[Int],
                       val equity: js.UndefOr[Double],
-                      val funds: js.UndefOr[Double],
                       val wallet: js.UndefOr[Double],
                       val totalXP: js.UndefOr[Int],
                       val lastLoginTime: js.UndefOr[js.Date]) extends UserProfileLike

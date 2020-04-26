@@ -89,9 +89,8 @@ case class InformationBarController($scope: InformationBarControllerScope, $cook
     for {
       userProfile <- $scope.userProfile
       cash <- userProfile.wallet
-      funds <- userProfile.funds
       equity <- userProfile.equity
-      change = ((cash + funds + equity) - original) / original * 100.0
+      change = ((cash + equity) - original) / original * 100.0
     } yield change
   }
 
