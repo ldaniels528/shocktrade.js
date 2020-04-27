@@ -1,16 +1,17 @@
 <div style="margin-top: 4px; margin-left: 4px">
 	<div style="display: inline">
-		<img ng-show="item.thumbNail.url" 
-			ng-src="{{ item.thumbNail.url }}" 
-			class="news_img pull-right"
-			style="width: {{ item.thumbNail.width }}; height: {{ item.thumbNail.height }}">
+		<img ng-show="channel.image.url"
+			 ng-src="{{ channel.image.url }}"
+			 class="news_img pull-right"
+			 title="{{ channel.image.title }}"
+			 style="width: {{ channel.image.width }}; height: {{ channel.image.height }}">
 	</div>
 	<div style="display: inline">
 		<span class="news_age">{{ item.pubDate | newsDuration }}</span>
 		<a ng-bind-html="item.title" class="news" ng-href="{{ item.link }}" target="newwindow">
 			<span class="news_title">{{ item.title }}</span>
 		</a>
-		<div compile="item.description" class="news_desc">{{ item.description }}</div>
+		<div compile="item.contentSnippet" class="news_desc">{{ item.contentSnippet }}</div>
 	</div>
 	<br style="clear: both">
 </div>

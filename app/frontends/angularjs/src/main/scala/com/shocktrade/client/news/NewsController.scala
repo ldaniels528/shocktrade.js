@@ -2,6 +2,8 @@ package com.shocktrade.client.news
 
 import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.news.NewsController._
+import com.shocktrade.common.models.rss._
+import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
@@ -9,7 +11,6 @@ import io.scalajs.npm.angularjs.sanitize.Sce
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
-import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -21,27 +22,48 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: Toaster,
-                     @injected("NewsService") newsService: NewsService)
+                     @injected("RSSFeedService") rssFeedService: RSSFeedService)
   extends Controller with GlobalLoading {
-
-  private var newsChannels = emptyArray[NewsChannel]
-  private var newsSources = emptyArray[NewsSource]
-  private var newsQuotes = emptyArray[NewsQuote]
 
   // define the scope variables
   // view: get the previously selected view from the cookie
-  $scope.selection = new NewsFeedSelection(feed = "")
+  $scope.selection = js.undefined
   $scope.view = $cookies.getOrElse(ViewTypeCookie, "list")
+
+  $scope.test = """<i>This is it!</i>"""
+
+  /////////////////////////////////////////////////////////////////////////////
+  //			Initialization Functions
+  /////////////////////////////////////////////////////////////////////////////
+
+  $scope.init = () => {
+    console.log("Loading news sources...")
+    val outcome = (for {
+      sources <- rssFeedService.getNewsSources
+      feedId = sources.data.flatMap(_.rssFeedID.toOption).headOption.getOrElse(throw js.JavaScriptException("No feeds found"))
+      channels <- rssFeedService.getNewsFeeds(feedId)
+    } yield (sources.data, channels.data)).toJSPromise
+
+    /*asyncLoading($scope)(outcome)*/ outcome onComplete {
+      case Success((sources, channels)) =>
+        $scope.$apply { () =>
+          $scope.newsSources = sources
+          $scope.newsChannels = channels
+          $scope.selection = sources.headOption.orUndefined
+          //$scope.test = generate(channels)
+        }
+      case Failure(e) =>
+        toaster.error("Failed to load news sources")
+        e.printStackTrace()
+    }
+    outcome
+  }
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.getChannels = () => newsChannels
-
-  $scope.getNewsFeed = (aFeedId: js.UndefOr[String]) => aFeedId foreach findNewsFeed
-
-  $scope.getNewsSources = () => getNewsSources
+  $scope.getNewsFeed = (aFeedId: js.UndefOr[String]) => aFeedId.map(findNewsFeed)
 
   /**
    * Return the appropriate class to create a diagonal grid
@@ -52,61 +74,58 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     s"news_tile$cell"
   }
 
-  $scope.newsSources = () => newsSources
-
   $scope.trustMe = (aHtml: js.UndefOr[String]) => aHtml map ($sce.trustAsHtml(_))
-
-  private def getNewsSources: js.Promise[HttpResponse[js.Array[NewsSource]]] = {
-    console.log("Loading news sources...")
-    val outcome = newsService.getNewsSources
-    asyncLoading($scope)(outcome) onComplete {
-      case Success(response) =>
-        val sources = response.data
-        $scope.$apply { () =>
-          this.newsSources = sources
-
-          // select the ID of the first feed
-          sources.headOption.orUndefined.flatMap(_._id) foreach { feed =>
-            $scope.selection.feed = feed
-            findNewsFeed(feed)
-          }
-        }
-      case Failure(e) =>
-        toaster.error("Failed to load news sources")
-    }
-    outcome
-  }
 
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  private def findNewsFeed(feedId: String): Unit = {
+  def findNewsFeed(feedId: String): js.Promise[HttpResponse[js.Array[RSSChannel]]] = {
     console.log("Getting news feeds...")
-    asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
+    val outcome = rssFeedService.getNewsFeeds(feedId)
+    /*asyncLoading($scope)(outcome)*/ outcome onComplete {
       case Success(response) =>
-        val feedChannels = response.data
+        val channels = response
         $scope.$apply { () =>
+          $scope.newsChannels = channels.data
+
+          for {channel <- channels.data; item <- channel.items} yield {
+            console.info(s"channel => ${JSON.stringify(channel)}")
+            console.info(s"item => ${JSON.stringify(item)}")
+          }
+          //$scope.test = generate(channels)
           //populateQuotes(feedChannels) TODO
-          this.newsChannels = feedChannels; //getEnrichedChannels(feedChannels)
-          removeImageTags(feedChannels)
+          //this.newsChannels = feedChannels; //getEnrichedChannels(feedChannels)
+          //removeImageTags(feedChannels)
         }
       case Failure(e) =>
         toaster.error(s"Failed to load news feed $feedId")
     }
+    outcome
   }
 
-  private def removeImageTags(channels: js.Array[NewsChannel]): Unit = {
+  private def generate(channels: js.Array[RSSChannel]): String = {
+    (for {channel <- channels; item <- channel.items} yield {
+      console.info(s"channel => ${JSON.stringify(channel)}")
+      s"""|<div>${channel.title.orNull}</div>
+          |<div>${item.title}</div>
+          |<div>${channel.description}</div>
+          |""".stripMargin
+    }) mkString "\n"
+  }
+
+  private def removeImageTags(channels: js.Array[RSSFeed]): Unit = {
     for {
       channel <- channels
-      item <- channel.items
+      //(_, item) <- channel.items
     } {
+      /*
       val start = item.description.indexOf("""<img src="http://feeds.feedburner.com""")
       val end = item.description.indexOf("/>", start)
       if (end > start && start != -1) {
         val block = item.description.substring(start, end + 2)
         item.description = item.description.replaceAllLiterally(block, "")
-      }
+      }*/
     }
   }
 
@@ -150,7 +169,7 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
 
   private def populateQuotes(channels: js.Array[NewsChannel]): Unit = {
     console.log(s"channels = ${angular.toJson(channels, pretty = true)}")
-    newsQuotes = channels.flatMap(_.items.flatMap(_.quotes))
+    $scope.newsQuotes = channels.flatMap(_.items.flatMap(_.quotes))
   }
 
 }
@@ -169,15 +188,17 @@ object NewsController {
   @js.native
   trait NewsScope extends Scope {
     // variables
-    var selection: NewsFeedSelection = js.native
-    var view: String = js.native
+    var newsChannels: js.UndefOr[js.Array[RSSChannel]] = js.native
+    var newsSources: js.UndefOr[js.Array[NewsSource]] = js.native
+    var newsQuotes: js.UndefOr[js.Array[NewsQuote]] = js.native
+    var selection: js.UndefOr[NewsSource] = js.native
+    var view: js.UndefOr[String] = js.native
+    var test: js.UndefOr[String] = js.native
 
     // functions
-    var getChannels: js.Function0[js.Array[NewsChannel]] = js.native
-    var getNewsFeed: js.Function1[js.UndefOr[String], Unit] = js.native
-    var getNewsSources: js.Function0[js.Promise[HttpResponse[js.Array[NewsSource]]]] = js.native
+    var init: js.Function0[js.Promise[Any]] = js.native
+    var getNewsFeed: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[js.Array[RSSChannel]]]]] = js.native
     var gridClass: js.Function1[js.UndefOr[Double], js.UndefOr[String]] = js.native
-    var newsSources: js.Function0[js.Array[NewsSource]] = js.native
     var trustMe: js.Function1[js.UndefOr[String], js.UndefOr[Any]] = js.native
 
   }

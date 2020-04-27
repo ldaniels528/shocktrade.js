@@ -26,7 +26,7 @@ package object routes {
     implicit val contestDAO: ContestDAO = ContestDAO()
     implicit val exploreDAO: ExploreDAO = ExploreDAO()
     implicit val globalSearchDAO: GlobalSearchDAO = GlobalSearchDAO()
-    implicit val newsDAO: NewsSourceDAO = NewsSourceDAO()
+    implicit val newsDAO: RSSFeedDAO = RSSFeedDAO()
     implicit val portfolioDAO: PortfolioDAO = PortfolioDAO()
     implicit val postDAO: PostDAO = PostDAO()
     implicit val researchDAO: ResearchDAO = ResearchDAO()

@@ -38,21 +38,22 @@ CREATE TABLE events (
 -- News
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS newsSources;
-CREATE TABLE newsSources (
-     _id VARCHAR(36) NOT NULL PRIMARY KEY,
+DROP TABLE IF EXISTS rss_feeds;
+CREATE TABLE rss_feeds (
+     rssFeedID VARCHAR(36) NOT NULL PRIMARY KEY,
      name VARCHAR(64) NOT NULL,
      url VARCHAR(255) NOT NULL,
      icon VARCHAR(64) NULL,
      priority INTEGER NOT NULL DEFAULT 0
 );
 
-INSERT INTO newsSources (_id, name, url, priority) VALUES ('1', 'CNN Money: Markets', 'http://rss.cnn.com/rss/money_markets.rss', 1) ;
-INSERT INTO newsSources (_id, name, url, priority) VALUES ('2', 'CNN Money: Latest News', 'http://rss.cnn.com/rss/money_latest.rss', 2);
-INSERT INTO newsSources (_id, name, url, priority) VALUES ('3', 'CBNC News', 'http://www.cnbc.com/id/100003114/device/rss/rss', 3);
-INSERT INTO newsSources (_id, name, url, priority) VALUES ('4', 'MarketWatch: Real-time Headlines', 'http://feeds.marketwatch.com/marketwatch/realtimeheadlines/', 4);
-INSERT INTO newsSources (_id, name, url, priority) VALUES ('5', 'MarketWatch: Stocks to Watch', 'http://feeds.marketwatch.com/marketwatch/StockstoWatch/', 5);
-INSERT INTO newsSources (_id, name, url, priority) VALUES ('6', 'NASDAQ Stocks News', 'http://articlefeeds.nasdaq.com/nasdaq/categories?category=Stocks', 6);
+INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'CNN News.com', 'http://rss.cnn.com/rss/cnn_topstories.rss', 1) ;
+INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'CNN Money: Markets', 'http://rss.cnn.com/rss/money_markets.rss', 1) ;
+INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'CNN Money: Latest News', 'http://rss.cnn.com/rss/money_latest.rss', 2);
+INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'CBNC News', 'http://www.cnbc.com/id/100003114/device/rss/rss', 3);
+INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'MarketWatch: Real-time Headlines', 'http://feeds.marketwatch.com/marketwatch/realtimeheadlines/', 4);
+INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'MarketWatch: Stocks to Watch', 'http://feeds.marketwatch.com/marketwatch/StockstoWatch/', 5);
+INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'NASDAQ Stocks News', 'http://articlefeeds.nasdaq.com/nasdaq/categories?category=Stocks', 6);
 
 -- ------------------------------------------------------------
 -- Perks

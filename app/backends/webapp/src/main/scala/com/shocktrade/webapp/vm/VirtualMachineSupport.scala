@@ -32,7 +32,7 @@ trait VirtualMachineSupport {
             logger.info(s"[${runTime.toMillis} ms] $code => ${result.orNull}")
           }
         case Failure(e) =>
-          logger.error(s"PIPELINE| ${e.getMessage}")
+          logger.error(s"drainPipeline| ${e.getMessage}")
           e.printStackTrace()
       }
     } catch {
@@ -54,7 +54,7 @@ trait VirtualMachineSupport {
             logger.info(s"$count opCodes scheduled in $elapsedTime msec")
           }
         case Failure(e) =>
-          logger.error(s"LIFECYCLE| ${e.getMessage}")
+          logger.error(s"updateContestLifeCycles| ${e.getMessage}")
       }
     } catch {
       case e: Exception =>

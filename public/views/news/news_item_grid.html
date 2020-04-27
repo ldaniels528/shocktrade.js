@@ -1,12 +1,13 @@
 <div ng-class="gridClass($index)" style="display: block; margin-bottom: 10px">
 	<span class="news_age">{{ item.pubDate | newsDuration }}</span>
-	<img ng-show="item.thumbNail.url" 
-		ng-src="{{ item.thumbNail.url }}" 
-		class="news_img pull-right"
-		style="width: {{ item.thumbNail.width }}; height: {{ item.thumbNail.height }}">
+	<img ng-show="channel.image.url"
+		 ng-src="{{ channel.image.url }}"
+		 class="news_img pull-right"
+		 title="{{ channel.image.title }}"
+		 style="width: {{ channel.image.width }}; height: {{ channel.image.height }}">
 	<a ng-bind-html="item.title" class="news" ng-href="{{ item.link }}" target="newwindow">
 		<span class="news_title">{{ item.title }}</span>
 	</a>
-	&#8212; <span compile="item.description" class="news_desc">{{ item.description }}</span>	
+	&#8212; <span compile="item.contentSnippet" class="news_desc">{{ item.contentSnippet }}</span>
 	<br style="clear: both">
 </div>

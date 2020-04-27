@@ -120,7 +120,7 @@ object WebServerJsApp {
     new ContestRoutes(app)
     new ExploreRoutes(app)
     new GlobalSearchRoutes(app)
-    new NewsRoutes(app)
+    new RSSFeedRoutes(app)
     new PortfolioRoutes(app)
     new PostAttachmentRoutes(app)
     new PostRoutes(app)

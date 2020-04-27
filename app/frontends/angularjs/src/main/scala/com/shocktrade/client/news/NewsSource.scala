@@ -8,5 +8,5 @@ import scala.scalajs.js
  */
 @js.native
 trait NewsSource extends js.Object {
-  var _id: js.UndefOr[String] = js.native
+  var rssFeedID: js.UndefOr[String] = js.native
 }

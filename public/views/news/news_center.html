@@ -1,33 +1,41 @@
-<div ng-controller="NewsController" ng-init="getNewsSources()">
-	<div ng-repeat="channel in getChannels()">
-		<div class="news_provider">
-			<select
-				ng-model="selection.feed"
-				ng-options="source._id as source.name for source in newsSources()"
-				ng-change="getNewsFeed(selection.feed)">
-			</select>
-			<i class="fa fa-th-list st_control"
-			   ng-click="view = 'list'"
-			   ng-class="view != 'list' ? 'clickable' : ''"
-			   popover="List view"
-			   popover-trigger="mouseenter"></i>
+<div ng-controller="NewsController" ng-init="init()">
+	<div class="news_provider">
+		<select
+			ng-model="selection.rssFeedID"
+			ng-options="source.rssFeedID as source.name for source in newsSources"
+			ng-change="getNewsFeed(selection.rssFeedID)">
+		</select>
 
-			<i class="fa fa-th st_control"
-			   ng-click="view = 'grid'"
-			   ng-class="view != 'grid' ? 'clickable' : ''"
-			   popover="Grid view"
-			   popover-trigger="mouseenter"></i>
-		</div>
+		<i class="fa fa-th-list st_control"
+		   ng-click="view = 'list'"
+		   ng-class="view != 'list' ? 'clickable' : ''"
+		   popover="List view"
+		   popover-trigger="mouseenter"></i>
 
+		<i class="fa fa-th st_control"
+		   ng-click="view = 'grid'"
+		   ng-class="view != 'grid' ? 'clickable' : ''"
+		   popover="Grid view"
+		   popover-trigger="mouseenter"></i>
+	</div>
+
+	<div ng-repeat="channel in newsChannels">
+		<div>{{ channel.title }} &#8212; {{ channel.description }}</div>
+	</div>
+
+	<div ng-repeat="channel in newsChannels">
 		<div ng-show="view === 'list'">
 			<div ng-repeat="item in channel.items | orderBy:pubDate:true"
-				 ng-class-even="'news_list_even'" ng-class-odd="'news_list_odd'">
+				 ng-class-even="'news_list_even'"
+				 ng-class-odd="'news_list_odd'">
 				<div ng-include src="'/views/news/news_item_list.html'"></div>
 			</div>
 		</div>
 
 		<div ng-show="view === 'grid'">
-			<div ng-repeat="item in channel.items | orderBy:pubDate:true" ng-class-even="'news_grid_even'" ng-class-odd="'news_grid_odd'">
+			<div ng-repeat="item in channel.items | orderBy:pubDate:true"
+				 ng-class-even="'news_grid_even'"
+				 ng-class-odd="'news_grid_odd'">
 				<div ng-include src="'/views/news/news_item_grid.html'"></div>
 			</div>
 			<br style="clear: both">
