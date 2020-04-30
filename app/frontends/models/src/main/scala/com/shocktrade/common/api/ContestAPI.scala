@@ -1,5 +1,9 @@
 package com.shocktrade.common.api
 
+import com.shocktrade.common.forms.ContestSearchOptions
+
+import scala.scalajs.js
+
 /**
  * Contest API
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
@@ -24,7 +28,10 @@ trait ContestAPI extends BaseAPI {
   //          Contest Finders
   ///////////////////////////////////////////////////////////////
 
-  def contestSearchURL: String = s"$baseURL/api/contests/search"
+  def contestSearchURL(options: js.UndefOr[ContestSearchOptions] = js.undefined): String = {
+    val uri = s"$baseURL/api/contests/search"
+    options.map(o => s"$uri?${o.toQueryString}") getOrElse uri
+  }
 
   def findContestByIDURL(contestID: String) = s"$baseURL/api/contest/$contestID"
 

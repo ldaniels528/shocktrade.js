@@ -2,11 +2,11 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope, GameLevel}
 import com.shocktrade.client.dialogs.PlayerProfileDialogController._
-import com.shocktrade.client.users.UserService
+import com.shocktrade.client.users.{OnlineStatusService, UserService}
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs._
-import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.util.JsUnderOrHelper._
@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
  * Player Profile Dialog Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PlayerProfileDialog($http: Http, $uibModal: Modal) extends Service {
+class PlayerProfileDialog($uibModal: Modal) extends Service {
 
   /**
    * Player Profile Modal Dialog
@@ -43,6 +43,7 @@ class PlayerProfileDialog($http: Http, $uibModal: Modal) extends Service {
  */
 case class PlayerProfileDialogController($scope: PlayerProfileDialogScope, $uibModalInstance: ModalInstance[PlayerProfileDialogResult],
                                          $timeout: Timeout, toaster: Toaster,
+                                         @injected("OnlineStatusService") onlineStatusService: OnlineStatusService,
                                          @injected("UserService") userService: UserService,
                                          @injected("userID") userID: () => String) extends Controller with AwardsSupport {
 
@@ -83,6 +84,8 @@ case class PlayerProfileDialogController($scope: PlayerProfileDialogScope, $uibM
 
   $scope.getTotalXP = () => $scope.player.flatMap(_.totalXP).getOrElse(0)
 
+  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(onlineStatusService.getOnlineStatus).map(_.connected)
+
   $scope.okay = () => $uibModalInstance.close($scope.player)
 
 }
@@ -102,6 +105,7 @@ object PlayerProfileDialogController {
     var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
     var getStars: js.Function0[js.Array[Int]] = js.native
     var getTotalXP: js.Function0[Int] = js.native
+    var isOnline: js.Function1[js.UndefOr[String], js.UndefOr[Boolean]] = js.native
     var okay: js.Function0[Unit] = js.native
 
     // variables

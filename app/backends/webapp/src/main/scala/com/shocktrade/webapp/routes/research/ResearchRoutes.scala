@@ -16,7 +16,7 @@ import scala.util.{Failure, Success}
  */
 class ResearchRoutes(app: Application)(implicit ec: ExecutionContext, researchDAO: ResearchDAO) extends ResearchAPI {
   // API routes
-  app.get(researchURLPrefix, (request: Request, response: Response, next: NextFunction) => research(request, response, next))
+  app.get(researchURL(), (request: Request, response: Response, next: NextFunction) => research(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods

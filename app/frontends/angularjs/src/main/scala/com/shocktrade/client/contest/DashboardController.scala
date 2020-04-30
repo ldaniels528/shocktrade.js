@@ -8,13 +8,12 @@ import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogRes
 import com.shocktrade.client.dialogs.PerksDialogController.PerksDialogResult
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog, PlayerProfileDialog}
 import com.shocktrade.client.discover.MarketStatusService
-import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
-import com.shocktrade.common.models.contest.{ContestRanking, Portfolio}
+import com.shocktrade.common.models.contest.{Contest, ContestRanking, Portfolio}
 import com.shocktrade.common.{AppConstants, Ok}
 import io.scalajs.JSON
-import io.scalajs.dom.html.browser.console
+import io.scalajs.dom.html.browser.{Window, console}
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
@@ -36,7 +35,7 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class DashboardController($scope: DashboardControllerScope, $routeParams: DashboardRouteParams,
-                               $cookies: Cookies, $interval: Interval, $timeout: Timeout, toaster: Toaster,
+                               $cookies: Cookies, $interval: Interval, $timeout: Timeout, toaster: Toaster, $window: Window,
                                @injected("ContestFactory") contestFactory: ContestFactory,
                                @injected("ContestService") contestService: ContestService,
                                @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
@@ -54,9 +53,9 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     with PlayerProfilePopupSupport
     with USMarketsStatusSupport {
 
-  private implicit val cookies: Cookies = $cookies
-
   $scope.maxPlayers = AppConstants.MaxPlayers
+
+  private val _userID = $cookies.getGameState.userID
 
   private val portfolioTabs = js.Array(
     new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html"),
@@ -71,7 +70,15 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.getPortfolioTabs = () => portfolioTabs//.filter(tab => !tab.isAuthRequired || $scope.isParticipant())
 
-  $scope.isParticipant = () => $scope.portfolio.flatMap(_.portfolioID).nonEmpty
+  $scope.isParticipant = () => _userID.flatMap(isParticipant)
+
+  private def isParticipant(userID: String): js.UndefOr[Boolean] = {
+    for {
+      contest <- $scope.contest
+      rankings <- contest.rankings
+      participants = rankings.flatMap(_.userID.toOption)
+    } yield participants.contains(userID)
+  }
 
   /////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -89,7 +96,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   private def initDash(): js.UndefOr[js.Promise[(Contest, Option[Portfolio])]] = {
     $scope.resetMarketStatus($routeParams.contestID)
-    for (contestID <- $routeParams.contestID) yield refreshView(contestID, $cookies.getGameState.userID)
+    for (contestID <- $routeParams.contestID) yield refreshView(contestID, _userID)
   }
 
   private def clock: js.Date = {
@@ -99,13 +106,13 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   private def refreshView(contestID: String, aUserID: js.UndefOr[String]): js.Promise[(Contest, Option[Portfolio])] = {
     $timeout(() => $scope.isRefreshing = true, 0.millis)
-    val outcome = for {
+    val outcome = (for {
       contest <- contestFactory.findContest(contestID)
       portfolio_? <- aUserID.toOption match {
-        case Some(userID) => contestFactory.findPortfolio(contestID, userID).map(c => Some(c)).recover { case _: Throwable => None }
+        case Some(userID) => contestFactory.findOptionalPortfolio(contestID, userID)
         case None => Future.successful(None)
       }
-    } yield (contest, portfolio_?)
+    } yield (contest, portfolio_?)).toJSPromise
 
     outcome onComplete { _ => $timeout(() => $scope.isRefreshing = false, 500.millis) }
     outcome onComplete {
@@ -115,8 +122,10 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
           $scope.portfolio = portfolio_?.orUndefined
         }
       case Failure(e) => toaster.error("Error", e.displayMessage)
+        console.error(s"error: ${e.getMessage} | ${JSON.stringify(e.asInstanceOf[js.Any])}")
+        e.printStackTrace()
     }
-    outcome.toJSPromise
+    outcome
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -144,7 +153,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   private def popupInvitePlayer(contestID: String): js.Promise[InvitePlayerDialogResult] = {
     val outcome = invitePlayerDialog.popup(contestID)
     outcome onComplete {
-      case Success(_) => refreshView(contestID, $cookies.getGameState.userID)
+      case Success(_) => refreshView(contestID, _userID)
       case Failure(e) =>
         if (e.getMessage != "cancel") {
           toaster.error("invite Player", e.displayMessage)
@@ -248,11 +257,11 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $scope.deleteContest = (aContestID: js.UndefOr[String]) => aContestID.map(deleteContest)
 
   $scope.joinContest = (aContestID: js.UndefOr[String]) => {
-    for {contestID <- aContestID; userID <- $cookies.getGameState.userID} yield joinContest(contestID, userID)
+    for {contestID <- aContestID; userID <- _userID} yield joinContest(contestID, userID)
   }
 
   $scope.quitContest = (aContestID: js.UndefOr[String]) => {
-    for {contestID <- aContestID; userID <- $cookies.getGameState.userID} yield quitContest(contestID, userID)
+    for {contestID <- aContestID; userID <- _userID} yield quitContest(contestID, userID)
   }
 
   $scope.startContest = (aContestID: js.UndefOr[String]) => aContestID.map(startContest)
@@ -277,10 +286,12 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     $scope.isJoining = true
     val outcome = contestService.joinContest(contestID, userID)
     outcome onComplete {
-      case Success(response) =>
-        console.info(s"response = ${JSON.stringify(response.data)}")
-        $scope.initDash()
-        $timeout(() => $scope.isJoining = false, 0.5.seconds)
+      case Success(_) =>
+        $timeout(() => {
+          $scope.isJoining = false
+          $window.location.reload()
+        }, 0.5.seconds)
+
       case Failure(e) =>
         toaster.error(title = "Error!", body = "Failed to join contest")
         console.error("An error occurred while joining the contest")
@@ -349,7 +360,7 @@ object DashboardController {
     var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
-    var isParticipant: js.Function0[Boolean] = js.native
+    var isParticipant: js.Function0[js.UndefOr[Boolean]] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
     var playerRankingOnTop: js.Function2[js.UndefOr[String], js.UndefOr[js.Array[ContestRanking]], js.UndefOr[js.Array[ContestRanking]]] = js.native
     var toggleRankingsShown: js.Function0[Unit] = js.native

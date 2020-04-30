@@ -1,8 +1,7 @@
 package com.shocktrade.client
 
-import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.common.events.RemoteEvent._
-import com.shocktrade.common.models.contest.{ChatMessage, Portfolio}
+import com.shocktrade.common.models.contest.{ChatMessage, Contest, Portfolio}
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console
@@ -21,7 +20,7 @@ object ScopeEvents {
    * @param $scope the given [[Scope scope]]
    * @tparam T the given type
    */
-  implicit class ScopeEnrichment[T <: Scope](val $scope: T) extends AnyVal {
+  final implicit class ScopeEnrichment[T <: Scope](val $scope: T) extends AnyVal {
 
     /////////////////////////////////////////////////////////////////////
     //          Emitters
@@ -78,6 +77,9 @@ object ScopeEvents {
 
     @inline
     def onPortfolioUpdated(callback: (Event, Portfolio) => Any): Unit = reactTo(PortfolioUpdated, callback)
+
+    @inline
+    def onStockUpdateEvent(callback: (Event, StockUpdateEvent) => Any): Unit = reactTo(StockUpdateEvent, callback)
 
     @inline
     def onUserProfileUpdated(callback: (Event, UserProfile) => Any): Unit = reactTo(UserProfileUpdated, callback)

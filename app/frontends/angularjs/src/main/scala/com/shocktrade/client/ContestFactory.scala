@@ -1,9 +1,7 @@
 package com.shocktrade.client
 
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
-import com.shocktrade.client.models.contest._
-import com.shocktrade.common.models.contest.Portfolio
-import io.scalajs.JSON
+import com.shocktrade.common.models.contest.{Contest, Portfolio}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Factory, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -78,8 +76,32 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         val outcome = buildPortfolioGraph(contestID, userID)
         outcome onComplete {
           case Success(portfolio) => portfolioCache(key) = portfolio
-          case Failure(e: js.JavaScriptException) => console.error(s"findPortfolio: contestID => '$contestID' ${JSON.stringify(e.getMessage)}")
+          case Failure(e) => console.error(s"findPortfolio: contestID => '$contestID' ${e.getMessage}")
             e.printStackTrace()
+        }
+        outcome
+    }
+  }
+
+  /**
+   * Returns the portfolio object graph for the given contest ID and user ID
+   * @param contestID the given contest ID
+   * @param userID    the given user ID
+   * @return the promise of an option of a [[Portfolio portfolio object graph]]
+   */
+  def findOptionalPortfolio(contestID: String, userID: String): Future[Option[Portfolio]] = {
+    console.info(s"Retrieving portfolio graph for contest $contestID, user $userID...")
+    val key = s"$contestID.$userID"
+    portfolioCache.get(key) match {
+      case Some(portfolio) => Future.successful(Option(portfolio))
+      case None =>
+        val outcome = buildPortfolioGraph(contestID, userID).map(p => Option(p)) recover {
+          case _: Throwable => None
+        }
+        outcome onComplete {
+          case Success(Some(portfolio)) => portfolioCache(key) = portfolio
+          case Success(None) =>
+          case Failure(e) => console.error(s"findPortfolio: contestID => '$contestID' ${e.getMessage}")
         }
         outcome
     }

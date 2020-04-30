@@ -4,7 +4,7 @@ package contest
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.ContestAPI
 import com.shocktrade.common.events.RemoteEvent
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchForm, ValidationErrors}
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchOptions, ValidationErrors}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
 import com.shocktrade.webapp.routes
 import com.shocktrade.webapp.routes.account.UserRoutes
@@ -34,7 +34,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   app.put(joinContestURL(":id", ":userID"), (request: Request, response: Response, next: NextFunction) => joinContest(request, response, next))
 
   // collections of contests
-  app.put(contestSearchURL, (request: Request, response: Response, next: NextFunction) => contestSearch(request, response, next))
+  app.get(contestSearchURL(), (request: Request, response: Response, next: NextFunction) => contestSearch(request, response, next))
   app.get(findContestRankingsURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestRankings(request, response, next))
 
   // administrative routes
@@ -45,10 +45,10 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   //////////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Searches for contest via a [[ContestSearchForm contest search form]]
+   * Searches for contest via a [[ContestSearchOptions contest search form]]
    */
   def contestSearch(request: Request, response: Response, next: NextFunction): Unit = {
-    val form = request.bodyAs[ContestSearchForm]
+    val form = request.bodyAs[ContestSearchOptions]
     form.validate match {
       case messages if messages.isEmpty =>
         contestDAO.contestSearch(form) onComplete {
@@ -135,7 +135,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
           // HTTP/200 OK
           case Success(count) =>
             response.send(Ok(count))
-            WebSocketHandler.emit(RemoteEvent.ChatMessagesUpdated, contestID)
+            WebSocketHandler.emit(RemoteEvent(RemoteEvent.ChatMessagesUpdated, contestID))
             next()
           // HTTP/500 ERROR
           case Failure(e) =>

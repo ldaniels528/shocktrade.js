@@ -32,7 +32,10 @@ object UserProfile {
   final implicit class UserProfileEnrichment(val profile: UserProfile) extends AnyVal {
 
     @inline
-    def nextLevelXP: js.UndefOr[Int] = profile.totalXP.map(_ + 1000)
+    def nextLevelXP: js.UndefOr[Int] = for {
+      xp <- profile.totalXP
+      nextLevelXP = (xp / 1000 + 1) * 1000
+    } yield nextLevelXP
 
   }
 

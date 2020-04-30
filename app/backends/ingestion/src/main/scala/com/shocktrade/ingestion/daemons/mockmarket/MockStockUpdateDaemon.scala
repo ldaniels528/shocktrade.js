@@ -1,12 +1,16 @@
 package com.shocktrade.ingestion.daemons
 package mockmarket
 
+import com.shocktrade.common.events.RemoteEvent
+import com.shocktrade.common.models.quote.Ticker
+import com.shocktrade.remote.proxies.RemoteEventProxy
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.{DataAccessObjectHelper, MySQLDAO}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.util.{Failure, Random, Success}
 
@@ -18,6 +22,8 @@ import scala.util.{Failure, Random, Success}
 class MockStockUpdateDaemon(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions) extends MySQLDAO(options) {
   private val logger = LoggerFactory.getLogger(getClass)
   private val random = new Random()
+  private val restProxy = new RemoteEventProxy(host = "localhost", port = 9000)
+  private var lastUpdateTime: Double = 0
   import random.nextDouble
 
   /**
@@ -30,17 +36,45 @@ class MockStockUpdateDaemon(options: MySQLConnectionOptions = DataAccessObjectHe
       stocks <- findStocks
       refreshedStocks = stocks.map(randomize)
       count <- Future.sequence(refreshedStocks.toSeq.map(updateStock)).map(_.sum)
-    } yield count
+    } yield (refreshedStocks, count)
 
     outcome onComplete {
-      case Success(count) =>
+      case Success((refreshedStocks, count)) =>
         val elapsedTime = System.currentTimeMillis() - startTime
         val rate = if (elapsedTime > 0) count / (elapsedTime / 1000.0) else count
         logger.info(f"Processed $count symbols in $elapsedTime msec [$rate%.1f rec/sec]")
+        if (lastUpdateTime == 0 || js.Date.now() - lastUpdateTime >= 5.minutes.toMillis) {
+          transmitUpdates(refreshedStocks.take(75))
+          lastUpdateTime = js.Date.now()
+        }
       case Failure(e) =>
         logger.error("Failed while updating mock stocks...")
         e.printStackTrace()
     }
+  }
+
+  def transmitUpdates(stocks: js.Array[StockData]): Unit = {
+    try {
+      logger.info(s"Transmitting ${stocks.length} stocks to relay...")
+      val startTime = js.Date.now()
+      val outcome = restProxy.relayEvent(RemoteEvent.createStockUpdateEvent(tickers = stocks.map { stock =>
+        import stock._
+        new Ticker(symbol = symbol, exchange = exchange, lastTrade = lastTrade, tradeDateTime = tradeDateTime)
+      }))
+
+      outcome onComplete {
+        case Success(_) =>
+          val elapsedTime = js.Date.now() - startTime
+          logger.info(s"Completed in $elapsedTime msec")
+        case Failure(e) =>
+          val elapsedTime = js.Date.now() - startTime
+          logger.error(s"Failed after $elapsedTime msec: ${e.getMessage}")
+      }
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
+    ()
   }
 
   def randomize(stock: StockData): StockData = {

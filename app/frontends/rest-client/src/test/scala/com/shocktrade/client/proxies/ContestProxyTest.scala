@@ -1,6 +1,6 @@
 package com.shocktrade.client.proxies
 
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchForm}
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchOptions}
 import com.shocktrade.remote.proxies.ContestProxy
 import io.scalajs.JSON
 import org.scalatest.funspec.AsyncFunSpec
@@ -19,7 +19,7 @@ class ContestProxyTest extends AsyncFunSpec {
   describe(classOf[ContestProxy].getSimpleName) {
 
     it("should retrieve contests") {
-      contestProxy.contestSearch(new ContestSearchForm()) map { searchResults =>
+      contestProxy.contestSearch(new ContestSearchOptions()) map { searchResults =>
         info(s"${searchResults.length} contests retrieved")
         assert(searchResults.nonEmpty)
       }

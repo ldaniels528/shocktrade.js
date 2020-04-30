@@ -4,8 +4,8 @@ import com.shocktrade.client.GameState._
 import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope}
 import com.shocktrade.client.users.HomeController.HomeControllerScope
 import com.shocktrade.client.{GlobalLoading, GlobalNavigation, RootScope}
-import com.shocktrade.common.forms.ContestSearchForm
-import com.shocktrade.common.forms.ContestSearchForm.ContestStatus
+import com.shocktrade.common.forms.ContestSearchOptions
+import com.shocktrade.common.forms.ContestSearchOptions.ContestStatus
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
@@ -23,9 +23,9 @@ case class HomeController($scope: HomeControllerScope, $cookies: Cookies, $timeo
                           @injected("UserService") userService: UserService)
   extends Controller with AwardsSupport with GlobalLoading {
 
-  $scope.statuses = ContestSearchForm.contestStatuses
+  $scope.statuses = ContestSearchOptions.contestStatuses
 
-  $scope.myGamesSearchOptions = new ContestSearchForm(
+  $scope.myGamesSearchOptions = new ContestSearchOptions(
     userID = $cookies.getGameState.userID,
     buyIn = js.undefined,
     continuousTrading = false,
@@ -70,7 +70,7 @@ object HomeController {
   @js.native
   trait HomeControllerScope extends RootScope with AwardsSupportScope with GlobalNavigation {
     // variables
-    var myGamesSearchOptions: ContestSearchForm = js.native
+    var myGamesSearchOptions: ContestSearchOptions = js.native
     var statuses: js.Array[ContestStatus] = js.native
     //var userProfile: js.UndefOr[UserProfile] = js.native
 

@@ -64,6 +64,8 @@ class UserService($http: Http) extends Service with UserAPI {
   //              Online Status Functions
   //////////////////////////////////////////////////////////////////////
 
+  def getOnlineStatusUpdates(since: Double): js.Promise[HttpResponse[js.Array[OnlineStatus]]] = $http.get(getOnlineStatusUpdatesURL(since.toString))
+
   def getOnlineStatus(userID: String): js.Promise[HttpResponse[OnlineStatus]] = $http.get(getOnlineStatusURL(userID))
 
   def setIsOnline(userID: String): js.Promise[HttpResponse[js.Any]] = $http.put(setIsOnlineURL(userID))

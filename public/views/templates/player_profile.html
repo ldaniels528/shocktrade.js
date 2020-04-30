@@ -6,6 +6,7 @@
         <div>
             <div class="inline pull-left">
                 <avatar id="{{ player.userID }}" class="avatar-75"></avatar>
+                <img style="vertical-align: top" ng-src="/images/status/{{ isOnline(player.userID) == true ? 'greenlight' : 'offlight' }}.png">
             </div>
             <div class="col-md-5 inline pull-left">
                 <div class="col-md-12 pull-left">

@@ -162,9 +162,9 @@
         <div id="searchResults">
             <span ng-hide="getSearchResultsCount()" class="notice">No matches found</span>
             <table class="results">
-                <tr ng-repeat="quote in getSearchResults() | orderBy: (searchOptions.reverse ? '-' : '') + searchOptions.sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
+                <tr ng-repeat="quote in filteredResults | orderBy: (searchOptions.reverse ? '-' : '') + searchOptions.sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
                     <td class="results">
-                        <a class="links" ng-href="/#!/discover/{{ quote.symbol }}">
+                        <a class="links" ng-click="stockQuotePopup(quote.symbol)"> <!-- ng-href="/#!/discover/{{ quote.symbol }}" -->
                             <i ng-class="getPreferenceIcon(row)"></i>
                             <span ng-class="quote.exchange"
                                 popover="{{ quote.name }}"

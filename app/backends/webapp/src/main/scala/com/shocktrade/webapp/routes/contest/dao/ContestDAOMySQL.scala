@@ -2,8 +2,8 @@ package com.shocktrade.webapp.routes.contest.dao
 
 import java.util.UUID
 
-import com.shocktrade.common.forms.ContestSearchForm._
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchForm}
+import com.shocktrade.common.forms.ContestSearchOptions._
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchOptions}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.MySQLDAO
@@ -67,7 +67,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
       .map { case (rows, _) => rows }
   }
 
-  override def contestSearch(form: ContestSearchForm): Future[js.Array[ContestSearchResult]] = {
+  override def contestSearch(form: ContestSearchOptions): Future[js.Array[ContestSearchResult]] = {
     val sql = makeSearchSQL(form)
     try conn.queryFuture[ContestSearchResult](sql).map(_._1) catch {
       case e: Throwable =>
@@ -76,7 +76,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
     }
   }
 
-  private def makeSearchSQL(form: ContestSearchForm): String = {
+  private def makeSearchSQL(form: ContestSearchOptions): String = {
     var options: List[String] = Nil
 
     // build the search options

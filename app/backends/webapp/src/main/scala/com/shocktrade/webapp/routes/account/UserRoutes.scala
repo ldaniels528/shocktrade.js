@@ -3,6 +3,7 @@ package com.shocktrade.webapp.routes.account
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.UserAPI
 import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
+import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.SignUpForm
 import com.shocktrade.common.models.user.OnlineStatus
 import com.shocktrade.webapp.routes._
@@ -11,15 +12,18 @@ import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Random, Success}
 
 /**
  * User Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class UserRoutes(app: Application)(implicit ec: ExecutionContext, authenticationDAO: AuthenticationDAO, userDAO: UserDAO) extends UserAPI {
+class UserRoutes(app: Application)(implicit ec: ExecutionContext, authenticationDAO: AuthenticationDAO, userDAO: UserDAO)
+  extends UserAPI with RemoteEventSupport {
   private val onlineStatuses = js.Dictionary[OnlineStatus]()
 
   // users API
@@ -45,7 +49,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
 
   // session API
   app.get(getOnlineStatusURL(":userID"), (request: Request, response: Response, next: NextFunction) => getOnlineStatus(request, response, next))
-  app.get(getOnlineStatusesURL, (request: Request, response: Response, next: NextFunction) => getOnlineStatuses(request, response, next))
+  app.get(getOnlineStatusUpdatesURL(":since"), (request: Request, response: Response, next: NextFunction) => getOnlineStatusUpdates(request, response, next))
   app.put(setIsOnlineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOnline(request, response, next))
   app.delete(setIsOfflineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOffline(request, response, next))
 
@@ -218,37 +222,42 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
   }
 
   def logout(request: Request, response: Response, next: NextFunction): Unit = {
-    response.send(Ok(updateCount = 1)); next()
+    response.send(Ok(updateCount = 1));
+    next()
   }
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      Online Status API Methods
   //////////////////////////////////////////////////////////////////////////////////////
 
-  def getOnlineStatuses(request: Request, response: Response, next: NextFunction): Unit = {
-    response.send(onlineStatuses)
+  def getOnlineStatusUpdates(request: Request, response: Response, next: NextFunction): Unit = {
+    val since = request.params("since")
+    val ts = since.toDouble
+    response.send(onlineStatuses.values.filter(_.lastUpdatedTime >= ts).toJSArray)
     next()
   }
 
   def getOnlineStatus(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(userID))
     response.send(status)
     next()
   }
 
   def setIsOnline(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = true))
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(userID))
     status.connected = true
+    wsEmit(RemoteEvent.createUserStatusUpdateEvent(userID, connected = status.connected))
     response.send(status)
     next()
   }
 
   def setIsOffline(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(userID))
     status.connected = false
+    wsEmit(RemoteEvent.createUserStatusUpdateEvent(userID, connected = status.connected))
     response.send(status)
     next()
   }

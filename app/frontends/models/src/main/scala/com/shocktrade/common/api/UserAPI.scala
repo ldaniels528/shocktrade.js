@@ -50,9 +50,9 @@ trait UserAPI extends BaseAPI {
   //              Online Status Functions
   /////////////////////////////////////////////////////////////////////
 
-  def getOnlineStatusURL(userID: String) = s"$baseURL/api/online/$userID"
+  def getOnlineStatusUpdatesURL(since: String) = s"$baseURL/api/online/updates/$since"
 
-  def getOnlineStatusesURL = s"$baseURL/api/online"
+  def getOnlineStatusURL(userID: String) = s"$baseURL/api/online/$userID"
 
   def setIsOnlineURL(userID: String) = s"$baseURL/api/online/$userID"
 

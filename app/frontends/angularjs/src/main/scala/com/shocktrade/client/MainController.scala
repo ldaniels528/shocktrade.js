@@ -5,11 +5,12 @@ import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
-import com.shocktrade.client.users.{SignInDialog, UserService}
+import com.shocktrade.client.users.{OnlineStatusService, SignInDialog, UserService}
+import com.shocktrade.common.SecuritiesHelper._
 import com.shocktrade.common.models.quote.ClassifiedQuote
-import com.shocktrade.common.models.user.{OnlineStatus, UserProfile}
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.JSON
-import io.scalajs.dom.html.browser.console
+import io.scalajs.dom.html.browser.{Window, console}
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
@@ -31,7 +32,9 @@ import scala.util.{Failure, Success}
  * Main Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class MainController($scope: MainControllerScope, $cookies: Cookies, $location: Location, $timeout: Timeout, toaster: Toaster,
+class MainController($scope: MainControllerScope, $cookies: Cookies, $location: Location,
+                     $timeout: Timeout, toaster: Toaster, $window: Window,
+                     @injected("OnlineStatusService") onlineStatusService: OnlineStatusService,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
                      @injected("UserService") userService: UserService)
@@ -39,8 +42,6 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 
   implicit private val scope: MainControllerScope = $scope
   implicit private val cookies: Cookies = $cookies
-
-  private val onlineStatuses = js.Dictionary[OnlineStatus]()
   private var loadingIndex = 0
 
   // public variable
@@ -87,9 +88,9 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 
   $scope.mainInit = () => mainInit()
 
-  $scope.getAssetCode = (q: js.UndefOr[ClassifiedQuote]) => MainController.getAssetCode(q)
+  $scope.getAssetCode = (q: js.UndefOr[ClassifiedQuote]) => getAssetCode(q)
 
-  $scope.getAssetIcon = (q: js.UndefOr[ClassifiedQuote]) => MainController.getAssetIcon(q)
+  $scope.getAssetIcon = (q: js.UndefOr[ClassifiedQuote]) => getAssetIcon(q)
 
   $scope.getExchangeClass = (exchange: js.UndefOr[String]) => s"${normalizeExchange(exchange)} bold"
 
@@ -97,7 +98,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 
   $scope.isAuthenticated = () => $scope.userProfile.flatMap(_.userID).isAssigned
 
-  $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
+  $scope.normalizeExchange = (market: js.UndefOr[String]) => normalizeExchange(market)
 
   private def mainInit(): js.UndefOr[js.Promise[HttpResponse[UserProfile]]] = {
     console.log(s"Initializing ${getClass.getSimpleName}...")
@@ -119,7 +120,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(getOnlineStatus).map(_.connected)
+  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(onlineStatusService.getOnlineStatus).map(_.connected)
 
   $scope.getPreferenceIcon = (q: js.Dynamic) => getPreferenceIcon(q)
 
@@ -150,32 +151,13 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
     }
   }
 
-  private def getOnlineStatus(userID: String): OnlineStatus = {
-    var isTriggered = false
-    val onlineStatus = onlineStatuses.getOrElseUpdate(userID, {
-      isTriggered = true
-      new OnlineStatus(connected = false)
-    })
-
-    // is a service call being triggered?
-    if (isTriggered) {
-      userService.getOnlineStatus(userID) onComplete {
-        case Success(response) => $scope.$apply(() => onlineStatus.connected = response.data.connected)
-        case Failure(e) =>
-          e.printStackTrace()
-      }
-    }
-
-    onlineStatus
-  }
-
   private def logout(): js.Promise[Unit] = {
     $scope.isLoggingOut = true
     val outcome = for {
       _ <- userService.logout()
       _ <- $cookies.getGameState.userID.map(userService.setIsOffline).getOrElse(js.Promise.reject("Missing user ID"))
     } yield {
-      $cookies.getGameState.userID.toOption.flatMap(onlineStatuses.get).foreach(_.connected = false)
+      $cookies.getGameState.userID.foreach(onlineStatusService.setIsOffline)
     }
 
     outcome onComplete { _ =>
@@ -201,9 +183,8 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
     outcome onComplete {
       case Success(userProfile) =>
         $cookies.getGameState.setUser(userProfile.data.userID)
-        $scope.$apply { () =>
-          $scope.userProfile = userProfile.data
-        }
+        $scope.$apply { () => $scope.userProfile = userProfile.data }
+        $window.location.reload()
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -222,7 +203,8 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
     outcome onComplete {
       case Success(userProfile) =>
         $cookies.getGameState.setUser(userProfile.data.userID)
-        $scope.userProfile = userProfile.data
+        $scope.$apply { () => $scope.userProfile = userProfile.data }
+        $window.location.reload()
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -276,43 +258,6 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 object MainController {
   private val DEFAULT_TIMEOUT = 15000
   private val AUTHENTICATED_USER_KEY = "AuthenticatedUser"
-
-  protected[client] def getAssetCode(q: js.UndefOr[ClassifiedQuote]): String = {
-    q.flatMap(_.assetType) map {
-      case "Crypto-Currency" => "&#xf15a" // fa-bitcoin
-      case "Currency" => "&#xf155" // fa-dollar
-      case "ETF" => "&#xf18d" // fa-stack-exchange
-      case _ => "&#xf0ac" // fa-globe
-    } getOrElse ""
-  }
-
-  protected[client] def getAssetIcon(q: js.UndefOr[ClassifiedQuote]): String = {
-    q.flatMap(_.assetType) map {
-      case "Crypto-Currency" => "fa fa-bitcoin st_blue"
-      case "Currency" => "fa fa-dollar st_blue"
-      case "ETF" => "fa fa-stack-exchange st_blue"
-      case _ => "fa fa-globe st_blue"
-    } getOrElse "fa fa-globe st_blue"
-  }
-
-  protected[client] def normalizeExchange(aMarket: js.UndefOr[String]): String = {
-    aMarket.flat map (_.toUpperCase) map {
-      //case s if s.contains("ASE") => s
-      //case s if s.contains("CCY") => s
-      case s if s.contains("NAS") => "NASDAQ"
-      case s if s.contains("NCM") => "NASDAQ"
-      case s if s.contains("NGM") => "NASDAQ"
-      case s if s.contains("NMS") => "NASDAQ"
-      case s if s.contains("NYQ") => "NYSE"
-      case s if s.contains("NYS") => "NYSE"
-      case s if s.contains("OBB") => "OTCBB"
-      case s if s.contains("OTC") => "OTCBB"
-      case s if s.contains("OTHER") => "OTHER_OTC"
-      //case s if s.contains("PCX") => s
-      case s if s.contains("PNK") => "OTCBB"
-      case s => s
-    } getOrElse ""
-  }
 
   /**
    * Main Controller Scope

@@ -83,7 +83,7 @@ object WebServerJsApp {
     })
 
     // disable caching
-    app.disable("etag")
+    //app.disable("etag")
 
     // setup all routes
     setupWebSocket(app)

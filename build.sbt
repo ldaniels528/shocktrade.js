@@ -172,8 +172,8 @@ lazy val onetime = (project in file("./app/backends/onetime"))
     ))
 
 lazy val ingestion = (project in file("./app/backends/ingestion"))
-  .aggregate(models, server_common, services)
-  .dependsOn(models, server_common, services)
+  .aggregate(models, server_common, services, rest_client)
+  .dependsOn(models, server_common, services, rest_client)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(

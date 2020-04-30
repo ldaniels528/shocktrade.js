@@ -23,7 +23,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
       """|UPDATE orders
          |SET closed = 1, processedTime = now(), statusMessage = ?
          |WHERE orderID = ?
-         |AND close = 0
+         |AND closed = 0
          |""".stripMargin,
       js.Array("Canceled", orderID)) map (_.affectedRows)
   }

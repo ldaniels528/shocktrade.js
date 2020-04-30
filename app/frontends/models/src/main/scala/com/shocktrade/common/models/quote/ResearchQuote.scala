@@ -1,32 +1,29 @@
 package com.shocktrade.common.models.quote
 
-import io.scalajs.util.ScalaJsHelper._
-
+import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
  * Represents a Research Quote
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-trait ResearchQuote extends js.Object {
-  var symbol: js.UndefOr[String]
-  var name: js.UndefOr[String]
-  var exchange: js.UndefOr[String]
-  var market: js.UndefOr[String]
-  var lastTrade: js.UndefOr[Double]
-  var open: js.UndefOr[Double]
-  var close: js.UndefOr[Double]
-  var prevClose: js.UndefOr[Double]
-  var high: js.UndefOr[Double]
-  var low: js.UndefOr[Double]
-  var change: js.UndefOr[Double]
-  var changePct: js.UndefOr[Double]
-  var spread: js.UndefOr[Double]
-  var volume: js.UndefOr[Double]
-  var avgVolume10Day: js.UndefOr[Double]
-  var beta: js.UndefOr[Double]
-  var active: js.UndefOr[Boolean]
-}
+class ResearchQuote(val symbol: js.UndefOr[String] = js.undefined,
+                    val name: js.UndefOr[String] = js.undefined,
+                    val exchange: js.UndefOr[String] = js.undefined,
+                    val market: js.UndefOr[String] = js.undefined,
+                    val lastTrade: js.UndefOr[Double] = js.undefined,
+                    val open: js.UndefOr[Double] = js.undefined,
+                    val close: js.UndefOr[Double] = js.undefined,
+                    val prevClose: js.UndefOr[Double] = js.undefined,
+                    val high: js.UndefOr[Double] = js.undefined,
+                    val low: js.UndefOr[Double] = js.undefined,
+                    val change: js.UndefOr[Double] = js.undefined,
+                    val changePct: js.UndefOr[Double] = js.undefined,
+                    val spread: js.UndefOr[Double] = js.undefined,
+                    val volume: js.UndefOr[Double] = js.undefined,
+                    val avgVolume10Day: js.UndefOr[Double] = js.undefined,
+                    val beta: js.UndefOr[Double] = js.undefined,
+                    val active: js.UndefOr[Boolean] = js.undefined) extends js.Object
 
 /**
  * Research Quote Companion
@@ -38,13 +35,45 @@ object ResearchQuote {
     "change", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"
   )
 
-  def apply(): ResearchQuote = New[ResearchQuote]
+  final implicit class ResearchQuoteEnriched(val quote: ResearchQuote) extends AnyVal {
 
-  def apply(symbol: String): ResearchQuote = {
-    val quote = New[ResearchQuote]
-    quote.symbol = symbol
-    quote.active = true
-    quote
+    def copy(symbol: js.UndefOr[String] = js.undefined,
+             name: js.UndefOr[String] = js.undefined,
+             exchange: js.UndefOr[String] = js.undefined,
+             market: js.UndefOr[String] = js.undefined,
+             lastTrade: js.UndefOr[Double] = js.undefined,
+             open: js.UndefOr[Double] = js.undefined,
+             close: js.UndefOr[Double] = js.undefined,
+             prevClose: js.UndefOr[Double] = js.undefined,
+             high: js.UndefOr[Double] = js.undefined,
+             low: js.UndefOr[Double] = js.undefined,
+             change: js.UndefOr[Double] = js.undefined,
+             changePct: js.UndefOr[Double] = js.undefined,
+             spread: js.UndefOr[Double] = js.undefined,
+             volume: js.UndefOr[Double] = js.undefined,
+             avgVolume10Day: js.UndefOr[Double] = js.undefined,
+             beta: js.UndefOr[Double] = js.undefined,
+             active: js.UndefOr[Boolean] = js.undefined): ResearchQuote = {
+      new ResearchQuote(
+        symbol = symbol ?? quote.symbol,
+        name = name ?? quote.name,
+        exchange = exchange ?? quote.exchange,
+        market = market ?? quote.market,
+        lastTrade = lastTrade ?? quote.lastTrade,
+        open = open ?? quote.open,
+        close = close ?? quote.close,
+        prevClose = prevClose ?? quote.prevClose,
+        high = high ?? quote.high,
+        low = low ?? quote.low,
+        change = change ?? quote.change,
+        changePct = changePct ?? quote.changePct,
+        spread = spread ?? quote.spread,
+        volume = volume ?? quote.volume,
+        avgVolume10Day = avgVolume10Day ?? quote.avgVolume10Day,
+        beta = beta ?? quote.beta,
+        active = active ?? quote.active)
+    }
+
   }
 
 }

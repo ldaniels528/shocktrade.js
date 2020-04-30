@@ -47,7 +47,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       _ <- creditFunds(portfolioID, proceeds)
       w <- updatePosition(position, increase = false)
       _ <- completeOrder(orderID, fulfilled = true)
-      _ <- increaseXP(portfolioID, xp = 1)
+      _ <- increaseXP(portfolioID, xp = 10)
     } yield w
   }
 
@@ -57,7 +57,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       _ <- debitFunds(portfolioID, cost)
       w <- updatePosition(position, increase = true)
       _ <- completeOrder(orderID, fulfilled = true)
-      _ <- increaseXP(portfolioID, xp = 1)
+      _ <- increaseXP(portfolioID, xp = 5)
     } yield w
 
     outcome recoverWith {

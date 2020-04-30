@@ -35,16 +35,18 @@ object WebSocketHandler {
     ()
   }
 
-  def emit(action: String, data: String): Immediate = {
+  def emit(remoteEvent: RemoteEvent): Immediate = {
     setImmediate { () =>
-      logger.log(s"Broadcasting action '$action' with data '$data'...")
-      clients.foreach(client => Try(client.send(action, data)) match {
+      //logger.log(s"Broadcasting action '$action' with data '$data'...")
+      clients.foreach(client => Try(client.send(remoteEvent)) match {
         case Success(_) =>
         case Failure(e) =>
           logger.warn(s"Client connection ${client.uid} (${client.ip}) failed")
           clients.indexWhere(_.uid == client.uid) match {
             case -1 => logger.error(s"Client ${client.uid} was not removed")
-            case index => clients.remove(index)
+            case index =>
+              logger.info(s"Dropping client #$index [${client.uid}]...")
+              clients.remove(index)
           }
       })
     }
@@ -57,9 +59,7 @@ object WebSocketHandler {
   class WsClient(val ip: String, val ws: WebSocket) {
     val uid: EventType = UUID.randomUUID().toString
 
-    def send(action: String, data: String): js.Any = ws.send(encode(action, data))
-
-    private def encode(action: String, data: String): String = JSON.stringify(new RemoteEvent(action, data))
+    def send(remoteEvent: RemoteEvent): js.Any = ws.send(JSON.stringify(remoteEvent))
 
   }
 

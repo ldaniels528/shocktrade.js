@@ -1,6 +1,7 @@
 package com.shocktrade.common.forms
 
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 
 /**
  * Research Options
@@ -24,19 +25,14 @@ class ResearchOptions(var changeMax: js.UndefOr[Double] = js.undefined,
  */
 object ResearchOptions {
 
-  final implicit class ResearchOptionsEnriched(val options: ResearchOptions) extends AnyVal {
+  /**
+   * Research Options Validations
+   * @param options the given [[ContestSearchOptions]]
+   */
+  final implicit class ResearchOptionsEnrichment(val options: ResearchOptions) extends AnyVal {
 
     def toQueryString: String = {
-      import options._
-      val values = js.Array(
-        "changeMax" -> changeMax, "changeMin" -> changeMin,
-        "priceMax" -> priceMax, "priceMin" -> priceMin,
-        "spreadMax" -> spreadMax, "spreadMin" -> spreadMin,
-        "volumeMax" -> volumeMax, "volumeMin" -> volumeMin,
-        "sortBy" -> sortBy, "reverse" -> reverse,
-        "maxResults" -> maxResults
-      )
-
+      val values = options.asInstanceOf[js.Dictionary[js.UndefOr[Any]]].toJSArray
       (for ((name, value) <- values if value.nonEmpty) yield s"$name=$value").mkString("&")
     }
   }

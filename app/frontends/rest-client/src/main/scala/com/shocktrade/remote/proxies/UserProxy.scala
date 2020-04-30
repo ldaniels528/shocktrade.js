@@ -91,7 +91,7 @@ class UserProxy(host: String, port: Int)(implicit ec: ExecutionContext) extends 
 
   def getOnlineStatus(userID: String): Future[OnlineStatus] = get(getOnlineStatusURL(userID))
 
-  def getOnlineStatuses: Future[js.Array[OnlineStatus]] = get(getOnlineStatusesURL)
+  def getOnlineStatusUpdates(since: Double): Future[js.Array[OnlineStatus]] = get(getOnlineStatusUpdatesURL(since.toString))
 
   def setIsOnline(userID: String): Future[OnlineStatus] = put(setIsOnlineURL(userID))
 

@@ -2,7 +2,7 @@ package com.shocktrade.remote.proxies
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.ContestAPI
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchForm}
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchOptions}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,7 +20,7 @@ class ContestProxy(host: String, port: Int)(implicit ec: ExecutionContext) exten
   //          Contest Finders
   ///////////////////////////////////////////////////////////////
 
-  def contestSearch(options: ContestSearchForm): Future[js.Array[ContestSearchResult]] = put(contestSearchURL, options)
+  def contestSearch(options: ContestSearchOptions): Future[js.Array[ContestSearchResult]] = get(contestSearchURL(options))
 
   def findContestByID(contestID: String): Future[js.Array[ContestRanking]] = get(findContestByIDURL(contestID))
 

@@ -3,6 +3,7 @@ package com.shocktrade.client
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestEntrySupport, ContestEntrySupportScope}
+import com.shocktrade.client.dialogs.{PlayerProfileDialog, StockQuoteDialog}
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.JSON
@@ -11,6 +12,7 @@ import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
+import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -21,11 +23,14 @@ import scala.util.{Failure, Success}
  * Information Bar Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-case class InformationBarController($scope: InformationBarControllerScope, $cookies: Cookies, $location: Location, $q: Q,
+case class InformationBarController($scope: InformationBarControllerScope, $cookies: Cookies,
+                                    $location: Location, $q: Q, toaster: Toaster,
+                                    @injected("PlayerProfileDialog") playerProfileDialog: PlayerProfileDialog,
                                     @injected("ReactiveSearchService") reactiveSearchSvc: ReactiveSearchService,
+                                    @injected("StockQuoteDialog") stockQuoteDialog: StockQuoteDialog,
                                     @injected("UserService") userService: UserService,
                                     @injected("WebSocketService") webSocket: WebSocketService)
-  extends Controller with ContestEntrySupport {
+  extends Controller with ContestEntrySupport with PlayerProfilePopupSupport with StockQuoteDialogSupport {
 
   implicit private val cookies: Cookies = $cookies
 
@@ -103,11 +108,15 @@ case class InformationBarController($scope: InformationBarControllerScope, $cook
       console.log(s"Handling $entity $label")
       entity match {
         case "SIMULATION" => model._id.foreach(enterGame)
+        case "STOCK" => model._id.foreach(stockQuoteDialog.lookupSymbol)
+        case "USER" => model._id.foreach(playerProfileDialog.popup)
         case _ =>
           console.warn(s"Entity type '$entity' was unhandled")
       }
     }
   }
+
+  def showSymbol(symbol: String): Location = $location.path(s"/discover?symbol=$symbol")
 
 }
 
@@ -116,7 +125,8 @@ case class InformationBarController($scope: InformationBarControllerScope, $cook
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait InformationBarControllerScope extends Scope with ContestEntrySupportScope {
+trait InformationBarControllerScope extends Scope
+  with ContestEntrySupportScope with PlayerProfilePopupSupportScope with StockQuoteDialogSupportScope {
   // functions
   var initInfoBar: js.Function0[js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
   var autoCompleteSearch: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[js.Array[EntitySearchResult]]]] = js.native

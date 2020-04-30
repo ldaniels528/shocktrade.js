@@ -4,15 +4,14 @@ import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameSearchController._
 import com.shocktrade.client.dialogs.{NewGameDialog, PlayerProfileDialog}
-import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, PlayerProfilePopupSupport, PlayerProfilePopupSupportScope, RootScope}
 import com.shocktrade.common.AppConstants
 import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration}
-import com.shocktrade.common.forms.ContestSearchForm.ContestStatus
-import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm}
+import com.shocktrade.common.forms.ContestSearchOptions.ContestStatus
+import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchOptions}
 import com.shocktrade.common.models.contest.ContestSearchResult._
-import com.shocktrade.common.models.contest.{ContestRanking, ContestSearchResult}
+import com.shocktrade.common.models.contest.{Contest, ContestRanking, ContestSearchResult}
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -52,9 +51,9 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   $scope.buyIns = ContestCreationForm.StartingBalances
   $scope.durations = ContestCreationForm.GameDurations
-  $scope.statuses = ContestSearchForm.contestStatuses
+  $scope.statuses = ContestSearchOptions.contestStatuses
 
-  $scope.searchOptions = new ContestSearchForm(
+  $scope.searchOptions = new ContestSearchOptions(
     userID = $cookies.getGameState.userID,
     buyIn = js.undefined,
     continuousTrading = false,
@@ -78,11 +77,11 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   $scope.getSearchResults = (aSearchTerm: js.UndefOr[String]) => getSearchResults(aSearchTerm)
 
-  $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions map contestSearch
+  $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchOptions]) => aSearchOptions map contestSearch
 
   $scope.isActive = (aContest: js.UndefOr[ContestSearchResult]) => aContest.map(_.isActive)
 
-  private def contestSearch(searchOptions: ContestSearchForm): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = {
+  private def contestSearch(searchOptions: ContestSearchOptions): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = {
     searchOptions.userID = $cookies.getGameState.userID
     val outcome = contestService.contestSearch(searchOptions)
     asyncLoading($scope)(outcome) onComplete {
@@ -202,12 +201,12 @@ object GameSearchController {
     var durations: js.Array[GameDuration] = js.native
     var maxPlayers: js.UndefOr[Int] = js.native
     var rankings: js.UndefOr[js.Array[ContestRanking]] = js.native
-    var searchOptions: ContestSearchForm = js.native
+    var searchOptions: ContestSearchOptions = js.native
     var portfolios: js.Array[ContestRanking] = js.native
     var statuses: js.Array[ContestStatus] = js.native
 
     // functions
-    var contestSearch: js.Function1[js.UndefOr[ContestSearchForm], js.UndefOr[js.Promise[HttpResponse[js.Array[ContestSearchResult]]]]] = js.native
+    var contestSearch: js.Function1[js.UndefOr[ContestSearchOptions], js.UndefOr[js.Promise[HttpResponse[js.Array[ContestSearchResult]]]]] = js.native
     var expandContest: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[js.Promise[js.Array[ContestRanking]]]] = js.native
     var getAvailableCount: js.Function0[Int] = js.native
     var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResult]] = js.native

@@ -1,0 +1,121 @@
+<script type="text/ng-template" id="stock_quote_dialog.html">
+    <div class="modal-header st_modal_header">
+        <h4>{{ q.name }} (<span ng-class="q.exchange">{{ q.symbol }}</span>:<span ng-class="q.exchange">{{ q.exchange }}</span>)</h4>
+    </div>
+    <div class="modal-body" ng-init="init()">
+        <div class="row">
+            <div class="col-md-6">
+                <span class="qm_header">Last Sale</span>
+                <i ng-hide="isLoading()" class="fa fa-refresh positive clickable" title="Refresh" ng-click="loadQuote(ticker)"></i>
+                <img ng-show="isLoading()" ng-src="/images/status/loading16.gif">
+                <span class="qm_detail pull-right">{{ q.lastTrade | quoteNumber }}</span>
+            </div>
+            <div class="col-md-6">
+                <span class="qm_header">Change / %</span>
+                <span class="plain pull-right">
+                    <span ng-class="q.change < 0 ? 'negative' : 'positive'">{{ q.changePct || 0.00 | quoteChange }}%</span>
+                    <changearrow value="{{ q.changePct }}"></changearrow>
+                    <span ng-class="q.change < 0 ? 'negative' : ''">{{ q.change | quoteNumber }}</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="qm_header">Updated</span>
+                <span class="plain pull-right">
+                    <span ng-show="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma' }} ET</span>
+                    <span ng-hide="q.tradeDateTime" class="null">N/A</span>
+                </span>
+            </div>
+
+            <div class="col-md-6">
+                <span class="qm_header">Beta</span>
+                <span class="plain pull-right">
+                    <span ng-show="q.beta">{{ q.beta }}</span>
+                    <span ng-hide="q.beta" class="null">Inconclusive</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="qm_header">Prev Close</span>
+                <span class="qm_detail pull-right">{{ q.prevClose | quoteNumber }}</span>
+            </div>
+            <div class="col-md-6">
+                <span class="qm_header">Open</span>
+                <span class="qm_detail pull-right">{{ q.open | quoteNumber }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="qm_header">Avg Vol</span> <span class="small">(10-day)</span>
+                <span class="qm_detail pull-right">{{ q.avgVolume10Day | number }}</span>
+            </div>
+            <div class="col-md-6">
+                <span class="qm_header">Volume</span>
+                <span class="qm_detail pull-right">{{ q.volume | number }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="qm_header">Spread</span>
+                <span class="qm_detail pull-right">
+                    <span ng-show="q.spread">{{ q.spread | number:2 }}%</span>
+                </span>
+            </div>
+            <div class="col-md-6">
+                <span class="qm_header">Market Cap</span>
+                <span class="qm_detail pull-right">{{ q.marketCap | bigNumber }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="qm_header">Day's High</span>
+                <span class="qm_detail pull-right">{{ q.high | quoteNumber }}</span>
+            </div>
+            <div class="col-md-6">
+                <span class="qm_header">Day's Low</span>
+                <span class="qm_detail pull-right">{{ q.low | quoteNumber }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="qm_header">52-Week Low</span>
+                <span class="qm_detail pull-right">
+                    <span ng-show="q.low52Week">{{ q.low52Week | quoteNumber }}</span>
+                </span>
+            </div>
+            <div class="col-md-6">
+                <span class="qm_header">52-Week High</span>
+                <span class="qm_detail pull-right">
+                    <span ng-show="q.high52Week">{{ q.high52Week | quoteNumber }}</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- error messages -->
+        <div class="row">
+            <ul class="error">
+                <li class="error" ng-repeat="message in getMessages()">
+                    <span class="error">{{message}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-left" ng-disabled="isLoading()" ng-click="dismiss(form)">
+                <img ng-show="isLoading()" src="/images/status/loading16.gif"> Dismiss
+            </button>
+            <button class="btn btn-warning pull-right" ng-disabled="isLoading()" ng-click="cancel()">
+                Cancel
+            </button>
+        </div>
+    </div>
+</script>

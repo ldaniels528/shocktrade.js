@@ -3,6 +3,7 @@ package com.shocktrade.client
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.events.RemoteEvent
+import io.scalajs.JSON
 import io.scalajs.dom.html.browser.{console, window}
 import io.scalajs.dom.ws._
 import io.scalajs.npm.angularjs.toaster.Toaster
@@ -11,7 +12,6 @@ import io.scalajs.util.DurationHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.js
-import scala.scalajs.js.JSON
 
 /**
  * WebSocket Service
@@ -26,7 +26,7 @@ class WebSocketService($rootScope: RootScope, $location: Location, $timeout: Tim
   /**
    * Initializes the service
    */
-  def init() {
+  def init(): Unit = {
     console.log("Initializing WebSocket service...")
     if (window.WebSocket.isEmpty) {
       console.log("Using a Mozilla Web Socket")
@@ -66,7 +66,7 @@ class WebSocketService($rootScope: RootScope, $location: Location, $timeout: Tim
   /**
    * Establishes a web socket connection
    */
-  private def connect() {
+  private def connect(): Unit = {
     val endpoint = s"ws://${$location.host()}:${$location.port()}/websocket"
     console.log(s"Connecting to WebSocket endpoint '$endpoint'...")
 
@@ -97,25 +97,23 @@ class WebSocketService($rootScope: RootScope, $location: Location, $timeout: Tim
    * Handles the incoming web socket message event
    * @param event the given web socket message event
    */
-  private def handleMessage(event: MessageEvent) {
+  private def handleMessage(event: MessageEvent): Unit = {
     Option(event.data) match {
       case Some(rawMessage: String) =>
-        console.log(s"rawMessage = '$rawMessage'")
-        val message = JSON.parse(rawMessage).asInstanceOf[RemoteEvent]
+        val message = JSON.parseAs[RemoteEvent](rawMessage)
         val result = for {
           action <- message.action.toOption
           data <- message.data.toOption
         } yield (action, data)
-
         result match {
-          case Some((action, data)) => $rootScope.emit(action, data)
+          case Some((action, data)) =>
+            console.log(s"WSS| action: $action")
+            $rootScope.emit(action, JSON.parse(data))
           case None =>
             console.warn(s"Message does not contain either an 'action' or 'data' property: ${angular.toJson(message)}")
         }
-
       case Some(data) =>
         console.warn(s"Unrecognized event data type: ${angular.toJson(data.asInstanceOf[js.Any])}")
-
       case None =>
         console.warn(s"Unhandled event received: ${angular.toJson(event)}")
     }
@@ -125,12 +123,11 @@ class WebSocketService($rootScope: RootScope, $location: Location, $timeout: Tim
    * Transmits the current "connected" state of the user
    * @param connected the given connection status indicator
    */
-  private def sendState(connected: Boolean) {
+  private def sendState(connected: Boolean): Unit = {
     $rootScope.userProfile.flatMap(_.userID).toOption match {
       case Some(userID) =>
         console.log(s"Sending connected status for user $userID ...")
-        if (connected) userService.setIsOnline(userID)
-        else userService.setIsOffline(userID)
+        if (connected) userService.setIsOnline(userID) else userService.setIsOffline(userID)
       case None =>
         console.log(s"User unknown, waiting 5 seconds ($attemptsLeft attempts remaining)...")
         if (attemptsLeft > 0) {
