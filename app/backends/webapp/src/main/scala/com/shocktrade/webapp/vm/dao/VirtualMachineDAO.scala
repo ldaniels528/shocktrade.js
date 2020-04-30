@@ -13,12 +13,8 @@ import scala.scalajs.js
  */
 trait VirtualMachineDAO {
 
-  def closeContest(contestID: String): Future[js.Dictionary[Double]]
-
-  def increaseXP(portfolioID: String, xp: Int): Future[Int]
-
   //////////////////////////////////////////////////////////////////
-  //    Cash Functions
+  //    Player Functions
   //////////////////////////////////////////////////////////////////
 
   def creditFunds(portfolioID: String, amount: Double): Future[Int]
@@ -29,9 +25,19 @@ trait VirtualMachineDAO {
 
   def debitWallet(portfolioID: String, amount: Double): Future[Int]
 
+  def grantAward(portfolioID: String, awardCode: String): Future[Int]
+
+  def grantXP(portfolioID: String, xp: Int): Future[Int]
+
   //////////////////////////////////////////////////////////////////
   //    Portfolio Functions
   //////////////////////////////////////////////////////////////////
+
+  def closeContest(contestID: String): Future[js.Dictionary[Double]]
+
+  def closePortfolio(portfolioID: String): Future[Double]
+
+  def closePortfolios(contestID: String): Future[js.Dictionary[Double]]
 
   def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String]): Future[Int]
 

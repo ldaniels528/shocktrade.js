@@ -4,14 +4,14 @@ package opcodes
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * Increase XP OpCode
+ * Grant XP OpCode
  * @param portfolioID the given portfolio ID
  * @param xp          the given experience
  */
-case class IncreaseXP(portfolioID: String, xp: Int) extends OpCode {
+case class GrantXP(portfolioID: String, xp: Int) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
-    ctx.increaseXP(portfolioID, xp)
+    ctx.grantXP(portfolioID, xp)
   }
 
   override def toString = s"${getClass.getSimpleName}(portfolioID: $portfolioID, xp: $xp)"

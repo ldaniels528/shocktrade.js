@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.vm.dao
 
-import com.shocktrade.server.common.LoggerFactory
+import com.shocktrade.common.models.Award
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.UserProfileData
 import com.shocktrade.webapp.routes.contest.dao.{PortfolioData, PositionData}
@@ -16,19 +16,28 @@ import scala.scalajs.js
  */
 class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext)
   extends MySQLDAO(options) with VirtualMachineDAO {
-  private val logger = LoggerFactory.getLogger(getClass)
 
   override def closeContest(contestID: String): Future[js.Dictionary[Double]] = {
     for {
-      w <- stopContest(contestID)
-      portfolioIDs <- findPortfolioIDsByContest(contestID)
-      dict <- Future.sequence(portfolioIDs.toSeq.map(p => liquidatePortfolio(p).map(t => p -> t))).map(a => js.Dictionary(a: _*))
+      _ <- stopContest(contestID)
+      dict <- closePortfolios(contestID)
     } yield dict
   }
 
-  private def findPortfolioIDsByContest(contestID: String): Future[js.Array[String]] = {
-    conn.queryFuture[PortfolioData]("SELECT portfolioID FROM portfolios WHERE contestID = ?",
-      js.Array(contestID)).map(_._1.flatMap(_.portfolioID.toOption))
+  override def closePortfolios(contestID: String): Future[js.Dictionary[Double]] = {
+    for {
+      portfolioIDs <- findPortfolioIDsByContest(contestID)
+      summaries <- Future.sequence(portfolioIDs.toList.map { pid =>
+        closePortfolio(pid).map(wealth => pid -> wealth)
+      })
+    } yield js.Dictionary(summaries: _*)
+  }
+
+  override def closePortfolio(portfolioID: String): Future[Double] = {
+    for {
+      v <- liquidatePortfolio(portfolioID)
+      _ <- grantAward(portfolioID, awardCode = Award.CHKDFLAG)
+    } yield v
   }
 
   override def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String] = js.undefined): Future[Int] = {
@@ -41,14 +50,39 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       .map(_.affectedRows) map checkCount(count => s"Order $orderID could not be closed: count = $count")
   }
 
+  private def findPortfolioIDsByContest(contestID: String): Future[js.Array[String]] = {
+    conn.queryFuture[PortfolioData]("SELECT portfolioID FROM portfolios WHERE contestID = ?",
+      js.Array(contestID)).map(_._1.flatMap(_.portfolioID.toOption))
+  }
+
   override def decreasePosition(orderID: String, position: PositionData, proceeds: Double): Future[Int] = {
     val portfolioID = position.portfolioID_!
     for {
       _ <- creditFunds(portfolioID, proceeds)
       w <- updatePosition(position, increase = false)
       _ <- completeOrder(orderID, fulfilled = true)
-      _ <- increaseXP(portfolioID, xp = 10)
+      _ <- grantXP(portfolioID, xp = 10)
     } yield w
+  }
+
+  override def grantAward(portfolioID: String, awardCode: String): Future[Int] = {
+    conn.executeFuture(
+      """|REPLACE INTO user_awards (userAwardID, userID, awardCode)
+         |SELECT uuid(), userID, ?
+         |FROM portfolios
+         |WHERE portfolioID = ?
+         |""".stripMargin,
+      js.Array(awardCode, portfolioID)).map(_.affectedRows)
+  }
+
+  override def grantXP(portfolioID: String, xp: Int): Future[Int] = {
+    conn.executeFuture(
+      """|UPDATE users U
+         |INNER JOIN portfolios P ON P.userID = U.userID
+         |SET U.totalXP = U.totalXP + ?
+         |WHERE P.portfolioID = ?
+         |""".stripMargin, js.Array(xp, portfolioID))
+      .map(_.affectedRows) map checkCount(count => s"Total XP could not be updated: count = $count")
   }
 
   override def increasePosition(orderID: String, position: PositionData, cost: Double): Future[Int] = {
@@ -57,7 +91,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       _ <- debitFunds(portfolioID, cost)
       w <- updatePosition(position, increase = true)
       _ <- completeOrder(orderID, fulfilled = true)
-      _ <- increaseXP(portfolioID, xp = 5)
+      _ <- grantXP(portfolioID, xp = 5)
     } yield w
 
     outcome recoverWith {
@@ -136,16 +170,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       count <- conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ?", js.Array(amount, userID))
         .map(_.affectedRows) map checkCount(_ => f"Portfolio $portfolioID could not be credit wallet with $amount%.2f")
     } yield count
-  }
-
-  override def increaseXP(portfolioID: String, xp: Int): Future[Int] = {
-    conn.executeFuture(
-      """|UPDATE users U
-         |INNER JOIN portfolios P ON P.userID = U.userID
-         |SET U.totalXP = U.totalXP + ?
-         |WHERE P.portfolioID = ?
-         |""".stripMargin, js.Array(xp, portfolioID))
-      .map(_.affectedRows) map checkCount(count => s"Total XP could not be updated: count = $count")
   }
 
   private def stopContest(contestID: String): Future[Int] = {

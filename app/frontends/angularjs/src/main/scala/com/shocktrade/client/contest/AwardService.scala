@@ -1,5 +1,6 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.common.models.Award
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
