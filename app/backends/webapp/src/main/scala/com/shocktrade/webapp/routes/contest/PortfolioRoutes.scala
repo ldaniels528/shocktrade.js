@@ -6,10 +6,12 @@ import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.contest.PortfolioHelper._
 import com.shocktrade.webapp.routes.contest.dao._
-import io.scalajs.nodejs.console
+import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
+import com.shocktrade.webapp.vm.opcodes.{CancelOrder, CreateOrder, PurchasePerks}
+import com.shocktrade.webapp.vm.{VirtualMachine, VirtualMachineSupport}
 import io.scalajs.npm.express.{Application, Request, Response}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -17,14 +19,14 @@ import scala.util.{Failure, Success}
  * Portfolio Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolioDAO: PortfolioDAO) extends PortfolioAPI {
+class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolioDAO: PortfolioDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
+  extends PortfolioAPI with VirtualMachineSupport {
   // individual objects
   app.get(findPortfolioByIDURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => findPortfolioByID(request, response, next))
   app.get(findHeldSecuritiesURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => findHeldSecurities(request, response, next))
   app.get(findChartURL(":id", ":userID", ":chart"), (request: Request, response: Response, next: NextFunction) => findChart(request, response, next))
 
   // perks
-  app.get(findAvailablePerksURL, (request: Request, response: Response, next: NextFunction) => findAvailablePerks(request, response, next))
   app.get(findPurchasedPerksURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => findPurchasedPerks(request, response, next))
   app.post(purchasePerksURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
 
@@ -32,9 +34,8 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   app.get(findPositionsURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => findPositions(request, response, next))
 
   // orders
-  app.delete(cancelOrderURL(":portfolioID", ":orderID"), (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
+  app.delete(cancelOrderURL(":orderID"), (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
   app.get(findOrdersURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
-  app.post(createOrderByIDURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => createOrderByID(request, response, next))
   app.post(createOrderURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
 
   // portfolios
@@ -53,29 +54,19 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     form.validate match {
       case messages if messages.nonEmpty => response.badRequest(messages); next()
       case _ =>
-        portfolioDAO.createOrder(contestID, userID, order = form.toOrder) onComplete {
-          case Success(count) => response.send(Ok(count)); next()
-          case Failure(e) => response.showException(e).internalServerError(e); next()
-        }
-    }
-  }
+        val outcome = for {
+          portfolioID <- portfolioDAO.findPortfolioIdByUser(contestID, userID) flatMap { portfolioID_? =>
+            val result = for {portfolioID <- portfolioID_?} yield portfolioID
+            result match {
+              case Some(portfolioID) => Future.successful(portfolioID)
+              case None => Future.failed(js.JavaScriptException(s"Portfolio for user $userID, contest $contestID"))
+            }
+          }
+          count <- vm.invoke(new CreateOrder(portfolioID, form.toOrder))
+        } yield count
 
-  /**
-   * Creates a new order within a portfolio by portfolio ID
-   */
-  def createOrderByID(request: Request, response: Response, next: NextFunction): Unit = {
-    val portfolioID = request.params("portfolioID")
-    val form = request.bodyAs[NewOrderForm]
-    form.validate match {
-      case messages if messages.nonEmpty => response.badRequest(messages); next()
-      case _ =>
-        val order = form.toOrder
-        portfolioDAO.createOrder(portfolioID, order) onComplete {
-          case Success(count) if count == 1 => response.send(Ok(count)); next()
-          case Success(count) =>
-            console.error(s"failed result = $count")
-            response.notFound(s"Order for portfolio # $portfolioID")
-            next()
+        outcome onComplete {
+          case Success(_) => response.send(Ok(1)); next()
           case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
@@ -105,12 +96,8 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
    */
   def cancelOrder(request: Request, response: Response, next: NextFunction): Unit = {
     val orderID = request.params("orderID")
-    portfolioDAO.cancelOrder(orderID) onComplete {
-      case Success(count) if count == 1 => response.send(Ok(count)); next()
-      case Success(count) =>
-        console.error(s"update result = $count")
-        response.notFound(request.params)
-        next()
+    vm.invoke(new CancelOrder(orderID)) onComplete {
+      case Success(result) => response.send(Ok(1)); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
@@ -145,16 +132,6 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   }
 
   /**
-   * Retrieves available perks
-   */
-  def findAvailablePerks(request: Request, response: Response, next: NextFunction): Unit = {
-    portfolioDAO.findAvailablePerks onComplete {
-      case Success(perks) => response.send(perks); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  /**
    * Retrieves the purchased perks by portfolio ID
    */
   def findPurchasedPerks(request: Request, response: Response, next: NextFunction): Unit = {
@@ -170,16 +147,9 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
    */
   def purchasePerks(request: Request, response: Response, next: NextFunction): Unit = {
     val portfolioID = request.params("portfolioID")
-    val purchasePerkCodes = request.bodyAs[js.Array[String]]
-    val outcome = for {
-      perks <- portfolioDAO.findAvailablePerks
-      perkMapping = js.Dictionary(perks.map(p => p.code.orNull -> p): _*)
-      perksCost = (purchasePerkCodes flatMap perkMapping.get).flatMap(_.cost.toOption).sum
-      count <- portfolioDAO.purchasePerks(portfolioID, purchasePerkCodes, perksCost) if count >= 1
-    } yield count
-
-    outcome onComplete {
-      case Success(updated) => response.send(new Ok(updated)); next()
+    val perkCodes = request.bodyAs[js.Array[String]]
+    vm.invoke(new PurchasePerks(portfolioID, perkCodes)) onComplete {
+      case Success(_) => response.send(new Ok(1)); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

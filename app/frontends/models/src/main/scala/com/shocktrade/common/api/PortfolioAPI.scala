@@ -28,11 +28,9 @@ trait PortfolioAPI extends BaseAPI {
   //          Positions & Orders
   ///////////////////////////////////////////////////////////////
 
-  def cancelOrderURL(portfolioId: String, orderId: String) = s"$baseURL/api/portfolio/$portfolioId/order/$orderId"
+  def cancelOrderURL(orderID: String) = s"$baseURL/api/order/$orderID"
 
   def createOrderURL(contestID: String, userID: String) = s"$baseURL/api/order/$contestID/user/$userID"
-
-  def createOrderByIDURL(portfolioID: String) = s"$baseURL/api/order/$portfolioID"
 
   def findHeldSecuritiesURL(portfolioID: String): String = s"$baseURL/api/portfolio/$portfolioID/heldSecurities"
 
@@ -45,8 +43,6 @@ trait PortfolioAPI extends BaseAPI {
   ///////////////////////////////////////////////////////////////
   //          Perks
   ///////////////////////////////////////////////////////////////
-
-  def findAvailablePerksURL = s"$baseURL/api/contests/perks"
 
   def findPurchasedPerksURL(portfolioID: String) = s"$baseURL/api/portfolio/$portfolioID/perks"
 

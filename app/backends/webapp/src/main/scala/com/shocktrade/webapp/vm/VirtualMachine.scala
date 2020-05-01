@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.vm
 
-import com.shocktrade.server.common.LoggerFactory
-import com.shocktrade.webapp.vm.VirtualMachine.VmProcess
+import com.shocktrade.webapp.vm.VirtualMachine.{OpCodeCallback, VmProcess}
 import com.shocktrade.webapp.vm.opcodes.OpCode
 import io.scalajs.nodejs.setImmediate
 
@@ -15,7 +14,6 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class VirtualMachine() {
-  private val logger = LoggerFactory.getLogger(getClass)
   private val pipeline = js.Array[OpCode]()
 
   /**
@@ -64,6 +62,17 @@ class VirtualMachine() {
   /**
    * Executes the next queued opCode from the pipeline
    * @param ctx the implicit [[VirtualMachineContext]]
+   * @return the option of an invocation result
+   */
+  def invoke(opCode: OpCode)(implicit ctx: VirtualMachineContext): Future[Any] = {
+    val promise = Promise[Any]()
+    pipeline.push(OpCodeCallback(opCode, promise))
+    promise.future
+  }
+
+  /**
+   * Executes the next queued opCode from the pipeline
+   * @param ctx the implicit [[VirtualMachineContext]]
    * @param ec  the implicit [[ExecutionContext]]
    * @return the option of an invocation result
    */
@@ -94,6 +103,19 @@ class VirtualMachine() {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object VirtualMachine {
+
+  case class OpCodeCallback(opCode: OpCode, promise: Promise[Any]) extends OpCode {
+    override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Any] = {
+      val outcome = opCode.invoke()
+      outcome onComplete {
+        case Success(value) => promise.success(value)
+        case Failure(e) => promise.failure(e)
+      }
+      outcome
+    }
+
+    override def toString: String = s"promised(${opCode.toString})"
+  }
 
   case class VmProcess(code: OpCode, result: js.UndefOr[Any], runTime: FiniteDuration) {
     override def toString: String = s"${getClass.getSimpleName}(code: $code, result: ${result.orNull}, $runTime)"

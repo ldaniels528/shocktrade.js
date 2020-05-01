@@ -11,7 +11,6 @@ import io.scalajs.npm.expressws.WebSocket
 
 import scala.scalajs.js
 import scala.scalajs.js.JSON
-import scala.util.{Failure, Success, Try}
 
 /**
  * WebSocket Handler
@@ -37,18 +36,18 @@ object WebSocketHandler {
 
   def emit(remoteEvent: RemoteEvent): Immediate = {
     setImmediate { () =>
-      //logger.log(s"Broadcasting action '$action' with data '$data'...")
-      clients.foreach(client => Try(client.send(remoteEvent)) match {
-        case Success(_) =>
-        case Failure(e) =>
-          logger.warn(s"Client connection ${client.uid} (${client.ip}) failed")
-          clients.indexWhere(_.uid == client.uid) match {
-            case -1 => logger.error(s"Client ${client.uid} was not removed")
-            case index =>
-              logger.info(s"Dropping client #$index [${client.uid}]...")
-              clients.remove(index)
-          }
-      })
+      clients.foreach { client =>
+        try client.send(remoteEvent) catch {
+          case e: Throwable =>
+            logger.warn(s"Client connection ${client.uid} (${client.ip}) failed")
+            clients.indexWhere(_.uid == client.uid) match {
+              case -1 => logger.error(s"Client ${client.uid} was not removed")
+              case index =>
+                logger.info(s"Dropping client #$index [${client.uid}]...")
+                clients.remove(index)
+            }
+        }
+      }
     }
   }
 

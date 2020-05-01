@@ -18,12 +18,6 @@ trait PortfolioDAO {
   //  Order Management
   ///////////////////////////////////////////////////////////////////////
 
-  def cancelOrder(orderID: String): Future[Int]
-
-  def createOrder(portfolioID: String, order: OrderData): Future[Int]
-
-  def createOrder(contestID: String, userID: String, order: OrderData): Future[Int]
-
   def findOrders(contestID: String, userID: String): Future[js.Array[OrderData]]
 
   ///////////////////////////////////////////////////////////////////////
@@ -31,20 +25,10 @@ trait PortfolioDAO {
   ///////////////////////////////////////////////////////////////////////
 
   /**
-   * Retrieves the collection of available perks
-   * @return the collection of available [[PerkData perks]]
+   * Retrieves the collection of purchased perks
+   * @return the collection of purchased [[PerkData perks]]
    */
-  def findAvailablePerks: Future[js.Array[PerkData]]
-
-  /**
-   * Retrieves the collection of perks
-   * @return the collection of available [[PerkData perks]]
-   */
-  def findPerks: Future[js.Array[PerkData]]
-
-  def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]] = ???
-
-  def purchasePerks(portfolioID: String, purchasePerkCodes: Seq[String], perksCost: Double): Future[Int] = ???
+  def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]]
 
   ///////////////////////////////////////////////////////////////////////
   //  Portfolio Management
@@ -55,6 +39,8 @@ trait PortfolioDAO {
   def findPortfolioByID(portfolioID: String): Future[Option[PortfolioData]]
 
   def findPortfolioByUser(contestID: String, userID: String): Future[Option[PortfolioData]]
+
+  def findPortfolioIdByUser(contestID: String, userID: String): Future[Option[String]]
 
   def findPortfoliosByContest(contestID: String): Future[js.Array[PortfolioData]]
 

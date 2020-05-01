@@ -12,4 +12,5 @@ class PortfolioData(val portfolioID: js.UndefOr[String] = UUID.randomUUID().toSt
                     val contestID: js.UndefOr[String] = js.undefined,
                     val userID: js.UndefOr[String] = js.undefined,
                     val funds: js.UndefOr[Double] = js.undefined,
-                    val joinTime: js.UndefOr[js.Date] = js.undefined) extends js.Object
+                    val joinTime: js.UndefOr[js.Date] = js.undefined,
+                    val closedTime: js.UndefOr[js.Date] = js.undefined) extends js.Object

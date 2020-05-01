@@ -53,6 +53,9 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     with PlayerProfilePopupSupport
     with USMarketsStatusSupport {
 
+  // refresh the dashboard every minute
+  $interval(() => initDash(), 5.minute)
+
   $scope.maxPlayers = AppConstants.MaxPlayers
 
   private val _userID = $cookies.getGameState.userID
@@ -68,7 +71,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   // select the first tab
   portfolioTabs.zipWithIndex foreach { case (tab, index) => tab.active = index == 0 }
 
-  $scope.getPortfolioTabs = () => portfolioTabs//.filter(tab => !tab.isAuthRequired || $scope.isParticipant())
+  $scope.getPortfolioTabs = () => portfolioTabs.filter(tab => !tab.isAuthRequired || !$scope.contest.toOption.flatMap(_.status.toOption).contains("CLOSED"))
 
   $scope.isParticipant = () => _userID.flatMap(isParticipant)
 

@@ -5,14 +5,14 @@ import com.shocktrade.webapp.vm.VirtualMachineContext
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * Credit Funds OpCode
+ * Debit Portfolio OpCode
  * @param portfolioID the given portfolio ID
- * @param amount      the given amount
+ * @param amount      the given amount to debit
  */
-class CreditFunds(portfolioID: String, amount: Double) extends OpCode {
+class DebitPortfolio(portfolioID: String, amount: Double) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
-    ctx.creditFunds(portfolioID, amount)
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Double] = {
+    ctx.debitPortfolio(portfolioID, amount)
   }
 
   override def toString = s"${getClass.getSimpleName}(portfolioID: $portfolioID, amount: $amount)"

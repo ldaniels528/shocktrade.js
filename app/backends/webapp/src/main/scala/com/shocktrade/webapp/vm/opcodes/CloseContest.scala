@@ -17,4 +17,6 @@ case class CloseContest(contestID: String) extends OpCode {
     }
   }
 
+  override def toString: String = s"${getClass.getSimpleName}(contestID: $contestID)"
+
 }

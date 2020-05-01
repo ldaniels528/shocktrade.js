@@ -14,10 +14,8 @@
             <div class="col-md-4">
                 <select class="form-control" ng-model="form.priceType">
                     <option value="">Pricing Method?</option>
-                    <option value="MARKET">Market ($9.99)</option>
-                    <option value="MARKET_ON_CLOSE">Market On Close ($14.99)</option>
-                    <option value="LIMIT">Limit ($19.99)</option>
-                    <option value="STOP_LIMIT">Stop Limit ($9.99)</option>
+                    <option value="MARKET">Market</option>
+                    <option value="LIMIT">Limit</option>
                 </select>
             </div>
             <div class="col-md-4">
@@ -154,10 +152,10 @@
     </div>
     <div class="modal-footer st_modal_footer">
         <div class="col-md-12">
-            <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="placeOrder(form)">
-                <img ng-show="processing" src="/images/status/loading16.gif"> Place Order
+            <button class="btn btn-primary pull-left" ng-disabled="isCreatingOrder" ng-click="placeOrder(form)">
+                <img ng-show="isCreatingOrder" src="/images/status/loading16.gif"> Place Order
             </button>
-            <button class="btn btn-warning pull-right" ng-disabled="processing" ng-click="cancel()">
+            <button class="btn btn-warning pull-right" ng-disabled="isCreatingOrder" ng-click="cancel()">
                 Cancel
             </button>
         </div>

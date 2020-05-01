@@ -61,11 +61,9 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
   //          Positions & Orders
   ///////////////////////////////////////////////////////////////
 
-  def cancelOrder(portfolioID: String, orderID: String): Future[Portfolio] = delete(cancelOrderURL(portfolioID, orderID))
+  def cancelOrder(orderID: String): Future[Portfolio] = delete(cancelOrderURL(orderID))
 
   def createOrder(contestID: String, userID: String, order: NewOrderForm): Future[Ok] = post(createOrderURL(contestID, userID), data = order)
-
-  def createOrderByID(portfolioID: String, order: NewOrderForm): Future[Ok] = post(createOrderByIDURL(portfolioID), data = order)
 
   def findHeldSecurities(portfolioID: String): Future[js.Array[String]] = get(findHeldSecuritiesURL(portfolioID))
 
@@ -76,12 +74,6 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
   ///////////////////////////////////////////////////////////////
   //          Perks
   ///////////////////////////////////////////////////////////////
-
-  /**
-   * Retrieves the promise of a sequence of available perks
-   * @return the promise of a sequence of available [[Perk perk]]s
-   */
-  def findAvailablePerks: Future[js.Array[Perk]] = get(findAvailablePerksURL)
 
   /**
    * Retrieves the promise of an option of a perks response

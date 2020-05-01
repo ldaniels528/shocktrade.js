@@ -14,9 +14,11 @@ import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -36,9 +38,9 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
   private val marketOrderTypes = js.Array("MARKET", "MARKET_ON_CLOSE")
 
   $scope.showOpenOrders = true
-  $scope.showClosedOrders = false
+  $scope.showClosedOrders = true
   $scope.selectedOrder = js.undefined
-  $scope.activeOrders = js.undefined
+  $scope.orders = js.undefined
 
   /////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -63,7 +65,7 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
       case Success((userProfile, orders)) =>
         $scope.$apply { () =>
           $scope.userProfile = userProfile.data
-          $scope.activeOrders = orders.data
+          $scope.orders = orders.data
         }
       case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
     }
@@ -74,19 +76,14 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
   //          Active Order Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.cancelOrder = (aPortfolioId: js.UndefOr[String], anOrderId: js.UndefOr[String]) => {
-    for {
-      portfolioID <- aPortfolioId
-      orderID <- anOrderId
-    } yield cancelOrder(portfolioID, orderID)
-  }
+  $scope.cancelOrder = (anOrderID: js.UndefOr[String]) => anOrderID map cancelOrder
 
   $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
 
-  $scope.getActiveOrders = () => ($scope.showOpenOrders.isTrue, $scope.showClosedOrders.isTrue) match {
-    case (true, true) => $scope.activeOrders
-    case (true, false) => $scope.activeOrders.map(_.filter(_.closed.isTrue))
-    case (false, true) => $scope.activeOrders.map(_.filterNot(_.closed.isTrue))
+  $scope.getOrders = () => ($scope.showOpenOrders.isTrue, $scope.showClosedOrders.isTrue) match {
+    case (true, true) => $scope.orders
+    case (true, false) => $scope.orders.map(_.filter(_.closed.contains(0)))
+    case (false, true) => $scope.orders.map(_.filter(_.closed.contains(1)))
     case (false, false) => js.Array[Order]()
   }
 
@@ -94,19 +91,23 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
     anOrder.exists(order => order.priceType.exists(marketOrderTypes.contains))
   }
 
-  $scope.isOrderSelected = () => $scope.getActiveOrders().nonEmpty && $scope.selectedOrder.nonEmpty
+  $scope.isOrderSelected = () => $scope.getOrders().nonEmpty && $scope.selectedOrder.nonEmpty
 
   $scope.selectOrder = (order: js.UndefOr[Order]) => $scope.selectedOrder = order
 
   $scope.toggleSelectedOrder = () => $scope.selectedOrder = js.undefined
 
-  private def cancelOrder(portfolioID: String, orderID: String): js.Promise[HttpResponse[Portfolio]] = {
-    val outcome = portfolioService.cancelOrder(portfolioID, orderID)
-    asyncLoading($scope)(outcome) onComplete {
-      case Success(portfolio) => $scope.$apply { () => }
+  private def cancelOrder(orderID: String): js.Promise[HttpResponse[Portfolio]] = {
+    $scope.isCancelingOrder = true
+    val outcome = portfolioService.cancelOrder(orderID)
+    outcome onComplete {
+      case Success(_) =>
       case Failure(err) =>
         toaster.error("Failed to cancel order")
         console.error(s"Failed to cancel order: ${err.displayMessage}")
+    }
+    outcome onComplete { _ =>
+      $timeout(() => $scope.isCancelingOrder = false, 500.millis)
     }
     outcome
   }
@@ -128,15 +129,16 @@ object OrdersController {
     // functions
     var initOrders: js.Function0[js.UndefOr[js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Order]])]]] = js.native
     var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native
-    var cancelOrder: js.Function2[js.UndefOr[String], js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Portfolio]]]] = js.native
-    var getActiveOrders: js.Function0[js.UndefOr[js.Array[Order]]] = js.native
+    var cancelOrder: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Portfolio]]]] = js.native
+    var getOrders: js.Function0[js.UndefOr[js.Array[Order]]] = js.native
     var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean] = js.native
     var isOrderSelected: js.Function0[Boolean] = js.native
     var selectOrder: js.Function1[js.UndefOr[Order], Unit] = js.native
     var toggleSelectedOrder: js.Function0[Unit] = js.native
 
     // variables
-    var activeOrders: js.UndefOr[js.Array[Order]] = js.native
+    var orders: js.UndefOr[js.Array[Order]] = js.native
+    var isCancelingOrder: js.UndefOr[Boolean] = js.native
     var selectedOrder: js.UndefOr[Order] = js.native
     var showClosedOrders: js.UndefOr[Boolean] = js.native
     var showOpenOrders: js.UndefOr[Boolean] = js.native

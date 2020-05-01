@@ -104,7 +104,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
    */
   def findContestRankings(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("id")
-    contestDAO.findRankings(contestID).map(rankings => ContestRanking.computeRankings(rankings.toSeq)) onComplete {
+    contestDAO.findRankings(contestID).map(ContestRanking.computeRankings(_)) onComplete {
       case Success(rankings) => response.setContentType("application/json"); response.send(rankings.toJSArray); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }

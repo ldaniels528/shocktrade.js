@@ -3,6 +3,7 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameSearchController._
+import com.shocktrade.client.dialogs.NewGameDialogController.NewGameDialogResult
 import com.shocktrade.client.dialogs.{NewGameDialog, PlayerProfileDialog}
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, PlayerProfilePopupSupport, PlayerProfilePopupSupportScope, RootScope}
@@ -160,20 +161,21 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   $scope.popupNewGameDialog = (aUserID: js.UndefOr[String]) => aUserID.map(popupNewGameDialog)
 
-  private def popupNewGameDialog(userID: String): js.Promise[HttpResponse[UserProfile]] = {
-    val outcome = for {
-      _ <- newGameDialog.popup(userID)
+  private def popupNewGameDialog(userID: String): js.Promise[(NewGameDialogResult, UserProfile)] = {
+    val outcome = (for {
+      newGame <- newGameDialog.popup(userID)
       userProfile <- userService.findUserByID(userID)
-    } yield userProfile
+    } yield (newGame, userProfile.data)).toJSPromise
 
     outcome onComplete {
-      case Success(userProfile) =>
-        $scope.emitUserProfileUpdated(userProfile.data)
+      case Success((newGame, userProfile)) =>
+        $scope.emitUserProfileUpdated(userProfile)
+        enterGame(newGame.contestID.orNull)
       case Failure(e) =>
         toaster.error("Failed to create game")
         console.error(s"Failed to create game: ${e.displayMessage}")
     }
-    outcome.toJSPromise
+    outcome
   }
 
 }
@@ -211,7 +213,7 @@ object GameSearchController {
     var getAvailableCount: js.Function0[Int] = js.native
     var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResult]] = js.native
     var isActive: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[Boolean]] = js.native
-    var popupNewGameDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
+    var popupNewGameDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[(NewGameDialogResult, UserProfile)]]] = js.native
 
   }
 

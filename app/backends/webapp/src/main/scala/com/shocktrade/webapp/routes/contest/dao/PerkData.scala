@@ -3,11 +3,10 @@ package com.shocktrade.webapp.routes.contest.dao
 import scala.scalajs.js
 
 /**
- * Represents the Perk Data model
+ * Represents the Perk data
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PerkData(val _id: js.UndefOr[String] = js.undefined,
-               val name: js.UndefOr[String] = js.undefined,
-               val code: js.UndefOr[String] = js.undefined,
-               val description: js.UndefOr[String] = js.undefined,
-               val cost: js.UndefOr[Double] = js.undefined) extends js.Object
+class PerkData(val perkID: js.UndefOr[String] = js.undefined,
+               val portfolioID: js.UndefOr[String] = js.undefined,
+               val perkCode: js.UndefOr[String] = js.undefined,
+               val purchasedTime: js.UndefOr[js.Date] = js.undefined) extends js.Object

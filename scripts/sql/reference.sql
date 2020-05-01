@@ -54,32 +54,3 @@ INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'CBNC New
 INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'MarketWatch: Real-time Headlines', 'http://feeds.marketwatch.com/marketwatch/realtimeheadlines/', 4);
 INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'MarketWatch: Stocks to Watch', 'http://feeds.marketwatch.com/marketwatch/StockstoWatch/', 5);
 INSERT INTO rss_feeds (rssFeedID, name, url, priority) VALUES (uuid(), 'NASDAQ Stocks News', 'http://articlefeeds.nasdaq.com/nasdaq/categories?category=Stocks', 6);
-
--- ------------------------------------------------------------
--- Perks
--- ------------------------------------------------------------
-
-DROP TABLE IF EXISTS perks;
-CREATE TABLE perks (
-    perkID INTEGER AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(40) NOT NULL,
-    code VARCHAR(20) NOT NULL,
-    cost DECIMAL(9,2) NOT NULL,
-    description TEXT NOT NULL,
-    enabled TINYINT(1) NOT NULL DEFAULT 1
-);
-
-CREATE UNIQUE INDEX perk_xp_code ON perks (code);
-CREATE UNIQUE INDEX perk_xp_name ON perks (name);
-
-INSERT INTO perks (name, code, cost, description)
-VALUES
-    ("Purchase Eminent", "PRCHEMNT", 500, "Gives the player the ability to create SELL orders for securities not yet owned"),
-    ("Perfect Timing", "PRFCTIMG", 500, "Gives the player the ability to create BUY orders for more than cash currently available"),
-    ("Compounded Daily", "CMPDDALY", 1000, "Gives the player the ability to earn interest on cash not currently invested"),
-    ("Fee Waiver", "FEEWAIVR", 2500, "Reduces the commissions the player pays for buying or selling securities"),
-    ("Rational People think at the Margin", "MARGIN", 2500, "Gives the player the ability to use margin accounts"),
-    ("Savings and Loans", "SAVGLOAN", 5000, "Gives the player the ability to borrow money"),
-    ("Loan Shark", "LOANSHRK", 5000, "Gives the player the ability to loan other players money at any interest rate"),
-    ("The Feeling's Mutual", "MUTFUNDS", 5000, "Gives the player the ability to create and use mutual funds"),
-    ("Risk Management",  "RISKMGMT", 5000, "Gives the player the ability to trade options");

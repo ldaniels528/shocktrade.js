@@ -17,7 +17,7 @@ class Order(var orderID: js.UndefOr[String],
             var expirationTime: js.UndefOr[js.Date],
             var processedTime: js.UndefOr[js.Date],
             var message: js.UndefOr[String],
-            var closed: js.UndefOr[Boolean]) extends OrderLike {
+            var closed: js.UndefOr[Int]) extends OrderLike {
 
   // UI-specific fields
   var lastTrade: js.UndefOr[Double] = js.undefined

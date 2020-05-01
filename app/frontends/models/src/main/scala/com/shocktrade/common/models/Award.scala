@@ -103,17 +103,17 @@ object Award {
       name = "Pay Dirt!",
       code = PAYDIRT,
       icon = "/images/awards/pay_dirt.png",
-      description = "Your portfolio gained 100% or more"),
+      description = "Your portfolio gained 25% or more"),
     new Award(
       name = "Mad Money!",
       code = MADMONEY,
       icon = "/images/awards/made_money.png",
-      description = "Your portfolio gained 250% or more"),
+      description = "Your portfolio gained 50% or more"),
     new Award(
       name = "Crystal Ball",
       code = CRYSTBAL,
       icon = "/images/awards/crystal_ball.png",
-      description = "Your portfolio gained 500% or more"),
+      description = "Your portfolio gained 100% or more"),
     new Award(
       name = "Checkered Flag",
       code = CHKDFLAG,

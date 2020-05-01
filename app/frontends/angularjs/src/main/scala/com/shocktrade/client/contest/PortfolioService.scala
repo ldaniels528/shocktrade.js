@@ -55,12 +55,6 @@ class PortfolioService($http: Http) extends Service with PortfolioAPI {
   /////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Retrieves the promise of a sequence of available perks
-   * @return the promise of a sequence of available [[Perk perk]]s
-   */
-  def findAvailablePerks: js.Promise[HttpResponse[js.Array[Perk]]] = $http.get(findAvailablePerksURL)
-
-  /**
    * Retrieves the promise of an option of a perks response
    * @param portfolioID the given portfolio ID
    * @return the promise of an option of a [[PerksResponse perks response]]
@@ -83,9 +77,7 @@ class PortfolioService($http: Http) extends Service with PortfolioAPI {
   //			Positions & Orders
   /////////////////////////////////////////////////////////////////////////////
 
-  def cancelOrder(portfolioID: String, orderID: String): js.Promise[HttpResponse[Portfolio]] = {
-    $http.delete(cancelOrderURL(portfolioID, orderID))
-  }
+  def cancelOrder(orderID: String): js.Promise[HttpResponse[Portfolio]] = $http.delete(cancelOrderURL(orderID))
 
   def createOrder(contestID: String, userID: String, order: NewOrderForm): js.Promise[HttpResponse[Ok]] = {
     $http.post(createOrderURL(contestID, userID), data = order)

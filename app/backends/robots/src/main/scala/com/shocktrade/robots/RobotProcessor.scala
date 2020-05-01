@@ -11,7 +11,6 @@ import com.shocktrade.server.common.LoggerFactory
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.reflectiveCalls
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
@@ -35,9 +34,15 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
   }
 
   def run(robotName: String): Unit = {
-    start(robotName) onComplete {
-      case Success(results) => //logger.info(JSON.stringify(results))
-      case Failure(e) =>
+    try {
+      start(robotName) onComplete {
+        case Success(results) => //logger.info(JSON.stringify(results))
+        case Failure(e) =>
+          logger.error(e.getMessage)
+          e.printStackTrace()
+      }
+    } catch {
+      case e: Throwable =>
         logger.error(e.getMessage)
         e.printStackTrace()
     }
@@ -48,7 +53,11 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
       daisy <- userProxy.findUserByName(robotName)
       portfolios <- portfolioProxy.findPortfoliosByUser(daisy.userID_!)
       stocks <- findSecurities(robotName)
-      orders = portfolios.map(p => new RobotReport(p.contestID, p.userID, p.portfolioID, produceOrders(p, stocks, costTarget = p.funds.map(_ / stocks.length).orZero)))
+      orders = portfolios collect {
+        case portfolio if portfolio.closedTime.flat.isEmpty =>
+          import portfolio._
+          new RobotReport(contestID, userID, portfolioID, produceOrders(portfolio, stocks, costTarget = funds.map(_ / stocks.length).orZero))
+      }
     } yield orders
   }
 
@@ -56,6 +65,7 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
     val options = robotName match {
       case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = 10)
       case "gadget" => new ResearchOptions(priceMax = 0.50, changeMax = 0.0, spreadMin = 30.0, volumeMin = 1e+6, maxResults = 10)
+      case "teddy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 35.0, volumeMin = 1e+6, maxResults = 10)
       case _ => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 10.0, volumeMin = 1e+6, maxResults = 10)
     }
     researchProxy.research(options)

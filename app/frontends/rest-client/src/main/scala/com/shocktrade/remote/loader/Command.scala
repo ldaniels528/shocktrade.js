@@ -25,7 +25,7 @@ class Command(val name: String, val args: List[String], val lineNumber: Int, val
   def invoke()(implicit c: ContestProxy, p: PortfolioProxy, u: UserProxy, scope: Scope): Future[js.Any] = {
     name match {
       // REST API functions
-      case "cancelOrder" => args.twoIds map p.cancelOrder
+      case "cancelOrder" => p.cancelOrder(args.oneId)
       case "contestSearch" => c.contestSearch(args.oneJSON)
       case "createNewGame" => c.createNewGame(args.oneJSON)
       case "createOrder" => args.twoIdsAndJSON map p.createOrder

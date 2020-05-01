@@ -18,36 +18,6 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
   //  Order Management
   ///////////////////////////////////////////////////////////////////////
 
-  override def cancelOrder(orderID: String): Future[Int] = {
-    conn.executeFuture(
-      """|UPDATE orders
-         |SET closed = 1, processedTime = now(), statusMessage = ?
-         |WHERE orderID = ?
-         |AND closed = 0
-         |""".stripMargin,
-      js.Array("Canceled", orderID)) map (_.affectedRows)
-  }
-
-  override def createOrder(portfolioID: String, order: OrderData): Future[Int] = {
-    import order._
-    conn.executeFuture(
-      """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
-         |VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?)
-         |""".stripMargin,
-      js.Array(portfolioID, symbol, exchange, orderType, priceType, price, quantity)) map (_.affectedRows)
-  }
-
-  override def createOrder(contestID: String, userID: String, order: OrderData): Future[Int] = {
-    import order._
-    conn.executeFuture(
-      """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
-         |SELECT uuid(), portfolioID, ?, ?, ?, ?, ?, ?
-         |FROM portfolios
-         |WHERE contestID = ? AND userID = ?
-         |""".stripMargin,
-      js.Array(symbol, exchange, orderType, priceType, price, quantity, contestID, userID)) map (_.affectedRows)
-  }
-
   override def findOrders(contestID: String, userID: String): Future[js.Array[OrderData]] = {
     conn.queryFuture[OrderData](
       """|SELECT O.*, S.lastTrade
@@ -56,23 +26,15 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |LEFT  JOIN stocks S ON S.symbol = O.symbol
          |WHERE P.contestID = ? AND P.userID = ?
          |""".stripMargin,
-      js.Array(contestID, userID)) map { case (rows, _) => rows }
+      js.Array(contestID, userID)).map(_._1)
   }
 
   ///////////////////////////////////////////////////////////////////////
   //  Perk Management
   ///////////////////////////////////////////////////////////////////////
 
-  /**
-   * Retrieves the collection of available perks
-   * @return the collection of available [[PerkData perks]]
-   */
-  override def findAvailablePerks: Future[js.Array[PerkData]] = {
-    conn.queryFuture[PerkData]("SELECT * FROM perks WHERE enabled = 1") map { case (rows, _) => rows }
-  }
-
-  override def findPerks: Future[js.Array[PerkData]] = {
-    conn.queryFuture[PerkData]("SELECT * FROM perks") map { case (rows, _) => rows }
+  override def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]] = {
+    conn.queryFuture[PerkData]("SELECT * FROM perks WHERE portfolioID = ?", js.Array(portfolioID)).map(_._1)
   }
 
   ///////////////////////////////////////////////////////////////////////
@@ -82,7 +44,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
   override def findPortfolioBalance(contestID: String, userID: String): Future[Option[PortfolioBalance]] = {
     conn.queryFuture[PortfolioBalance](
       """|SELECT
-         |  C.contestID, C.name, U.userID, U.username, U.wallet, P.funds, IFNULL(MAX(SP.tradeDateTime), NOW()) AS asOfDate, SUM(SP.lastTrade * PS.quantity) equity,
+         |  C.contestID, C.name, U.userID, U.username, U.wallet, P.funds,
+         |  IFNULL(MAX(SP.tradeDateTime), NOW()) AS asOfDate,
+         |  SUM(SP.lastTrade * PS.quantity) equity,
          |  SUM(CASE WHEN O.orderType = 'BUY' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalBuyOrders,
          |  SUM(CASE WHEN O.orderType = 'SELL' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalSellOrders
          |FROM users U
@@ -90,12 +54,12 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |INNER JOIN contests C ON C.contestID = P.contestID
          |LEFT JOIN orders O ON O.portfolioID = P.portfolioID
          |LEFT JOIN stocks SO ON SO.symbol = O.symbol
-         |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+         |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID AND PS.quantity > 0
          |LEFT JOIN stocks SP ON SP.symbol = PS.symbol
-         |WHERE C.contestID = ? AND U.userID = ? AND PS.quantity > 0
+         |WHERE C.contestID = ? AND U.userID = ?
          |GROUP BY C.contestID, C.name, U.userID, U.username, U.wallet, P.funds
          |""".stripMargin,
-      js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
+      js.Array(contestID, userID)).map(_._1.headOption)
   }
 
   override def findPortfolioByID(portfolioID: String): Future[Option[PortfolioData]] = {
@@ -104,14 +68,21 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |FROM portfolios
          |WHERE portfolioID = ?
          |""".stripMargin,
-      js.Array(portfolioID)) map { case (rows, _) => rows.headOption }
+      js.Array(portfolioID)).map(_._1.headOption)
   }
 
   override def findPortfolioByUser(contestID: String, userID: String): Future[Option[PortfolioData]] = {
     conn.queryFuture[PortfolioData](
       """|SELECT * FROM portfolios WHERE contestID = ? AND userID = ?
          |""".stripMargin,
-      js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
+      js.Array(contestID, userID)).map(_._1.headOption)
+  }
+
+  override def findPortfolioIdByUser(contestID: String, userID: String): Future[Option[String]] = {
+    conn.queryFuture[PortfolioData](
+      """|SELECT portfolioID FROM portfolios WHERE contestID = ? AND userID = ?
+         |""".stripMargin,
+      js.Array(contestID, userID)) map { case (rows, _) => rows.headOption.flatMap(_.portfolioID.toOption) }
   }
 
   override def findPortfoliosByContest(contestID: String): Future[js.Array[PortfolioData]] = {
@@ -120,7 +91,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |FROM portfolios
          |WHERE contestID = ?
          |""".stripMargin,
-      js.Array(contestID)) map { case (rows, _) => rows }
+      js.Array(contestID)).map(_._1)
   }
 
   override def findPortfoliosByUser(userID: String): Future[js.Array[PortfolioData]] = {
@@ -129,7 +100,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |FROM portfolios
          |WHERE userID = ?
          |""".stripMargin,
-      js.Array(userID)) map { case (rows, _) => rows }
+      js.Array(userID)).map(_._1)
   }
 
   ///////////////////////////////////////////////////////////////////////
@@ -149,15 +120,15 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
 
   private def findContestChart(contestID: String): Future[js.Array[ChartData]] = {
     conn.queryFuture[ChartData](
-      s"""|SELECT U.username AS name, P.funds + SUM(IFNULL(s.lastTrade,0) * IFNULL(PS.quantity,0)) AS value
+      s"""|SELECT U.username AS name, SUM(P.funds) + SUM(IFNULL(s.lastTrade,0) * IFNULL(PS.quantity,0)) AS value
           |FROM contests C
           |LEFT JOIN portfolios P ON P.contestID = C.contestID
           |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
           |LEFT JOIN stocks S ON S.symbol = PS.symbol
           |LEFT JOIN users U ON U.userID = P.userID
-          |WHERE C.contestID = ? AND PS.quantity > 0
-          |GROUP BY U.username, P.funds
-          |""".stripMargin, js.Array(contestID)).map { case (rows, _) => rows }
+          |WHERE C.contestID = ?
+          |GROUP BY U.username
+          |""".stripMargin, js.Array(contestID)).map(_._1)
   }
 
   private def findExposureChartData(contestID: String, userID: String, column: String): Future[js.Array[ChartData]] = {
@@ -168,7 +139,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
           |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
           |INNER JOIN stocks S ON S.symbol = PS.symbol
           |INNER JOIN contests C ON C.contestID = P.contestID
-          |WHERE C.contestID = ? AND U.userID = ?
+          |WHERE C.contestID = ? AND U.userID = ? AND PS.quantity > 0
           |GROUP BY $column
           |     UNION
           |SELECT 'Cash' AS name, P.funds AS value
@@ -176,20 +147,19 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
           |INNER JOIN portfolios P ON P.userID = U.userID
           |INNER JOIN contests C ON C.contestID = P.contestID
           |WHERE C.contestID = ? AND U.userID = ?
-          |AND PS.quantity > 0
-          |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map { case (rows, _) => rows }
+          |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map(_._1)
   }
 
   override def findHeldSecurities(portfolioID: String): Future[js.Array[Ticker]] = {
     conn.queryFuture[Ticker](
       """|SELECT S.symbol, S.exchange, S.lastTrade, S.tradeDateTime
          |FROM portfolios P
-         |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
-         |INNER JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+         |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+         |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
          |WHERE P.portfolioID = ?
          |AND PS.quantity > 0
          |""".stripMargin,
-      js.Array(portfolioID)) map { case (rows, _) => rows }
+      js.Array(portfolioID)).map(_._1)
   }
 
   override def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]] = {
@@ -207,7 +177,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |WHERE P.contestID = ?
          |AND P.userID = ?
          |AND PS.quantity > 0
-         |""".stripMargin, js.Array(contestID, userID)) map { case (rows, _) => rows }
+         |""".stripMargin, js.Array(contestID, userID)).map(_._1)
   }
 
 }

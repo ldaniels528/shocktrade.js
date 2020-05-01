@@ -82,8 +82,16 @@ object RobotsJsApp {
     implicit val robotProcessor: RobotProcessor = new RobotProcessor()
 
     // setup intermittent processing
-    setTimeout(() => robotProcessor.run(robotName = "gadget"), 1.milli)
-    setInterval(() => robotProcessor.run(robotName = "gadget"), 1.hour)
+    robotDAO.findRobots map { robots =>
+      logger.info(s"Setting up ${robots.size} robots...")
+      for {
+        robot <- robots
+        robotName <- robot.username.toList
+      } {
+        setTimeout(() => robotProcessor.run(robotName), 1.milli)
+        setInterval(() => robotProcessor.run(robotName), 5.minutes)
+      }
+    }
 
     // setup the robot routes
     new RobotRoutes(app)

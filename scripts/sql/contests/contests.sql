@@ -51,6 +51,20 @@ CREATE TABLE messages (
 );
 
 -- ------------------------------------------------------------
+-- Perks
+-- ------------------------------------------------------------
+
+DROP TABLE IF EXISTS perks;
+CREATE TABLE perks (
+    perkID VARCHAR(36) NOT NULL PRIMARY KEY,
+    portfolioID VARCHAR(36) NOT NULL,
+    perkCode VARCHAR(20) NOT NULL,
+    purchasedTime DATETIME NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX perk_xp_code ON perks (portfolioID, perkCode);
+
+-- ------------------------------------------------------------
 -- Portfolio tables
 -- ------------------------------------------------------------
 
@@ -60,7 +74,8 @@ CREATE TABLE portfolios (
      userID CHAR(36) NOT NULL,
      contestID CHAR(36) NOT NULL,
      funds DECIMAL(12,5) NOT NULL,
-     joinTime DATETIME NOT NULL DEFAULT now()
+     joinTime DATETIME NOT NULL DEFAULT now(),
+     closedTime DATETIME NULL
 );
 CREATE UNIQUE INDEX portfolios_xpk ON portfolios (contestID, userID);
 

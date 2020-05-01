@@ -7,7 +7,6 @@ import com.shocktrade.client.contest.PerksController.PerksControllerScope
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.forms.PerksResponse
 import com.shocktrade.common.models.contest.{Perk, Portfolio}
-import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
@@ -20,7 +19,6 @@ import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -32,7 +30,9 @@ case class PerksController($scope: PerksControllerScope, $routeParams: Dashboard
                            @injected("PortfolioService") portfolioService: PortfolioService,
                            @injected("UserService") userService: UserService) extends Controller {
 
+  $scope.availablePerks = Perk.availablePerks
   $scope.myPerkCodes = emptyArray[String]
+
   private var perkMapping = js.Dictionary[Perk]()
 
   ///////////////////////////////////////////////////////////////////////////
@@ -47,24 +47,16 @@ case class PerksController($scope: PerksControllerScope, $routeParams: Dashboard
     } yield initPerks(contestID, userID)
   }
 
-  private def initPerks(contestID: String, userID: String): js.Promise[(HttpResponse[js.Array[Perk]], HttpResponse[Portfolio])] = {
+  private def initPerks(contestID: String, userID: String): js.Promise[HttpResponse[Portfolio]] = {
     console.info(s"Loading portfolio for contest $contestID user $userID...")
-    val outcome = for {
-      portfolio <- portfolioService.findPortfolioByUser(contestID, userID)
-      perks <- portfolioService.findAvailablePerks
-    } yield (perks, portfolio)
-
+    val outcome = portfolioService.findPortfolioByUser(contestID, userID)
     outcome onComplete {
-      case Success((perks, portfolio)) =>
-        console.info(s"perks => ${JSON.stringify(perks)}")
-        $scope.$apply { () =>
-          $scope.availablePerks = perks.data
-          $scope.portfolio = portfolio.data
-        }
+      case Success(portfolio) =>
+        $scope.$apply { () => $scope.portfolio = portfolio.data }
       case Failure(e) =>
         toaster.error(e.displayMessage)
     }
-    outcome.toJSPromise
+    outcome
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -81,29 +73,24 @@ case class PerksController($scope: PerksControllerScope, $routeParams: Dashboard
 
   $scope.loadPerks = () => $scope.portfolio.flatMap(_.portfolioID) map loadPerks
 
-  private def loadPerks(portfolioID: String): js.Promise[(js.Array[Perk], PerksResponse)] = {
+  private def loadPerks(portfolioID: String): js.Promise[HttpResponse[PerksResponse]] = {
     // load the player's perks
-    val outcome = for {
-      thePerks <- portfolioService.findAvailablePerks.map(_.data)
-      perksResponse <- portfolioService.findPurchasedPerks(portfolioID).map(_.data)
-    } yield (thePerks, perksResponse)
-
+    val outcome = portfolioService.findPurchasedPerks(portfolioID)
     outcome onComplete {
-      case Success((thePerks, perksResponse)) =>
+      case Success(perksResponse) =>
         // create a mapping from the available perks
-        $scope.availablePerks = thePerks
-        this.perkMapping = js.Dictionary(thePerks.map(p => p.code -> p): _*)
+        this.perkMapping = js.Dictionary(Perk.availablePerks.map(p => p.code -> p): _*)
 
         // capture the owned perk codes
         //$scope.fundsAvailable = perksResponse.fundsAvailable
-        $scope.myPerkCodes = perksResponse.perkCodes
+        $scope.myPerkCodes = perksResponse.data.perkCodes
 
         $scope.$apply(() => setupPerks())
       case Failure(e) =>
         toaster.error("Error loading perks from the portfolio")
         console.error(s"Error loading player perks: ${e.displayMessage}")
     }
-    outcome.toJSPromise
+    outcome
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -136,13 +123,12 @@ object PerksController {
     var portfolio: js.UndefOr[Portfolio] = js.native
 
     // functions
-    var initPerks: js.Function0[js.UndefOr[js.Promise[(HttpResponse[js.Array[Perk]], HttpResponse[Portfolio])]]] = js.native
+    var initPerks: js.Function0[js.UndefOr[js.Promise[HttpResponse[Portfolio]]]] = js.native
     var countOwnedPerks: js.Function0[Int] = js.native
     var isPerksSelected: js.Function0[Boolean] = js.native
     var getPerkNameClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
     var getPerkDescClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
-    var loadPerks: js.Function0[js.UndefOr[js.Promise[(js.Array[Perk], PerksResponse)]]] = js.native
-
+    var loadPerks: js.Function0[js.UndefOr[js.Promise[HttpResponse[PerksResponse]]]] = js.native
   }
 
 }

@@ -58,14 +58,9 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
   extends AutoCompletionController($scope, $q, quoteService) {
 
   private val messages = emptyArray[String]
-  private var processing = false
 
-  $scope.form = new NewOrderForm(
-    symbol = params.symbol,
-    quantity = params.quantity,
-    emailNotify = true
-  )
-
+  $scope.isCreatingOrder = false
+  $scope.form = new NewOrderForm(symbol = params.symbol, quantity = params.quantity, emailNotify = true)
   $scope.quote = $scope.form.symbol.map(symbol => OrderQuote(symbol = symbol)).getOrElse(OrderQuote())
 
   ///////////////////////////////////////////////////////////////////////////
@@ -99,14 +94,12 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
 
   $scope.getMessages = () => messages
 
-  $scope.isProcessing = () => processing
-
   $scope.placeOrder = (aForm: js.UndefOr[NewOrderForm]) => {
     messages.removeAll()
     val inputs = (for {form <- aForm} yield (form, params.contestID, params.userID)).toOption
     inputs match {
       case Some((form, contestID, userID)) =>
-        processing = true
+        $scope.isCreatingOrder = true
         val outcome = for {
           messages <- validate(form)
           portfolio <- portfolioService.createOrder(contestID, userID, $scope.form)
@@ -114,13 +107,13 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
 
         outcome onComplete {
           case Success((_, portfolio)) =>
-            $timeout(() => processing = false, 0.5.seconds)
+            $timeout(() => $scope.isCreatingOrder = false, 0.5.seconds)
             $uibModalInstance.close(portfolio.data)
           case Success((errors, _)) =>
-            $timeout(() => processing = false, 0.5.seconds)
+            $timeout(() => $scope.isCreatingOrder = false, 0.5.seconds)
             messages.push(errors: _*)
           case Failure(e) =>
-            $timeout(() => processing = false, 0.5.seconds)
+            $timeout(() => $scope.isCreatingOrder = false, 0.5.seconds)
             messages.push(s"The order could not be processed")
             console.error(s"order processing error: userID = $userID, contestID = $contestID, form = ${angular.toJson(form)}")
             e.printStackTrace()
@@ -226,6 +219,7 @@ object NewOrderDialogController {
 trait NewOrderScope extends AutoCompletionControllerScope {
   // variables
   var form: NewOrderForm = js.native
+  var isCreatingOrder: js.UndefOr[Boolean] = js.native
   var portfolio: js.UndefOr[Portfolio] = js.native
   var quote: OrderQuote = js.native
   var ticker: js.Any = js.native
@@ -235,7 +229,6 @@ trait NewOrderScope extends AutoCompletionControllerScope {
   var init: js.Function0[js.UndefOr[js.Promise[HttpResponse[PerksResponse]]]] = js.native
   var cancel: js.Function0[Unit] = js.native
   var getMessages: js.Function0[js.Array[String]] = js.native
-  var isProcessing: js.Function0[Boolean] = js.native
   var placeOrder: js.Function1[js.UndefOr[NewOrderForm], Unit] = js.native
   var onSelectedItem: js.Function3[js.UndefOr[AutoCompleteQuote], js.UndefOr[AutoCompleteQuote], js.UndefOr[String], Unit] = js.native
   var orderQuote: js.Function1[js.Dynamic, Unit] = js.native

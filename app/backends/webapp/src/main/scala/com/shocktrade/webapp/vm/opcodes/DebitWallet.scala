@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
  */
 class DebitWallet(portfolioID: String, amount: Double) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Double] = {
     ctx.debitWallet(portfolioID, amount)
   }
 

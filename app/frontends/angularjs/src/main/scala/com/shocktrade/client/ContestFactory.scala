@@ -3,10 +3,12 @@ package com.shocktrade.client
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.common.models.contest.{Contest, Portfolio}
 import io.scalajs.dom.html.browser.console
-import io.scalajs.npm.angularjs.{Factory, injected}
+import io.scalajs.npm.angularjs.{Factory, Interval, injected}
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
@@ -15,10 +17,13 @@ import scala.util.{Failure, Success}
  * Contest Graph Factory
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestFactory(@injected("ContestService") contestService: ContestService,
+class ContestFactory($interval: Interval,
+                     @injected("ContestService") contestService: ContestService,
                      @injected("PortfolioService") portfolioService: PortfolioService) extends Factory {
   private val contestCache: js.Dictionary[Contest] = js.Dictionary()
   private val portfolioCache: js.Dictionary[Portfolio] = js.Dictionary()
+
+  $interval(() => clear(), 30.seconds)
 
   /**
    * Clears the contest and portfolio caches
@@ -161,7 +166,8 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         balance = balance.data,
         perks = portfolio.data.perks,
         orders = orders.data,
-        positions = positions.data)
+        positions = positions.data,
+        closedTime = portfolio.data.closedTime)
     }
   }
 

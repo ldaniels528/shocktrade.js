@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.vm.dao
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
-import com.shocktrade.webapp.routes.contest.dao.PositionData
+import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -17,21 +17,25 @@ trait VirtualMachineDAO {
   //    Player Functions
   //////////////////////////////////////////////////////////////////
 
-  def creditFunds(portfolioID: String, amount: Double): Future[Int]
+  def creditPortfolio(portfolioID: String, amount: Double): Future[Double]
 
-  def debitFunds(portfolioID: String, amount: Double): Future[Int]
+  def debitPortfolio(portfolioID: String, amount: Double): Future[Double]
 
-  def creditWallet(portfolioID: String, amount: Double): Future[Int]
+  def creditWallet(portfolioID: String, amount: Double): Future[Double]
 
-  def debitWallet(portfolioID: String, amount: Double): Future[Int]
+  def debitWallet(portfolioID: String, amount: Double): Future[Double]
 
-  def grantAward(portfolioID: String, awardCode: String): Future[Int]
+  def grantAwards(portfolioID: String, awardCode: js.Array[String]): Future[Int]
 
   def grantXP(portfolioID: String, xp: Int): Future[Int]
+
+  def purchasePerks(portfolioID: String, purchasePerkCodes: js.Array[String]): Future[Int]
 
   //////////////////////////////////////////////////////////////////
   //    Portfolio Functions
   //////////////////////////////////////////////////////////////////
+
+  def cancelOrder(orderID: String): Future[Int]
 
   def closeContest(contestID: String): Future[js.Dictionary[Double]]
 
@@ -40,6 +44,8 @@ trait VirtualMachineDAO {
   def closePortfolios(contestID: String): Future[js.Dictionary[Double]]
 
   def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String]): Future[Int]
+
+  def createOrder(portfolioID: String, order: OrderData): Future[Int]
 
   def decreasePosition(orderID: String, position: PositionData, proceeds: Double): Future[Int]
 

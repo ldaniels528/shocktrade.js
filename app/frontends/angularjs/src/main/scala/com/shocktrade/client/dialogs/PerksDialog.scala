@@ -2,11 +2,12 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.PerksDialogController._
-import com.shocktrade.client.users.UserService
+import com.shocktrade.common.forms.PerksResponse
 import com.shocktrade.common.models.contest.{Perk, Portfolio}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.util.JsUnderOrHelper._
@@ -42,9 +43,7 @@ class PerksDialog($uibModal: Modal) extends Service {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalInstance[PerksDialogResult], toaster: Toaster,
-                            @injected("PerksDialog") perksDialog: PerksDialog,
                             @injected("PortfolioService") portfolioService: PortfolioService,
-                            @injected("UserService") userService: UserService,
                             @injected("contestID") contestID: () => String,
                             @injected("userID") userID: () => String)
   extends Controller {
@@ -52,7 +51,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
   private var myPerkCodes = emptyArray[String]
   private var perkMapping = js.Dictionary[Perk]()
 
-  $scope.availablePerks = emptyArray[Perk]
+  $scope.availablePerks = Perk.availablePerks
   $scope.errors = emptyArray[String]
   $scope.fundsAvailable = js.undefined
 
@@ -62,15 +61,9 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
 
   $scope.init = () => {
     console.info(s"Loading portfolio for contest ${contestID()} user ${userID()}...")
-    val outcome = for {
-      portfolio <- portfolioService.findPortfolioByUser(contestID(), userID())
-      perks <- portfolioService.findAvailablePerks
-    } yield (perks, portfolio)
-
-    outcome onComplete {
-      case Success((perks, portfolio)) =>
+    portfolioService.findPortfolioByUser(contestID(), userID()) onComplete {
+      case Success(portfolio) =>
         $scope.$apply { () =>
-          $scope.availablePerks = perks.data
           $scope.portfolio = portfolio.data
           $scope.fundsAvailable = portfolio.data.funds
         }
@@ -107,20 +100,17 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
     if (perk.selected.isTrue || $scope.fundsAvailable.exists(_ >= perk.cost)) "" else "null"
   }
 
-  $scope.loadPerks = () => {
+  $scope.loadPerks = () => loadPerks
+
+  private def loadPerks: js.Promise[HttpResponse[PerksResponse]] = {
     // load the player's perks
     $scope.portfolio.flatMap(_.portfolioID).toOption match {
       case Some(portfolioId) =>
-        val outcome = for {
-          thePerks <- portfolioService.findAvailablePerks
-          perksResponse <- portfolioService.findPurchasedPerks(portfolioId)
-        } yield (thePerks, perksResponse)
-
+        val outcome = portfolioService.findPurchasedPerks(portfolioId)
         outcome onComplete {
-          case Success((thePerks, perksResponse)) =>
+          case Success(perksResponse) =>
             // create a mapping from the available perks
-            $scope.availablePerks = thePerks.data
-            this.perkMapping = js.Dictionary(thePerks.data.map(p => p.code -> p): _*)
+            this.perkMapping = js.Dictionary(Perk.availablePerks.map(p => p.code -> p): _*)
 
             // capture the owned perk codes
             //$scope.fundsAvailable = perksResponse.fundsAvailable
@@ -131,9 +121,11 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
             toaster.error("Error loading perks from the portfolio")
             console.error(s"Error loading player perks: ${e.displayMessage}")
         }
+        outcome
 
       case None =>
         toaster.error("Portfolio is not loaded")
+        js.Promise.reject("Portfolio is not loaded")
     }
   }
 
@@ -204,7 +196,7 @@ object PerksDialogController {
     var getPerkCostClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
     var getPerkNameClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
     var getPerkDescClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
-    var loadPerks: js.Function0[Unit] = js.native
+    var loadPerks: js.Function0[js.Promise[HttpResponse[PerksResponse]]] = js.native
     var purchasePerks: js.Function0[Unit] = js.native
 
   }

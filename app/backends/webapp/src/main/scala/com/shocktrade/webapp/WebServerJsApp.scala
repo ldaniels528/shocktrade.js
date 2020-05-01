@@ -87,25 +87,8 @@ object WebServerJsApp {
 
     // setup all routes
     setupWebSocket(app)
-    setupVirtualMachine(app)
     setupRoutes(app)
     app
-  }
-
-  /**
-   * Setup the Virtual Machine routes
-   * @param app  the given [[Application]]
-   */
-  private def setupVirtualMachine(app: Application with WsRouting): Unit = {
-    logger.info("Setting up Virtual Machine routes...")
-    implicit val cqmDAO: QualificationDAO = QualificationDAO()
-    implicit val vmDAO: VirtualMachineDAO = VirtualMachineDAO()
-    implicit val cqm: ContestQualificationModule = new ContestQualificationModule()
-    implicit val vm: VirtualMachine = new VirtualMachine()
-
-    // setup the CQM routes
-    new VirtualMachineRoutes(app)
-    ()
   }
 
   /**
@@ -115,21 +98,28 @@ object WebServerJsApp {
   private def setupRoutes(app: Application with WsRouting): Unit = {
     import routes.dao._
 
+    logger.info("Setting up Virtual Machine routes...")
+    implicit val cqmDAO: QualificationDAO = QualificationDAO()
+    implicit val vmDAO: VirtualMachineDAO = VirtualMachineDAO()
+    implicit val cqm: ContestQualificationModule = new ContestQualificationModule()
+    implicit val vm: VirtualMachine = new VirtualMachine()
+
     // setup all other routes
     logger.info("Setting up all other routes...")
     new ContestRoutes(app)
     new ExploreRoutes(app)
     new GlobalSearchRoutes(app)
-    new RSSFeedRoutes(app)
     new PortfolioRoutes(app)
     new PostAttachmentRoutes(app)
     new PostRoutes(app)
     new QuoteRoutes(app)
     new RemoteEventRoutes(app)
     new ResearchRoutes(app)
+    new RSSFeedRoutes(app)
     new SocialRoutes(app)
     new TradingClockRoutes(app)
     new UserRoutes(app)
+    new VirtualMachineRoutes(app)
     ()
   }
 

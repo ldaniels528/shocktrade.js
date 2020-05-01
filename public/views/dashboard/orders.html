@@ -11,11 +11,11 @@
         </span>
     </div>
     <div class="col-md-12">
-        <div class="col-md-3 bold left">Symbol</div>
-        <div class="col-md-2 bold left" ng-hide="isOrderSelected()">Type</div>
+        <div class="col-md-2 bold left">Symbol</div>
+        <div class="col-md-2 bold left" ng-hide="isOrderSelected()">Terms</div>
         <div class="col-md-2 bold right" ng-hide="isOrderSelected()">Your Price</div>
-        <div class="col-md-2 bold right" ng-hide="isOrderSelected()">Market Price</div>
-        <div class="col-md-3 bold right" ng-hide="isOrderSelected()">Shares</div>
+        <div class="col-md-2 bold right" ng-hide="isOrderSelected()">Shares</div>
+        <div class="col-md-4 bold left" ng-hide="isOrderSelected()">Status</div>
 
         <div class="col-md-7 bold" ng-show="isOrderSelected()">
             <span ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.companyName }}</span>
@@ -29,33 +29,39 @@
     </div>
 
     <div class="ordersContainer">
-        <div class="col-md-offset-1 col-md-11" ng-show="getActiveOrders().length === 0">
+        <div class="col-md-offset-1 col-md-11" ng-show="getOrders().length === 0">
             <i class="fa fa-warning warning"></i>
             <span class="warning">No orders found</span>
         </div>
 
         <!-- Data Rows -->
         <div ng-class="{'col-md-12':(!isOrderSelected()), 'col-md-3':(isOrderSelected())}">
-            <div class="col-md-12 clickable" ng-repeat="o in getActiveOrders() track by $index"
+            <div class="col-md-12 clickable" ng-repeat="o in getOrders() track by $index"
                  ng-class-even="'contest_even'"
                  ng-class-odd="'contest_odd'"
                  ng-class="selectedOrder.orderID === o.orderID ? 'selected' : ''"
                  ng-click="selectOrder(o)">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="loadQuote(o.symbol, true)">
                         <span ng-class="selectedOrder.orderID === o.orderID ? 'underlined' : ''">{{ o.symbol }}</span>
                     </span>
                 </div>
-                <div ng-hide="isOrderSelected()" class="col-md-2 left">{{ o.orderType }}</div>
-                <div ng-hide="isOrderSelected()" class="col-md-2 right">
-                    <span ng-show="o.price">$ {{ o.price | quoteNumber }}</span>
-                    <span ng-hide="o.price" class="positive">MARKET</span>
+                <div ng-hide="isOrderSelected()" class="col-md-2 left">
+                    {{ o.orderType }} &#8212; {{ o.priceType }}
                 </div>
                 <div ng-hide="isOrderSelected()" class="col-md-2 right">
-                    <span ng-show="o.lastTrade">$ {{ o.lastTrade | quoteNumber }}</span>
-                    <span ng-hide="o.lastTrade" class="null">Unavailable</span>
+                    <span ng-show="o.priceType == 'LIMIT'">$ {{ o.price | quoteNumber }}</span>
+                    <span ng-hide="o.priceType == 'LIMIT'" class="positive">$ {{ o.lastTrade | quoteNumber }}</span>
                 </div>
-                <div ng-hide="isOrderSelected()" class="col-md-3 right">{{ o.quantity | number }}</div>
+                <div ng-hide="isOrderSelected()" class="col-md-2 right">
+                    <div ng-hide="isOrderSelected()">{{ o.quantity | number }}</div>
+                </div>
+                <div ng-hide="isOrderSelected()" class="col-md-4 left">
+                    <span ng-show="o.message" ng-class="{'positive':o.fulfilled, 'error':!o.fulfilled}">{{ o.message }}</span>
+                    <span ng-show="!o.message && !o.closed" class="positive">Pending</span>
+                    <span ng-show="!o.message && o.closed && !o.fulfilled">Closed</span>
+                    <span ng-show="!o.message && o.closed && o.fulfilled">Processed {{ o.processedTime | duration }}</span>
+                </div>
             </div>
         </div>
 
@@ -115,10 +121,12 @@
                 <div class="col-md-5 bold">Notify By Email</div>
                 <div class="col-md-7">{{ selectedOrder.emailNotify ? "Yes" : "No" }}</div>
             </div>
-            <div class="row">
+            <div class="row" ng-show="!selectedOrder.closed">
                 <div class="col-md-offset-5 col-md-7">
                     <button class="btn btn-default cancel_button"
-                            ng-click="cancelOrder(contest.contestID, userProfile.userID, selectedOrder)">
+                            ng-click="cancelOrder(selectedOrder.orderID)"
+                            ng-disabled="isCancelingOrder">
+                        <img ng-show="isCancelingOrder" src="/images/status/loading16.gif">
                         <i class="fa fa-warning"></i> Cancel
                     </button>
                 </div>
