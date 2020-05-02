@@ -9,10 +9,14 @@ import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
 import com.shocktrade.webapp.routes
 import com.shocktrade.webapp.routes.account.UserRoutes
 import com.shocktrade.webapp.routes.contest.dao._
+import com.shocktrade.webapp.vm.VirtualMachine
+import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
+import com.shocktrade.webapp.vm.opcodes.{CreateContest, JoinContest, SendChatMessage, QuitContest}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
@@ -20,7 +24,7 @@ import scala.util.{Failure, Success}
  * Contest Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO) extends ContestAPI {
+class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine) extends ContestAPI {
   // individual contests
   app.post(createNewGameURL, (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
   app.get(findContestByIDURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))
@@ -72,8 +76,8 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
       case messages if messages.nonEmpty =>
         response.badRequest(new ValidationErrors(messages)); next()
       case _ =>
-        contestDAO.create(form) onComplete {
-          case Success(result) => response.send(result); next()
+        vm.invoke(CreateContest(form)) onComplete {
+          case Success(result) => response.send(result.asInstanceOf[js.Any]); next()
           case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
@@ -112,8 +116,8 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
 
   def joinContest(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("id"), request.params("userID"))
-    contestDAO.join(contestID, userID) onComplete {
-      case Success(data) => response.send(Ok(data)); next()
+    vm.invoke(JoinContest(contestID, userID)) onComplete {
+      case Success(data) => response.send(Ok(1)); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
@@ -131,10 +135,10 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     form match {
       case Some((contestID, userID, message)) =>
         // asynchronously create the message
-        contestDAO.putChatMessage(contestID, userID, message) onComplete {
+        vm.invoke(SendChatMessage(contestID, userID, message)) onComplete {
           // HTTP/200 OK
           case Success(count) =>
-            response.send(Ok(count))
+            response.send(Ok(1))
             WebSocketHandler.emit(RemoteEvent(RemoteEvent.ChatMessagesUpdated, contestID))
             next()
           // HTTP/500 ERROR
@@ -149,8 +153,8 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
 
   def quitContest(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("id"), request.params("userID"))
-    contestDAO.quit(contestID, userID) onComplete {
-      case Success(data) => response.send(Ok(data)); next()
+    vm.invoke(new QuitContest(contestID, userID)) onComplete {
+      case Success(data) => response.send(Ok(1)); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

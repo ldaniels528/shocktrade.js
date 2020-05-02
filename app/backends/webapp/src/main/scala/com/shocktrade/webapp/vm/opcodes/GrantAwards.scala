@@ -9,7 +9,7 @@ import scala.scalajs.js
  * Grant Awards
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class GrantAwards(portfolioID: String, awardCodes: js.Array[String]) extends OpCode {
+case class GrantAwards(portfolioID: String, awardCodes: js.Array[String]) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Any] = {
     ctx.grantAwards(portfolioID, awardCodes)

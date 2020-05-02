@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchOptions}
+import com.shocktrade.common.forms.ContestSearchOptions
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -14,29 +14,15 @@ import scala.scalajs.js
  */
 trait ContestDAO {
 
-  def create(request: ContestCreationRequest): Future[ContestCreationResponse]
-
-  def create(portfolio: PortfolioData): Future[Int]
-
   def findOneByID(contestID: String): Future[Option[ContestData]]
 
   def findRankings(contestID: String): Future[js.Array[ContestRanking]]
 
   def contestSearch(form: ContestSearchOptions): Future[js.Array[ContestSearchResult]]
 
-  def start(contestID: String, userID: String): Future[Boolean]
-
   def updateContest(contest: ContestData): Future[Int]
 
-  def updateContests(contests: Seq[ContestData]): Future[Int]
-
-  def putChatMessage(contestID: String, userID: String, message: String): Future[Int]
-
   def findChatMessages(contestID: String): Future[js.Array[ChatMessage]]
-
-  def join(contestID: String, userID: String): Future[Int]
-
-  def quit(contestID: String, userID: String): Future[Int]
 
 }
 

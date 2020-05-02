@@ -6,13 +6,10 @@ import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
 import com.shocktrade.webapp.vm.proccesses.cqm.ContestQualificationModule
 import com.shocktrade.webapp.vm.proccesses.cqm.dao.QualificationDAO
 import com.shocktrade.webapp.vm.{VirtualMachine, VirtualMachineSupport}
-import io.scalajs.nodejs._
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.duration._
 import scala.language.postfixOps
-import scala.util.{Failure, Success}
 
 /**
  * Virtual Machine Routes
@@ -23,14 +20,12 @@ extends VirtualMachineSupport {
 
   // API routes
   app.get("/api/vm/queued", (request: Request, response: Response, next: NextFunction) => queued(request, response, next))
-  app.get("/api/vm/run", (request: Request, response: Response, next: NextFunction) => run(request, response, next))
+  app.get("/api/vm/start", (request: Request, response: Response, next: NextFunction) => start(request, response, next))
+  app.get("/api/vm/status", (request: Request, response: Response, next: NextFunction) => status(request, response, next))
+  app.get("/api/vm/stop", (request: Request, response: Response, next: NextFunction) => stop(request, response, next))
 
-  // queue the CQM life-cycle updates
-  setImmediate(() => updateContestLifeCycles())
-  setInterval(() => updateContestLifeCycles(), 30.seconds)
-
-  // process all queued opCodes
-  setInterval(() => drainPipeline(), 5.seconds)
+  // start the virtual machine
+  startMachine()
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -41,11 +36,22 @@ extends VirtualMachineSupport {
     next()
   }
 
-  def run(request: Request, response: Response, next: NextFunction): Unit = {
-    vm.invokeAll() onComplete {
-      case Success(results) => response.send(Ok(results.length)); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
+  def start(request: Request, response: Response, next: NextFunction): Unit = {
+    startMachine()
+    response.send(Ok(1))
+    next()
+  }
+
+  def status(request: Request, response: Response, next: NextFunction): Unit = {
+    startMachine()
+    response.send(Ok(if (isRunning) 1 else 0))
+    next()
+  }
+
+  def stop(request: Request, response: Response, next: NextFunction): Unit = {
+    stopMachine()
+    response.send(Ok(1))
+    next()
   }
 
 }

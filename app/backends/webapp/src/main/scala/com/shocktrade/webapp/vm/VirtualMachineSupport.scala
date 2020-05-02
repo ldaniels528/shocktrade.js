@@ -4,8 +4,11 @@ import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.webapp.vm.VirtualMachine.VmProcess
 import com.shocktrade.webapp.vm.proccesses.cqm.ContestQualificationModule
 import com.shocktrade.webapp.vm.proccesses.cqm.dao.QualificationDAO
+import io.scalajs.nodejs.{setTimeout, _}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -15,10 +18,31 @@ import scala.util.{Failure, Success}
  */
 trait VirtualMachineSupport {
   private val logger = LoggerFactory.getLogger(getClass)
+  private var isAlive: Boolean = false
+
+  def isRunning: Boolean = isAlive
+
+  def startMachine()(implicit ec: ExecutionContext, cqm: ContestQualificationModule, cqmDAO: QualificationDAO, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
+    if (!isAlive) {
+      isAlive = true
+
+      // queue the CQM life-cycle updates
+      setInterval(() => updateContestLifeCycles(), 30.seconds)
+
+      // start the virtual CPU
+      continuouslyConsumeOpCodes()
+    }
+  }
+
+  def stopMachine(): Unit = isAlive = false
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      Processing Methods
   //////////////////////////////////////////////////////////////////////////////////////
+
+  private def continuouslyConsumeOpCodes()(implicit ec: ExecutionContext, cqm: ContestQualificationModule, cqmDAO: QualificationDAO, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
+    Future(drainPipeline()) onComplete { _ => if (isAlive) setTimeout(() => continuouslyConsumeOpCodes(), 5.millis) }
+  }
 
   def drainPipeline()(implicit ec: ExecutionContext, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
     try {

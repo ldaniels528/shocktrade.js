@@ -1,14 +1,18 @@
 package com.shocktrade.webapp.vm.dao
 
+import java.util.UUID
+
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
 import com.shocktrade.common.models.Award
 import com.shocktrade.common.models.contest.{ContestRanking, Perk}
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.UserProfileData
-import com.shocktrade.webapp.routes.contest.dao.{OrderData, PortfolioData, PositionData}
-import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.{AwardsRecommendation, Proceeds}
+import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData, PortfolioData, PositionData}
+import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.{AwardsRecommendation, Proceeds, _}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 import io.scalajs.util.JsUnderOrHelper._
 
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -19,6 +23,67 @@ import scala.scalajs.js.JSConverters._
  */
 class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext)
   extends MySQLDAO(options) with VirtualMachineDAO {
+
+  //////////////////////////////////////////////////////////////////
+  //    Contest Functions
+  //////////////////////////////////////////////////////////////////
+
+  override def createContest(request: ContestCreationRequest): Future[ContestCreationResponse] = {
+    // define the contestID, portfolioID and required parameters
+    val params = for {
+      name <- request.name.flat.toOption
+      userID <- request.userID.flat.toOption
+      duration <- request.duration.flat.toOption
+      startingBalance <- request.startingBalance.flat.toOption
+    } yield (name, userID, startingBalance, duration)
+
+    // create the contest
+    params match {
+      case Some((name, userID, startingBalance, duration)) =>
+        for {
+          contestID <- insertContest(userID, name, startingBalance, duration)(request)
+          portfolioID <- insertPortfolio(contestID, userID, startingBalance)
+          _ <- debitWallet(portfolioID, startingBalance)
+          _ <- sendChatMessage(contestID, userID, message = s"Welcome to $name!") map checkInsertCount
+        } yield new ContestCreationResponse(contestID, portfolioID)
+      case None =>
+        Future.failed(js.JavaScriptException("Required parameters are missing"))
+    }
+  }
+
+  override def joinContest(contestID: String, userID: String): Future[String] = {
+    for {
+      startingBalance <- findEntryFeeByContestID(contestID)
+      portfolioID <- insertPortfolio(contestID = contestID, userID = userID, funds = startingBalance)
+      _ <- debitWallet(portfolioID, startingBalance)
+    } yield portfolioID
+  }
+
+  override def quitContest(contestID: String, userID: String): Future[Double] = {
+    for {
+      cp <- findContestAndPortfolioID(contestID, userID)
+      proceeds <- liquidatePortfolio(cp.portfolioID)
+      _ <- creditWallet(cp.portfolioID, proceeds)
+    } yield proceeds
+  }
+
+  override def sendChatMessage(contestID: String, userID: String, message: String): Future[Int] = {
+    conn.executeFuture(
+      """|INSERT INTO messages (messageID, contestID, userID, message)
+         |VALUES (uuid(), ?, ?, ?)
+         |""".stripMargin,
+      js.Array(contestID, userID, message)) map (_.affectedRows)
+  }
+
+  override def startContest(contestID: String, userID: String): Future[Boolean] = {
+    conn.executeFuture(
+      s"""|UPDATE portfolios P
+          |INNER JOIN contest_statuses CS ON CS.status = 'ACTIVE'
+          |SET startTime = now(), statusID = CS.statusID
+          |WHERE contestID = ? AND hostUserID = ? AND statusID <> CS.statusID
+          |""".stripMargin,
+      js.Array(contestID, userID)) map (_.affectedRows > 0)
+  }
 
   //////////////////////////////////////////////////////////////////
   //    Player Functions
@@ -47,17 +112,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     } yield wallet - amount
   }
 
-  private def determineAwards(portfolioID: String, rankings: Seq[ContestRanking]): AwardsRecommendation = {
-    var items: List[(String, Int)] = Nil
-    val myRanking = rankings.find(_.portfolioID.contains(portfolioID))
-    items = Award.CHKDFLAG -> 5 :: items
-    items = (myRanking collect { case ranking if ranking.rankNum.orZero == 1 => Award.GLDTRPHY -> 25 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 25.0 => Award.PAYDIRT -> 25 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 50.0 => Award.MADMONEY -> 50 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 100.0 => Award.CRYSTBAL -> 100 }).toList ::: items
-    new AwardsRecommendation(awardCodes = items.map(_._1).toJSArray, awardedXP = items.map(_._2).sum)
-  }
-
   override def grantAwards(portfolioID: String, awardCodes: js.Array[String]): Future[Int] = {
     Future.sequence(awardCodes.toSeq map { awardCode =>
       conn.executeFuture(
@@ -82,13 +136,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     val perks = Perk.availablePerks
     val perkMapping = js.Dictionary(perks.map(p => p.code -> p): _ *)
     val perksCost = (perkCodes flatMap perkMapping.get).map(_.cost).sum
-
-    def insertPerks(portfolioID: String, perkCodes: js.Array[String]): Future[Int] = {
-      Future.sequence(perkCodes.toSeq map { perkCode =>
-        conn.executeFuture("INSERT INTO perks (perkID, portfolioID, perkCode) VALUES (uuid(), ?, ?)",
-          js.Array(portfolioID, perkCode)).map(_.affectedRows)
-      }) map (_.sum)
-    }
 
     for {
       _ <- debitPortfolio(portfolioID, perksCost)
@@ -133,11 +180,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     } yield js.Dictionary(summaries: _*)
   }
 
-  private def closePositions(portfolioID: String): Future[Int] = {
-    conn.executeFuture("UPDATE positions SET quantity = 0 WHERE portfolioID = ?", js.Array(portfolioID))
-      .map(_.affectedRows) map checkCount(count => s"Portfolio $portfolioID could not be closed: count = $count")
-  }
-
   override def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String] = js.undefined): Future[Int] = {
     val closed = true
     conn.executeFuture(
@@ -146,29 +188,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |WHERE orderID = ?
          |""".stripMargin, js.Array(closed, fulfilled, new js.Date(), message.orNull, orderID))
       .map(_.affectedRows) map checkCount(count => s"Order $orderID could not be closed: count = $count")
-  }
-
-  private def completeOrders(portfolioID: String, message: String): Future[Int] = {
-    val (closed, fulfilled) = (false, false)
-    conn.executeFuture(
-      """|UPDATE orders
-         |SET closed = ?, fulfilled = ?, processedTime = ?, message = ?
-         |WHERE portfolioID = ?
-         |""".stripMargin, js.Array(closed, fulfilled, new js.Date(), message, portfolioID))
-      .map(_.affectedRows)
-  }
-
-  private def computePortfolioEquity(portfolioID: String): Future[Proceeds] = {
-    conn.queryFuture[Proceeds](
-      """|SELECT P.funds AS cash, SUM(S.lastTrade) AS equity
-         |FROM positions PS
-         |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
-         |INNER JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-         |WHERE PS.portfolioID = ?
-         |""".stripMargin, js.Array(portfolioID)).map(_._1.headOption) map {
-      case Some(proceeds) => proceeds
-      case None => new Proceeds(cash = 0.0, equity = 0.0)
-    }
   }
 
   override def createOrder(portfolioID: String, order: OrderData): Future[Int] = {
@@ -224,25 +243,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
-  private def ensurePortfolioIsOpen(portfolioID: String): Future[Boolean] = {
-    conn.queryFuture[PortfolioData]("SELECT closedTime FROM portfolios WHERE portfolioID = ?", js.Array(portfolioID))
-      .map(_._1).map(_.headOption) flatMap {
-      case Some(portfolio) if portfolio.closedTime.flat.nonEmpty => Future.failed(PortfolioClosedException(portfolioID))
-      case Some(_) => Future.successful(true)
-      case None => Future.failed(PortfolioNotFoundException(portfolioID))
-    }
-  }
-
-  private def findPortfolioIDsByContest(contestID: String): Future[js.Array[String]] = {
-    conn.queryFuture[PortfolioData]("SELECT portfolioID FROM portfolios WHERE contestID = ?",
-      js.Array(contestID)).map(_._1.flatMap(_.portfolioID.toOption))
-  }
-
-  private def findPortfolioRankings(portfolioID: String): Future[js.Array[ContestRanking]] = {
-    conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE portfolioID = ?", js.Array(portfolioID))
-      .map { case (rows, _) => rows }
-  }
-
   override def increasePosition(orderID: String, position: PositionData, cost: Double): Future[Int] = {
     val portfolioID = position.portfolioID_!
     val outcome = for {
@@ -271,6 +271,119 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       _ <- creditWallet(portfolioID, proceeds.equity + proceeds.cash)
       _ <- closePositions(portfolioID)
     } yield proceeds.equity + proceeds.cash
+  }
+
+  //////////////////////////////////////////////////////////////////
+  //    Utility Functions
+  //////////////////////////////////////////////////////////////////
+
+  private def closePositions(portfolioID: String): Future[Int] = {
+    conn.executeFuture("UPDATE positions SET quantity = 0 WHERE portfolioID = ?", js.Array(portfolioID))
+      .map(_.affectedRows) map checkCount(count => s"Portfolio $portfolioID could not be closed: count = $count")
+  }
+
+  private def completeOrders(portfolioID: String, message: String): Future[Int] = {
+    val (closed, fulfilled) = (false, false)
+    conn.executeFuture(
+      """|UPDATE orders
+         |SET closed = ?, fulfilled = ?, processedTime = ?, message = ?
+         |WHERE portfolioID = ?
+         |""".stripMargin, js.Array(closed, fulfilled, new js.Date(), message, portfolioID))
+      .map(_.affectedRows)
+  }
+
+  private def computePortfolioEquity(portfolioID: String): Future[Proceeds] = {
+    conn.queryFuture[Proceeds](
+      """|SELECT P.funds AS cash, SUM(S.lastTrade) AS equity
+         |FROM positions PS
+         |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
+         |INNER JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+         |WHERE PS.portfolioID = ?
+         |""".stripMargin, js.Array(portfolioID)).map(_._1.headOption) map {
+      case Some(proceeds) => proceeds
+      case None => new Proceeds(cash = 0.0, equity = 0.0)
+    }
+  }
+
+  private def determineAwards(portfolioID: String, rankings: Seq[ContestRanking]): AwardsRecommendation = {
+    var items: List[(String, Int)] = Nil
+    val myRanking = rankings.find(_.portfolioID.contains(portfolioID))
+    items = Award.CHKDFLAG -> 5 :: items
+    items = (myRanking collect { case ranking if ranking.rankNum.orZero == 1 => Award.GLDTRPHY -> 25 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 25.0 => Award.PAYDIRT -> 25 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 50.0 => Award.MADMONEY -> 50 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 100.0 => Award.CRYSTBAL -> 100 }).toList ::: items
+    new AwardsRecommendation(awardCodes = items.map(_._1).toJSArray, awardedXP = items.map(_._2).sum)
+  }
+
+  private def ensurePortfolioIsOpen(portfolioID: String): Future[Boolean] = {
+    conn.queryFuture[PortfolioData]("SELECT closedTime FROM portfolios WHERE portfolioID = ?", js.Array(portfolioID))
+      .map(_._1).map(_.headOption) flatMap {
+      case Some(portfolio) if portfolio.closedTime.flat.nonEmpty => Future.failed(PortfolioClosedException(portfolioID))
+      case Some(_) => Future.successful(true)
+      case None => Future.failed(PortfolioNotFoundException(portfolioID))
+    }
+  }
+
+  private def findEntryFeeByContestID(contestID: String): Future[Double] = {
+    conn.queryFuture[ContestData]("SELECT startingBalance FROM contests WHERE contestID = ?",
+      js.Array(contestID)).map(_._1.headOption) map {
+      case Some(contest) => contest.startingBalance.getOrElse(throw js.JavaScriptException("startingBalance is required"))
+      case None => throw js.JavaScriptException(s"Contest $contestID not found")
+    }
+  }
+
+  private def findPortfolioIDsByContest(contestID: String): Future[js.Array[String]] = {
+    conn.queryFuture[PortfolioData]("SELECT portfolioID FROM portfolios WHERE contestID = ?",
+      js.Array(contestID)).map(_._1.flatMap(_.portfolioID.toOption))
+  }
+
+  private def findContestAndPortfolioID(contestID: String, userID: String): Future[ContestPortfolioData] = {
+    conn.queryFuture[ContestPortfolioData]("SELECT portfolioID FROM portfolios WHERE contestID = ? AND userID = ?",
+      js.Array(contestID, userID)).map(_._1.headOption) map {
+      case Some(results) => results
+      case None => throw ContestPortfolioNotFoundException(contestID, userID)
+    }
+  }
+
+  private def findPortfolioRankings(portfolioID: String): Future[js.Array[ContestRanking]] = {
+    conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE portfolioID = ?", js.Array(portfolioID))
+      .map { case (rows, _) => rows }
+  }
+
+  private def insertContest(userID: String, name: String, startingBalance: Double, duration: Int)(request: ContestCreationRequest): Future[String] = {
+    val contestID = UUID.randomUUID().toString
+    conn.executeFuture(
+      """|INSERT INTO contests (
+         |  contestID, hostUserID, name, statusID, startingBalance, expirationTime,
+         |  friendsOnly, invitationOnly, levelCap, perksAllowed, robotsAllowed
+         |)
+         |SELECT ?, ?, ?, CS.statusID, ?, ?, ?, ?, ?, ?, ?
+         |FROM contest_statuses CS
+         |WHERE CS.status = 'ACTIVE'
+         |""".stripMargin,
+      js.Array(contestID, userID, name, startingBalance,
+        new js.Date(js.Date.now() + duration * 1.day.toMillis), request.friendsOnly ?? false, request.invitationOnly ?? false,
+        request.levelCap ?? 0, request.perksAllowed ?? true, request.robotsAllowed ?? true)).map(_.affectedRows) map {
+      case count if count > 0 => contestID
+      case count => throw js.JavaScriptException(s"Contest not created (count = $count)")
+    }
+  }
+
+  private def insertPerks(portfolioID: String, perkCodes: js.Array[String]): Future[Int] = {
+    Future.sequence(perkCodes.toSeq map { perkCode =>
+      conn.executeFuture("INSERT INTO perks (perkID, portfolioID, perkCode) VALUES (uuid(), ?, ?)",
+        js.Array(portfolioID, perkCode)).map(_.affectedRows)
+    }) map (_.sum)
+  }
+
+  private def insertPortfolio(contestID: String, userID: String, funds: Double): Future[String] = {
+    val portfolioID = UUID.randomUUID().toString
+    conn.executeFuture("INSERT INTO portfolios (contestID, portfolioID, userID, funds) VALUES (?, ?, ?, ?)",
+      js.Array(contestID, portfolioID, userID, funds)).map(_.affectedRows) map {
+      case count if count > 0 => portfolioID
+      case _ => throw ContestPortfolioNotFoundException(contestID, userID)
+    }
   }
 
   private def stopContest(contestID: String): Future[Int] = {
@@ -329,8 +442,12 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
  */
 object VirtualMachineDAOMySQL {
 
-  class Proceeds(val cash: Double, val equity: Double) extends js.Object
-
   class AwardsRecommendation(val awardCodes: js.Array[String], val awardedXP: Int) extends js.Object
+
+  class ContestPortfolioData(val contestID: String,
+                             val portfolioID: String,
+                             val startingBalance: Double) extends js.Object
+
+  class Proceeds(val cash: Double, val equity: Double) extends js.Object
 
 }

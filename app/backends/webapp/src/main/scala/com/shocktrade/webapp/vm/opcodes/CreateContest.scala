@@ -13,8 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 case class CreateContest(request: ContestCreationRequest) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[ContestCreationResponse] = {
-    import com.shocktrade.webapp.routes.dao._
-    contestDAO.create(request)
+    ctx.createContest(request)
   }
 
   override def toString = s"${getClass.getSimpleName}(${JSON.stringify(request)})"

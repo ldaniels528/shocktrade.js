@@ -4,14 +4,14 @@ package opcodes
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * Join Contest OpCode
+ * Quit Contest OpCode
  * @param contestID the given contest ID
  * @param userID    the given user ID
  */
-case class JoinContest(contestID: String, userID: String) extends OpCode {
+case class QuitContest(contestID: String, userID: String) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[String] = {
-    ctx.joinContest(contestID, userID)
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Double] = {
+    ctx.quitContest(contestID, userID)
   }
 
   override def toString = s"${getClass.getSimpleName}(contestID: $contestID, userID: $userID)"

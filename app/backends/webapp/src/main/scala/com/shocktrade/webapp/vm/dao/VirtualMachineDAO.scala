@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.vm.dao
 
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -14,12 +15,24 @@ import scala.scalajs.js
 trait VirtualMachineDAO {
 
   //////////////////////////////////////////////////////////////////
-  //    Player Functions
+  //    Contest Functions
   //////////////////////////////////////////////////////////////////
 
-  def creditPortfolio(portfolioID: String, amount: Double): Future[Double]
+  def closeContest(contestID: String): Future[js.Dictionary[Double]]
 
-  def debitPortfolio(portfolioID: String, amount: Double): Future[Double]
+  def createContest(request: ContestCreationRequest): Future[ContestCreationResponse]
+
+  def joinContest(contestID: String, userID: String): Future[String]
+
+  def quitContest(contestID: String, userID: String): Future[Double]
+
+  def sendChatMessage(contestID: String, userID: String, message: String): Future[Int]
+
+  def startContest(contestID: String, userID: String): Future[Boolean]
+
+  //////////////////////////////////////////////////////////////////
+  //    Player Functions
+  //////////////////////////////////////////////////////////////////
 
   def creditWallet(portfolioID: String, amount: Double): Future[Double]
 
@@ -37,8 +50,6 @@ trait VirtualMachineDAO {
 
   def cancelOrder(orderID: String): Future[Int]
 
-  def closeContest(contestID: String): Future[js.Dictionary[Double]]
-
   def closePortfolio(portfolioID: String): Future[Double]
 
   def closePortfolios(contestID: String): Future[js.Dictionary[Double]]
@@ -46,6 +57,10 @@ trait VirtualMachineDAO {
   def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String]): Future[Int]
 
   def createOrder(portfolioID: String, order: OrderData): Future[Int]
+
+  def creditPortfolio(portfolioID: String, amount: Double): Future[Double]
+
+  def debitPortfolio(portfolioID: String, amount: Double): Future[Double]
 
   def decreasePosition(orderID: String, position: PositionData, proceeds: Double): Future[Int]
 

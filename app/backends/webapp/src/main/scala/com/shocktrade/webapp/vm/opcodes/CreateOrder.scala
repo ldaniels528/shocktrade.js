@@ -6,7 +6,7 @@ import com.shocktrade.webapp.vm.VirtualMachineContext
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.JSON
 
-class CreateOrder(portfolioID: String, order: OrderData) extends OpCode {
+case class CreateOrder(portfolioID: String, order: OrderData) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
     ctx.createOrder(portfolioID, order)

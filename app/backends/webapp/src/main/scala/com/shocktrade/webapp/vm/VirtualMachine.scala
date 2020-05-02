@@ -31,9 +31,41 @@ class VirtualMachine() {
       pipeline.clear()
 
       // execute the opCodes
-      waterfall(opCodes)
+      VirtualMachine.waterfall(opCodes)
     }
   }
+
+  /**
+   * Executes the next queued opCode from the pipeline
+   * @param ctx the implicit [[VirtualMachineContext]]
+   * @return the option of an invocation result
+   */
+  def invoke(opCode: OpCode)(implicit ctx: VirtualMachineContext): Future[Any] = {
+    val promise = Promise[Any]()
+    pipeline.push(OpCodeCallback(opCode, promise))
+    promise.future
+  }
+
+  /**
+   * Queues opCodes for processing
+   * @param opCodes one or more [[OpCode]]
+   * @return the number of opCodes queued
+   */
+  def enqueue(opCodes: OpCode*): Int = pipeline.push(opCodes: _*)
+
+  /**
+   * Returns the collection queued OpCodes
+   * @return the collection of OpCodes
+   */
+  def queued: js.Array[String] = pipeline.map(_.toString)
+
+}
+
+/**
+ * Virtual Machine Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object VirtualMachine {
 
   def waterfall(opCodes: Seq[OpCode])(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[List[VmProcess]] = {
     val promise = Promise[List[VmProcess]]()
@@ -58,51 +90,6 @@ class VirtualMachine() {
     setImmediate(() => recurse(opCodes.toList))
     promise.future
   }
-
-  /**
-   * Executes the next queued opCode from the pipeline
-   * @param ctx the implicit [[VirtualMachineContext]]
-   * @return the option of an invocation result
-   */
-  def invoke(opCode: OpCode)(implicit ctx: VirtualMachineContext): Future[Any] = {
-    val promise = Promise[Any]()
-    pipeline.push(OpCodeCallback(opCode, promise))
-    promise.future
-  }
-
-  /**
-   * Executes the next queued opCode from the pipeline
-   * @param ctx the implicit [[VirtualMachineContext]]
-   * @param ec  the implicit [[ExecutionContext]]
-   * @return the option of an invocation result
-   */
-  def invokeNext()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Option[Future[Any]] = {
-    if (pipeline.isEmpty) None else {
-      val opCode = pipeline.pop()
-      Option(opCode.invoke())
-    }
-  }
-
-  /**
-   * Queues opCodes for processing
-   * @param opCodes one or more [[OpCode]]
-   * @return the number of opCodes queued
-   */
-  def enqueue(opCodes: OpCode*): Int = pipeline.push(opCodes: _*)
-
-  /**
-   * Returns the collection queued OpCodes
-   * @return the collection of OpCodes
-   */
-  def queued: js.Array[String] = pipeline.map(_.toString)
-
-}
-
-/**
- * Virtual Machine Companion
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-object VirtualMachine {
 
   case class OpCodeCallback(opCode: OpCode, promise: Promise[Any]) extends OpCode {
     override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Any] = {

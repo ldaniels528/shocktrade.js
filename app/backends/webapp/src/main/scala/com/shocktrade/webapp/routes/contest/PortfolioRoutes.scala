@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
  */
 class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolioDAO: PortfolioDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
   extends PortfolioAPI {
-  // individual objects
+  // finders
   app.get(findPortfolioByIDURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => findPortfolioByID(request, response, next))
   app.get(findHeldSecuritiesURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => findHeldSecurities(request, response, next))
   app.get(findChartURL(":id", ":userID", ":chart"), (request: Request, response: Response, next: NextFunction) => findChart(request, response, next))
@@ -63,7 +63,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
               case None => Future.failed(js.JavaScriptException(s"Portfolio for user $userID, contest $contestID"))
             }
           }
-          count <- vm.invoke(new CreateOrder(portfolioID, form.toOrder))
+          count <- vm.invoke(CreateOrder(portfolioID, form.toOrder))
         } yield count
 
         outcome onComplete {
@@ -97,7 +97,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
    */
   def cancelOrder(request: Request, response: Response, next: NextFunction): Unit = {
     val orderID = request.params("orderID")
-    vm.invoke(new CancelOrder(orderID)) onComplete {
+    vm.invoke(CancelOrder(orderID)) onComplete {
       case Success(result) => response.send(Ok(1)); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
