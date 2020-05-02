@@ -1,0 +1,75 @@
+<script type="text/ng-template" id="order_review_dialog.html">
+    <div class="modal-header st_modal_header">
+        <h4 style="color: #345688">Order Review</h4>
+    </div>
+    <div class="modal-body" ng-init="initOrderReview()">
+        <div class="row">
+            <div class="col-md-4 bold">Order #</div>
+            <div class="col-md-8">{{ order.orderID }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Symbol</div>
+            <div class="col-md-8">
+                <span ng-class="order.exchange">{{ order.symbol }}</span> (<span ng-class="order.exchange">{{ order.exchange }}</span>)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Status</div>
+            <div class="col-md-8">
+                <span ng-show="order.message" ng-class="{'positive':order.fulfilled, 'error':!order.fulfilled}">{{ order.message }}</span>
+                <span ng-show="!order.message && !order.closed" class="positive">Pending</span>
+                <span ng-show="!order.message && order.closed && !order.fulfilled">Closed</span>
+                <span ng-show="!order.message && order.closed && order.fulfilled">Processed {{ order.processedTime | duration }}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Terms</div>
+            <div class="col-md-8">{{ order.orderType }} &#8212; {{ order.priceType }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Last Sale</div>
+            <div class="col-md-8">
+                <span ng-show="order.lastTrade">$ {{ order.lastTrade | quoteNumber }}</span>
+                <span ng-hide="order.lastTrade" class="null">Not Available</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Price</div>
+            <div class="col-md-8">$ {{ (order.price || order.lastTrade) | quoteNumber }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Quantity</div>
+            <div class="col-md-8">{{ order.quantity | number }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Estimated Cost</div>
+            <div class="col-md-8">$ {{ computeOrderCost(order) | number:2 }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Notify By Email</div>
+            <div class="col-md-8">{{ order.emailNotify ? "Yes" : "No" }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Creation Time</div>
+            <div class="col-md-8">{{ order.creationTime | duration }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bold">Expires</div>
+            <div class="col-md-8" ng-show=" order.expirationTime">{{ order.expirationTime | duration }}</div>
+            <div class="col-md-8" ng-hide=" order.expirationTime" class="null">N/A</div>
+        </div>
+    </div>
+
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12" style="margin-top: 10px">
+            <button class="btn btn-primary pull-left" ng-click="dismiss()">Dismiss</button>
+            <button class="btn btn-danger pull-right"
+                    ng-show="!order.closed"
+                    ng-click="cancelOrder(order.orderID)"
+                    ng-disabled="isCancelingOrder">
+                <img ng-show="isCancelingOrder" src="/images/status/loading16.gif">
+                Cancel Order
+            </button>
+        </div>
+    </div>
+</script>

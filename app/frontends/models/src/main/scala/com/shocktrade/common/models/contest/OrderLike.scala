@@ -1,6 +1,5 @@
 package com.shocktrade.common.models.contest
 
-import com.shocktrade.common.Commissions
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
 
@@ -53,7 +52,7 @@ object OrderLike {
    * Order Enrichment
    * @param order the given [[OrderLike order]]
    */
-  implicit class OrderLikeEnrichment(val order: OrderLike) extends AnyVal {
+  final implicit class OrderLikeEnrichment(val order: OrderLike) extends AnyVal {
 
     @inline
     def isExpired(asOfTime: js.Date): Boolean = order.expirationTime.exists(_ < asOfTime)
@@ -72,12 +71,6 @@ object OrderLike {
 
     @inline
     def isMarketAtCloseOrder: Boolean = order.priceType.contains("MARKET_AT_CLOSE")
-
-    @inline
-    def totalCost: js.UndefOr[Double] = for {
-      price <- order.price
-      quantity <- order.quantity
-    } yield price * quantity + Commissions(order)
 
   }
 

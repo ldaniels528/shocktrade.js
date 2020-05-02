@@ -15,31 +15,31 @@ import scala.scalajs.js
 class ExploreService($http: Http) extends Service {
 
   def loadSectorInfo(symbol: String): js.Promise[HttpResponse[SectorInfoQuote]] = {
-    $http.get[SectorInfoQuote](s"/api/explore/symbol/$symbol")
+    $http.get(s"/api/explore/symbol/$symbol")
   }
 
   def loadSectors(): js.Promise[HttpResponse[js.Array[AggregatedSectorData]]] = {
-    $http.get[js.Array[AggregatedSectorData]]("/api/explore/sectors")
+    $http.get("/api/explore/sectors")
   }
 
   def loadNAICSSectors(): js.Promise[HttpResponse[js.Array[AggregatedSectorData]]] = {
-    $http.get[js.Array[AggregatedSectorData]]("/api/explore/naics/sectors")
+    $http.get("/api/explore/naics/sectors")
   }
 
   def loadIndustries(sector: String): js.Promise[HttpResponse[js.Array[AggregatedSectorData]]] = {
-    $http.get[js.Array[AggregatedSectorData]](s"/api/explore/industries?sector=${sector.encode}")
+    $http.get(s"/api/explore/industries?sector=${sector.encode}")
   }
 
   def loadIndustryQuotes(sector: String, industry: String): js.Promise[HttpResponse[js.Array[ResearchQuote]]] = {
-    $http.get[js.Array[ResearchQuote]](s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}")
+    $http.get(s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}")
   }
 
   def loadSubIndustries(sector: String, industry: String): js.Promise[HttpResponse[js.Array[AggregatedSectorData]]] = {
-    $http.get[js.Array[AggregatedSectorData]](s"/api/explore/subIndustries?sector=${sector.encode}&industry=${industry.encode}")
+    $http.get(s"/api/explore/subIndustries?sector=${sector.encode}&industry=${industry.encode}")
   }
 
   def loadSubIndustryQuotes(sector: String, industry: String, subIndustry: String): js.Promise[HttpResponse[js.Array[ResearchQuote]]] = {
-    $http.get[js.Array[ResearchQuote]](s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}&subIndustry=${subIndustry.encode}")
+    $http.get(s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}&subIndustry=${subIndustry.encode}")
   }
 
 }

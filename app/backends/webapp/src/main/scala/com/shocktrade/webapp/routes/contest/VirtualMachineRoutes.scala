@@ -27,7 +27,7 @@ extends VirtualMachineSupport {
 
   // queue the CQM life-cycle updates
   setImmediate(() => updateContestLifeCycles())
-  setInterval(() => updateContestLifeCycles(), 1.minute)
+  setInterval(() => updateContestLifeCycles(), 30.seconds)
 
   // process all queued opCodes
   setInterval(() => drainPipeline(), 5.seconds)

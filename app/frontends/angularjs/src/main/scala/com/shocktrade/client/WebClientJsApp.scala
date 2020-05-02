@@ -83,27 +83,48 @@ object WebClientJsApp {
   }
 
   private def configureDialogs(module: Module): Unit = {
+    // Compose Message Dialog
     module.serviceOf[ComposeMessageDialog]("ComposeMessageDialog")
-    module.serviceOf[InvitePlayerDialog]("InvitePlayerDialog")
-    module.serviceOf[NewGameDialog]("NewGameDialog")
-    module.serviceOf[NewOrderDialog]("NewOrderDialog")
-    module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
-    module.serviceOf[PerksDialog]("PerksDialog")
-    module.serviceOf[PlayerProfileDialog]("PlayerProfileDialog")
-    module.serviceOf[ReactiveSearchService]("ReactiveSearchService")
-    module.serviceOf[SignInDialog]("SignInDialog")
-    module.serviceOf[SignUpDialog]("SignUpDialog")
-    module.serviceOf[StockQuoteDialog]("StockQuoteDialog")
-
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
+
+    // Invite Player Dialog
+    module.serviceOf[InvitePlayerDialog]("InvitePlayerDialog")
     module.controllerOf[InvitePlayerDialogController]("InvitePlayerDialogController")
-    module.controllerOf[NewGameDialogController]("NewGameDialogController")
-    module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
-    module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
-    module.controllerOf[PerksDialogController]("PerksDialogController")
+
+    // Perks Dialog
+    module.serviceOf[PerksDialog]("PerksDialog")
+    module.controllerOf[PerksDialog.PerksDialogController]("PerksDialogController")
+
+    // Player Profile Dialog
+    module.serviceOf[PlayerProfileDialog]("PlayerProfileDialog")
     module.controllerOf[PlayerProfileDialogController]("PlayerProfileDialogController")
+
+    // Order Review Dialog
+    module.serviceOf[OrderReviewDialog]("OrderReviewDialog")
+    module.controllerOf[OrderReviewDialog.OrderReviewDialogController]("OrderReviewDialogController")
+
+    // New Game Dialog
+    module.serviceOf[NewGameDialog]("NewGameDialog")
+    module.controllerOf[NewGameDialogController]("NewGameDialogController")
+
+    // New Order Dialog
+    module.serviceOf[NewOrderDialog]("NewOrderDialog")
+    module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
+
+    // News Quote Dialog
+    module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
+    module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
+
+    // Sign In Dialog
+    module.serviceOf[SignInDialog]("SignInDialog")
     module.controllerOf[SignInDialogController]("SignInDialogController")
+
+    // Sign Up Dialog
+    module.serviceOf[SignUpDialog]("SignUpDialog")
     module.controllerOf[SignUpDialogController]("SignUpDialogController")
+
+    // Stock Quote Dialog
+    module.serviceOf[StockQuoteDialog]("StockQuoteDialog")
     module.controllerOf[StockQuoteDialogController]("StockQuoteDialogController")
     ()
   }
@@ -123,6 +144,7 @@ object WebClientJsApp {
     module.serviceOf[PostService]("PostService")
     module.serviceOf[QuoteCache]("QuoteCache")
     module.serviceOf[QuoteService]("QuoteService")
+    module.serviceOf[ReactiveSearchService]("ReactiveSearchService")
     module.serviceOf[ResearchService]("ResearchService")
     module.serviceOf[RSSFeedService]("RSSFeedService")
     module.serviceOf[UserService]("UserService")

@@ -77,10 +77,14 @@ class PortfolioService($http: Http) extends Service with PortfolioAPI {
   //			Positions & Orders
   /////////////////////////////////////////////////////////////////////////////
 
-  def cancelOrder(orderID: String): js.Promise[HttpResponse[Portfolio]] = $http.delete(cancelOrderURL(orderID))
+  def cancelOrder(orderID: String): js.Promise[HttpResponse[Ok]] = $http.delete(cancelOrderURL(orderID))
 
   def createOrder(contestID: String, userID: String, order: NewOrderForm): js.Promise[HttpResponse[Ok]] = {
     $http.post(createOrderURL(contestID, userID), data = order)
+  }
+
+  def findOrderByID(orderID: String): js.Promise[HttpResponse[Order]] = {
+    $http.get(findOrderByIDURL(orderID))
   }
 
   def findOrders(contestID: String, userID: String): js.Promise[HttpResponse[js.Array[Order]]] = {

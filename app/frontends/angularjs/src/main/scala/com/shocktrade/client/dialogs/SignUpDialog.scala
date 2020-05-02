@@ -6,7 +6,6 @@ import com.shocktrade.common.forms.SignUpForm
 import com.shocktrade.common.models.user.UserProfile
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.dom.html.browser.console
-import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.npm.angularjs.{Timeout, _}
@@ -23,7 +22,7 @@ import scala.util.{Failure, Success}
  * Sign-Up Dialog Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class SignUpDialog($http: Http, $uibModal: Modal) extends Service {
+class SignUpDialog($uibModal: Modal) extends Service {
 
   def signUp(): js.Promise[SignUpDialogResult] = {
     val modalInstance = $uibModal.open[SignUpDialogResult](new ModalOptions(

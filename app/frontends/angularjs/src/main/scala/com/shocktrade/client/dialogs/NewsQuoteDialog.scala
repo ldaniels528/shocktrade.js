@@ -5,11 +5,9 @@ import com.shocktrade.client.discover.QuoteService
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper.ExceptionExtensions
 import io.scalajs.npm.angularjs._
-import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.util.PromiseHelper.Implicits._
-
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -19,7 +17,7 @@ import scala.util.{Failure, Success}
  * News Quote Dialog Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class NewsQuoteDialog($http: Http, $uibModal: Modal) extends Service {
+class NewsQuoteDialog($uibModal: Modal) extends Service {
 
   /**
    * Popups the News Quote Dialog

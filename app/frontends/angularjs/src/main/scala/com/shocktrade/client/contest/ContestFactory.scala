@@ -1,6 +1,5 @@
-package com.shocktrade.client
+package com.shocktrade.client.contest
 
-import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.common.models.contest.{Contest, Portfolio}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Factory, Interval, injected}
@@ -23,7 +22,7 @@ class ContestFactory($interval: Interval,
   private val contestCache: js.Dictionary[Contest] = js.Dictionary()
   private val portfolioCache: js.Dictionary[Portfolio] = js.Dictionary()
 
-  $interval(() => clear(), 30.seconds)
+  $interval(() => clear(), 15.seconds)
 
   /**
    * Clears the contest and portfolio caches

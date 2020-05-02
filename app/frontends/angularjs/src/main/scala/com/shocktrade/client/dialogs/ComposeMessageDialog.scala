@@ -1,7 +1,6 @@
 package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.dialogs.ComposeMessageDialogController.ComposeMessageResult
-import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.uibootstrap._
 import io.scalajs.npm.angularjs.{Controller, Scope, Service, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -14,7 +13,7 @@ import scala.scalajs.js
  * Compose Message Dialog Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ComposeMessageDialog($http: Http, $uibModal: Modal) extends Service {
+class ComposeMessageDialog($uibModal: Modal) extends Service {
 
   def popup(): Future[ComposeMessageResult] = {
     val $uibModalInstance = $uibModal.open[ComposeMessageResult](new ModalOptions(

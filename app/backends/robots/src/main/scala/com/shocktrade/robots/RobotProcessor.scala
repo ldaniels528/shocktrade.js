@@ -13,7 +13,7 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Random, Success}
 
 /**
  * Robot Processor
@@ -25,6 +25,7 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
   private val portfolioProxy = new PortfolioProxy(host, port)
   private val researchProxy = new ResearchProxy(host, port)
   private val userProxy = new UserProxy(host, port)
+  private val random = new Random()
 
   def start(robotName: String): Future[js.Array[RobotReport]] = {
     for {
@@ -56,7 +57,9 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
       orders = portfolios collect {
         case portfolio if portfolio.closedTime.flat.isEmpty =>
           import portfolio._
-          new RobotReport(contestID, userID, portfolioID, produceOrders(portfolio, stocks, costTarget = funds.map(_ / stocks.length).orZero))
+          val buyOrders = produceBuyOrders(portfolio, stocks, costTarget = funds.map(_ / stocks.length).orZero)
+          val sellOrders = produceSellOrders(portfolio, stocks)
+          new RobotReport(contestID, userID, portfolioID, orders = (buyOrders.toList ::: sellOrders.toList).toJSArray)
       }
     } yield orders
   }
@@ -65,13 +68,13 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
     val options = robotName match {
       case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = 10)
       case "gadget" => new ResearchOptions(priceMax = 0.50, changeMax = 0.0, spreadMin = 30.0, volumeMin = 1e+6, maxResults = 10)
-      case "teddy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 35.0, volumeMin = 1e+6, maxResults = 10)
+      case "teddy" => new ResearchOptions(priceMax = random.nextDouble(), changeMax = 0.0, spreadMin = random.nextInt(75).toDouble, maxResults = 10)
       case _ => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 10.0, volumeMin = 1e+6, maxResults = 10)
     }
     researchProxy.research(options)
   }
 
-  private def produceOrders(portfolio: Portfolio, stocks: Seq[ResearchQuote], costTarget: Double): js.Array[NewOrderForm] = {
+  private def produceBuyOrders(portfolio: Portfolio, stocks: Seq[ResearchQuote], costTarget: Double): js.Array[NewOrderForm] = {
     case class Accumulator(orders: List[NewOrderForm] = Nil, budget: Double)
     val candidateOrders = for {
       stock <- stocks
@@ -84,6 +87,10 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
       case (acc, _) => acc
     }
     results.orders.toJSArray
+  }
+
+  private def produceSellOrders(portfolio: Portfolio, stocks: Seq[ResearchQuote]): js.Array[NewOrderForm] = {
+    js.Array[NewOrderForm]()
   }
 
   private def saveOrders(reports: js.Array[RobotReport]): Future[js.Array[Ok]] = {

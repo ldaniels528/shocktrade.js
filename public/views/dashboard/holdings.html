@@ -1,6 +1,10 @@
 <div ng-controller="PositionsController" ng-init="initPositions()">
-    <div ng-include src="'/views/dashboard/portfolio_summary.html'" ng-show="portfolio.balance"></div>
-    <div class="col-md-12" style="border-top: 1px solid #cccccc; margin-top: 15px">
+    <div class="order_states white col-md-12">
+        <span ng-hide="getPositions().length">No positions found</span>
+        <span ng-show="getPositions().length === 1">{{ getPositions().length }} position found</span>
+        <span ng-show="getPositions().length > 1">{{ getPositions().length }} positions found</span>
+    </div>
+    <div class="col-md-12">
         <div class="col-md-2 bold left">Symbol</div>
         <div class="col-md-3 bold right" ng-hide="isPositionSelected()">Shares</div>
         <div class="col-md-3 bold right" ng-hide="isPositionSelected()">Market Price</div>
@@ -20,11 +24,6 @@
     </div>
 
     <div class="positionsContainer">
-        <div class="col-md-offset-1 col-md-11" ng-show="getPositions().length === 0">
-            <i class="fa fa-warning warning"></i>
-            <span class="warning">No positions found</span>
-        </div>
-
         <!-- Data Rows -->
         <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-2':(isPositionSelected())}" class="clickable">
             <div class="col-md-12 clickable" ng-repeat="p in getPositions() track by $index"

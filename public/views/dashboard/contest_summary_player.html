@@ -1,0 +1,46 @@
+<div>
+    <div class="row">
+        <span class="col-md-4">
+            Cash Available:
+            <span class="pull-right fundsAvailable">{{ portfolio.balance.funds || 0.00 | number:2 }}</span>
+        </span>
+        <!--
+        <span class="col-md-3 col-md-offset-1">
+            Access:
+            <span class="pull-right">
+                <select class="font">
+                    <option value="1">Everyone</option>
+                    <option value="2">Friends and Invites</option>
+                    <option value="3">Invitations Only</option>
+                </select>
+            </span>
+        </span>
+        -->
+        <span class="col-md-4">
+            Pending BUY Orders:
+            <span class="pull-right" ng-class="portfolio.balance.totalBuyOrders > portfolio.balance.funds ? 'profitable' : 'unprofitable'">
+                {{ portfolio.balance.totalBuyOrders || 0.00 | number:2 }}
+            </span>
+        </span>
+
+        <span class="col-md-4">
+            Experience Points Earned: <span class="pull-right profitable">{{ userProfile.totalXP || 0.00 | number:0 }}</span>
+        </span>
+    </div>
+
+    <div class="row">
+        <span class="col-md-4">
+            Total Equity:
+            <span class="pull-right fundsAvailable">{{ portfolio.balance.equity || 0.00 | number:2 }}</span>
+        </span>
+
+        <span class="col-md-4">
+            Pending SELL Orders:
+            <span class="pull-right fundsAvailable">{{ portfolio.balance.totalSellOrders || 0.00 | number:2 }}</span>
+        </span>
+
+        <span class="col-md-4">
+            Awards Earned: <span class="pull-right profitable">{{ userProfile.awards.length || 0 | number:0 }}</span>
+        </span>
+    </div>
+</div>

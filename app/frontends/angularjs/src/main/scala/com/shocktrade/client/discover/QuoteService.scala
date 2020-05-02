@@ -15,24 +15,22 @@ import scala.scalajs.js
 class QuoteService($http: Http) extends Service {
 
   def autoCompleteSymbols(searchTerm: String, maxResults: Int): js.Promise[HttpResponse[js.Array[AutoCompleteQuote]]] = {
-    $http.get[js.Array[AutoCompleteQuote]](s"/api/quotes/search?searchTerm=$searchTerm&maxResults=$maxResults")
+    $http.get(s"/api/quotes/search?searchTerm=$searchTerm&maxResults=$maxResults")
   }
 
   def getBasicQuote(symbol: String): js.Promise[HttpResponse[BasicQuote]] = {
-    $http.get[BasicQuote](s"/api/quote/$symbol/basic")
+    $http.get(s"/api/quote/$symbol/basic")
   }
 
   def getBasicQuotes(symbols: js.Array[String]): js.Promise[HttpResponse[js.Array[OrderQuote]]] = {
-    $http.post[js.Array[OrderQuote]]("/api/quotes/list", data = symbols)
+    $http.post("/api/quotes/list", data = symbols)
   }
 
   def getCompleteQuote(symbol: String): js.Promise[HttpResponse[CompleteQuote]] = {
-    $http.get[CompleteQuote](s"/api/quote/$symbol/discover")
+    $http.get(s"/api/quote/$symbol/discover")
   }
 
-  def getExchangeCounts: js.Promise[HttpResponse[js.Array[js.Dynamic]]] = {
-    $http.get[js.Array[js.Dynamic]]("/api/exchanges")
-  }
+  def getExchangeCounts: js.Promise[HttpResponse[js.Array[js.Dynamic]]] = $http.get("/api/exchanges")
 
   def getFilterQuotes(aFilter: js.UndefOr[js.Any]): js.Promise[HttpResponse[js.Dynamic]] = {
     aFilter.flat.toOption match {
@@ -44,19 +42,23 @@ class QuoteService($http: Http) extends Service {
   }
 
   def getOrderQuote(symbol: String): js.Promise[HttpResponse[OrderQuote]] = {
-    $http.get[OrderQuote](s"/api/quote/$symbol/order")
+    $http.get(s"/api/quote/$symbol/order")
   }
 
   def getKeyStatistics(symbol: String): js.Promise[HttpResponse[KeyStatistics]] = {
-    $http.get[KeyStatistics](s"/api/quote/$symbol/statistics")
+    $http.get(s"/api/quote/$symbol/statistics")
   }
 
   def getTradingHistory(symbol: String): js.Promise[HttpResponse[js.Array[HistoricalQuote]]] = {
-    $http.get[js.Array[HistoricalQuote]](s"/api/quote/$symbol/history")
+    $http.get(s"/api/quote/$symbol/history")
   }
 
 }
 
+/**
+ * Quote Services Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object QuoteService {
 
   type BasicQuote = js.Object

@@ -36,8 +36,8 @@ class StockQuoteDialog($uibModal: Modal) extends Service {
  */
 case class StockQuoteDialogController($scope: StockQuoteDialogScope, $timeout: Timeout,
                                       $uibModalInstance: ModalInstance[StockQuoteDialogResult],
-                                      @injected("symbol") symbol: () => String,
-                                      @injected("QuoteService") quoteService: QuoteService) extends Controller {
+                                      @injected("QuoteService") quoteService: QuoteService,
+                                      @injected("symbol") symbol: () => String) extends Controller {
 
   $scope.cancel = () => $uibModalInstance.dismiss("cancel")
 

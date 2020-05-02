@@ -6,9 +6,9 @@ import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.contest.PortfolioHelper._
 import com.shocktrade.webapp.routes.contest.dao._
+import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
 import com.shocktrade.webapp.vm.opcodes.{CancelOrder, CreateOrder, PurchasePerks}
-import com.shocktrade.webapp.vm.{VirtualMachine, VirtualMachineSupport}
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolioDAO: PortfolioDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
-  extends PortfolioAPI with VirtualMachineSupport {
+  extends PortfolioAPI {
   // individual objects
   app.get(findPortfolioByIDURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => findPortfolioByID(request, response, next))
   app.get(findHeldSecuritiesURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => findHeldSecurities(request, response, next))
@@ -35,6 +35,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
 
   // orders
   app.delete(cancelOrderURL(":orderID"), (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
+  app.get(findOrderByIDURL(":orderID"), (request: Request, response: Response, next: NextFunction) => findOrderByID(request, response, next))
   app.get(findOrdersURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
   app.post(createOrderURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
 
@@ -98,6 +99,18 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val orderID = request.params("orderID")
     vm.invoke(new CancelOrder(orderID)) onComplete {
       case Success(result) => response.send(Ok(1)); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
+    }
+  }
+
+  /**
+   * Retrieves an order by ID
+   */
+  def findOrderByID(request: Request, response: Response, next: NextFunction): Unit = {
+    val orderID = request.params("orderID")
+    portfolioDAO.findOrderByID(orderID) onComplete {
+      case Success(Some(order)) => response.send(order); next()
+      case Success(None) => response.notFound(request.params); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

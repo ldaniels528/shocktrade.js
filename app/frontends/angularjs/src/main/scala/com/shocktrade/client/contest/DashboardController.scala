@@ -3,10 +3,10 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
+import com.shocktrade.client.contest.PerksDialog._
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
-import com.shocktrade.client.dialogs.PerksDialogController.PerksDialogResult
-import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog, PlayerProfileDialog}
+import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PlayerProfileDialog}
 import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
@@ -63,8 +63,8 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   private val portfolioTabs = js.Array(
     new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html"),
     new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", isAuthRequired = true),
-    new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html", isAuthRequired = true),
-    new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html", isAuthRequired = true),
+    new PortfolioTab(name = "My Orders", icon = "fa-list-alt", path = "/views/dashboard/orders.html", isAuthRequired = true),
+    new PortfolioTab(name = "My Holdings", icon = "fa-ravelry", path = "/views/dashboard/holdings.html", isAuthRequired = true),
     new PortfolioTab(name = "My Awards", icon = "fa-trophy", path = "/views/dashboard/awards.html", isAuthRequired = true),
     new PortfolioTab(name = "My Perks", icon = "fa-gift", path = "/views/dashboard/perks.html", isAuthRequired = true))
 
@@ -91,7 +91,6 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.initDash = () => {
     console.info(s"${getClass.getSimpleName} initializing...")
-    portfolioTabs.zipWithIndex.foreach { case (tab, index) => tab.active = index == 0 }
     initDash()
   }
 

@@ -2,7 +2,6 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import io.scalajs.npm.angularjs._
-import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.social.facebook.TaggableFriend
 import io.scalajs.util.ScalaJsHelper._
@@ -13,7 +12,7 @@ import scala.scalajs.js
  * Invite Player Dialog Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
+class InvitePlayerDialog($uibModal: Modal) extends Service {
 
   /**
    * Invite a player via pop-up dialog

@@ -34,6 +34,8 @@ trait PortfolioAPI extends BaseAPI {
 
   def findHeldSecuritiesURL(portfolioID: String): String = s"$baseURL/api/portfolio/$portfolioID/heldSecurities"
 
+  def findOrderByIDURL(orderID: String) = s"$baseURL/api/order/$orderID"
+
   def findOrdersURL(contestID: String, userID: String) = s"$baseURL/api/orders/$contestID/user/$userID"
 
   def findPortfolioBalanceURL(contestID: String, userID: String) = s"$baseURL/api/portfolio/contest/$contestID/user/$userID/balance"

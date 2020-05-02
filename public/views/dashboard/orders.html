@@ -1,13 +1,22 @@
 <div ng-controller="OrdersController" ng-init="initOrders()">
     <div class="order_states col-md-12">
-        <span class="order_states clickable" ng-click="showOpenOrders = !showOpenOrders">
-            Open Orders <i ng-class="showOpenOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
+        <span class="col-md-4">
+            <span ng-hide="getOrders().length">No orders found</span>
+            <span ng-show="getOrders().length === 1">{{ getOrders().length }} order found</span>
+            <span ng-show="getOrders().length > 1">{{ getOrders().length }} orders found</span>
         </span>
-        <span class="order_states clickable" ng-click="showClosedOrders = !showClosedOrders">
-            Closed Orders <i ng-class="showClosedOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
+        <span class="col-md-4">
+            <span class="clickable" ng-click="showOpenOrders = !showOpenOrders">
+                Open Orders <i ng-class="showOpenOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
+            </span>
+            <span class="clickable" ng-click="showClosedOrders = !showClosedOrders">
+                Closed Orders <i ng-class="showClosedOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
+            </span>
         </span>
-        <span ng-click="popupNewOrderDialog(contest.contestID, userProfile.userID, selectedSymbol)" class="clickable pull-right" style="padding-right: 16px">
-            <i class="fa fa-plus-circle"></i> Create a new order.
+        <span class="col-md-4">
+            <span ng-click="popupNewOrderDialog(contest.contestID, userProfile.userID, selectedSymbol)" class="clickable pull-right" style="padding-right: 16px">
+                <i class="fa fa-plus-circle"></i> Create a new order.
+            </span>
         </span>
     </div>
     <div class="col-md-12">
@@ -29,26 +38,17 @@
     </div>
 
     <div class="ordersContainer">
-        <div class="col-md-offset-1 col-md-11" ng-show="getOrders().length === 0">
-            <i class="fa fa-warning warning"></i>
-            <span class="warning">No orders found</span>
-        </div>
-
         <!-- Data Rows -->
-        <div ng-class="{'col-md-12':(!isOrderSelected()), 'col-md-3':(isOrderSelected())}">
+        <div class="col-md-12">
             <div class="col-md-12 clickable" ng-repeat="o in getOrders() track by $index"
                  ng-class-even="'contest_even'"
-                 ng-class-odd="'contest_odd'"
-                 ng-class="selectedOrder.orderID === o.orderID ? 'selected' : ''"
-                 ng-click="selectOrder(o)">
+                 ng-class-odd="'contest_odd'">
                 <div class="col-md-2">
-                    <span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="loadQuote(o.symbol, true)">
+                    <span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="popupOrderReviewDialog(o.orderID)">
                         <span ng-class="selectedOrder.orderID === o.orderID ? 'underlined' : ''">{{ o.symbol }}</span>
                     </span>
                 </div>
-                <div ng-hide="isOrderSelected()" class="col-md-2 left">
-                    {{ o.orderType }} &#8212; {{ o.priceType }}
-                </div>
+                <div ng-hide="isOrderSelected()" class="col-md-2 left">{{ o.orderType }} &#8212; {{ o.priceType }}</div>
                 <div ng-hide="isOrderSelected()" class="col-md-2 right">
                     <span ng-show="o.priceType == 'LIMIT'">$ {{ o.price | quoteNumber }}</span>
                     <span ng-hide="o.priceType == 'LIMIT'" class="positive">$ {{ o.lastTrade | quoteNumber }}</span>
@@ -61,74 +61,6 @@
                     <span ng-show="!o.message && !o.closed" class="positive">Pending</span>
                     <span ng-show="!o.message && o.closed && !o.fulfilled">Closed</span>
                     <span ng-show="!o.message && o.closed && o.fulfilled">Processed {{ o.processedTime | duration }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Expanded Section -->
-        <div ng-if="isOrderSelected()" class="col-md-9">
-            <div class="row">
-                <div class="col-md-5 bold">Order #</div>
-                <div class="col-md-7">{{ selectedOrder.orderID }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Order Type</div>
-                <div class="col-md-7">{{ selectedOrder.orderType }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Creation Time</div>
-                <div class="col-md-7">{{ selectedOrder.creationTime | duration }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Expires</div>
-                <div class="col-md-7" ng-show=" selectedOrder.expirationTime">{{ selectedOrder.expirationTime | duration }}</div>
-                <div class="col-md-7" ng-hide=" selectedOrder.expirationTime" class="null">N/A</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Exchange</div>
-                <div class="col-md-7">
-                    <span ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.exchange }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Last Sale</div>
-                <div class="col-md-7">
-                    <span ng-show="selectedOrder.lastTrade">$ {{ selectedOrder.lastTrade | quoteNumber }}</span>
-                    <span ng-hide="selectedOrder.lastTrade" class="null">Not Available</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Price</div>
-                <div class="col-md-7">$ {{ selectedOrder.price | quoteNumber }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Price Type</div>
-                <div class="col-md-7">{{ selectedOrder.priceType }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Quantity</div>
-                <div class="col-md-7">{{ selectedOrder.quantity | number }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Estimated Cost</div>
-                <div class="col-md-7">$ {{ computeOrderCost(selectedOrder) | number:2 }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Allow Partial Fulfillment</div>
-                <div class="col-md-7">{{ selectedOrder.partialFulfillment ? "Yes" : "No" }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Notify By Email</div>
-                <div class="col-md-7">{{ selectedOrder.emailNotify ? "Yes" : "No" }}</div>
-            </div>
-            <div class="row" ng-show="!selectedOrder.closed">
-                <div class="col-md-offset-5 col-md-7">
-                    <button class="btn btn-default cancel_button"
-                            ng-click="cancelOrder(selectedOrder.orderID)"
-                            ng-disabled="isCancelingOrder">
-                        <img ng-show="isCancelingOrder" src="/images/status/loading16.gif">
-                        <i class="fa fa-warning"></i> Cancel
-                    </button>
                 </div>
             </div>
         </div>

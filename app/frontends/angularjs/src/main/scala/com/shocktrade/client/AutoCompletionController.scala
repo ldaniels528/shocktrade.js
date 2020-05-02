@@ -18,7 +18,7 @@ abstract class AutoCompletionController($scope: AutoCompletionControllerScope, $
 
   $scope.autoCompleteSymbols = (aSearchTerm: js.UndefOr[String]) => aSearchTerm map { searchTerm =>
     val deferred = $q.defer[js.Array[AutoCompleteQuote]]()
-    quoteService.autoCompleteSymbols(searchTerm, maxResults = 20) onComplete {
+    quoteService.autoCompleteSymbols(searchTerm, maxResults = 10) onComplete {
       case Success(response) => deferred.resolve(response.data)
       case Failure(e) => deferred.reject(e.getMessage)
     }

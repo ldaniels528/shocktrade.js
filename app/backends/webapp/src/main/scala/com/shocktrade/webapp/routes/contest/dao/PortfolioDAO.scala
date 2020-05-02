@@ -18,6 +18,8 @@ trait PortfolioDAO {
   //  Order Management
   ///////////////////////////////////////////////////////////////////////
 
+  def findOrderByID(orderID: String): Future[Option[OrderData]]
+
   def findOrders(contestID: String, userID: String): Future[js.Array[OrderData]]
 
   ///////////////////////////////////////////////////////////////////////

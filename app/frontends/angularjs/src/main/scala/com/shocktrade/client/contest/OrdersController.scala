@@ -4,9 +4,11 @@ import com.shocktrade.client.GameState._
 import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
+import com.shocktrade.client.contest.OrderReviewDialog.{OrderReviewDialogPopupSupport, OrderReviewDialogPopupSupportScope}
 import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
 import com.shocktrade.client.users.UserService
-import com.shocktrade.common.models.contest.{Order, Portfolio}
+import com.shocktrade.common.Ok
+import com.shocktrade.common.models.contest.Order
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -28,18 +30,18 @@ import scala.util.{Failure, Success}
  * Orders Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRouteParams,
-                       $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                       @injected("PortfolioService") portfolioService: PortfolioService,
-                       @injected("UserService") userService: UserService)
-  extends Controller with GlobalLoading {
+case class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRouteParams,
+                            $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                            @injected("OrderReviewDialog") orderReviewDialog: OrderReviewDialog,
+                            @injected("PortfolioService") portfolioService: PortfolioService,
+                            @injected("UserService") userService: UserService)
+  extends Controller with GlobalLoading with OrderReviewDialogPopupSupport {
 
   implicit val cookies: Cookies = $cookies
   private val marketOrderTypes = js.Array("MARKET", "MARKET_ON_CLOSE")
 
   $scope.showOpenOrders = true
-  $scope.showClosedOrders = true
-  $scope.selectedOrder = js.undefined
+  $scope.showClosedOrders = false
   $scope.orders = js.undefined
 
   /////////////////////////////////////////////////////////////////////
@@ -91,13 +93,7 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
     anOrder.exists(order => order.priceType.exists(marketOrderTypes.contains))
   }
 
-  $scope.isOrderSelected = () => $scope.getOrders().nonEmpty && $scope.selectedOrder.nonEmpty
-
-  $scope.selectOrder = (order: js.UndefOr[Order]) => $scope.selectedOrder = order
-
-  $scope.toggleSelectedOrder = () => $scope.selectedOrder = js.undefined
-
-  private def cancelOrder(orderID: String): js.Promise[HttpResponse[Portfolio]] = {
+  private def cancelOrder(orderID: String): js.Promise[HttpResponse[Ok]] = {
     $scope.isCancelingOrder = true
     val outcome = portfolioService.cancelOrder(orderID)
     outcome onComplete {
@@ -125,21 +121,17 @@ object OrdersController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait OrdersControllerScope extends Scope {
+  trait OrdersControllerScope extends Scope with OrderReviewDialogPopupSupportScope {
     // functions
     var initOrders: js.Function0[js.UndefOr[js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Order]])]]] = js.native
     var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native
-    var cancelOrder: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Portfolio]]]] = js.native
+    var cancelOrder: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Ok]]]] = js.native
     var getOrders: js.Function0[js.UndefOr[js.Array[Order]]] = js.native
     var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean] = js.native
-    var isOrderSelected: js.Function0[Boolean] = js.native
-    var selectOrder: js.Function1[js.UndefOr[Order], Unit] = js.native
-    var toggleSelectedOrder: js.Function0[Unit] = js.native
 
     // variables
     var orders: js.UndefOr[js.Array[Order]] = js.native
     var isCancelingOrder: js.UndefOr[Boolean] = js.native
-    var selectedOrder: js.UndefOr[Order] = js.native
     var showClosedOrders: js.UndefOr[Boolean] = js.native
     var showOpenOrders: js.UndefOr[Boolean] = js.native
     var userProfile: js.UndefOr[UserProfile] = js.native

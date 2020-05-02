@@ -18,6 +18,16 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
   //  Order Management
   ///////////////////////////////////////////////////////////////////////
 
+  override def findOrderByID(orderID: String): Future[Option[OrderData]] = {
+    conn.queryFuture[OrderData](
+      """|SELECT O.*, S.lastTrade
+         |FROM orders O
+         |LEFT  JOIN stocks S ON S.symbol = O.symbol
+         |WHERE O.orderID = ?
+         |""".stripMargin,
+      js.Array(orderID)).map(_._1.headOption)
+  }
+
   override def findOrders(contestID: String, userID: String): Future[js.Array[OrderData]] = {
     conn.queryFuture[OrderData](
       """|SELECT O.*, S.lastTrade
@@ -25,6 +35,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
          |LEFT  JOIN stocks S ON S.symbol = O.symbol
          |WHERE P.contestID = ? AND P.userID = ?
+         |AND (O.closed = 0 OR now() < DATE_ADD(O.processedTime, INTERVAL 1 DAY))
          |""".stripMargin,
       js.Array(contestID, userID)).map(_._1)
   }
@@ -44,22 +55,33 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
   override def findPortfolioBalance(contestID: String, userID: String): Future[Option[PortfolioBalance]] = {
     conn.queryFuture[PortfolioBalance](
       """|SELECT
-         |  C.contestID, C.name, U.userID, U.username, U.wallet, P.funds,
-         |  IFNULL(MAX(SP.tradeDateTime), NOW()) AS asOfDate,
-         |  SUM(SP.lastTrade * PS.quantity) equity,
-         |  SUM(CASE WHEN O.orderType = 'BUY' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalBuyOrders,
-         |  SUM(CASE WHEN O.orderType = 'SELL' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalSellOrders
-         |FROM users U
-         |INNER JOIN portfolios P ON P.userID = U.userID
+         |    P.userID, P.funds,
+         |    IFNULL(SUM(S.lastTrade * PS.quantity),0) equity,
+         |    IFNULL(MAX(S.tradeDateTime), NOW()) AS asOfDate,
+         |    (SELECT SUM(S.lastTrade * O.quantity)
+         |      FROM orders O
+         |      INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
+         |      LEFT JOIN stocks S ON S.symbol = O.symbol
+         |      WHERE O.orderType = 'BUY'
+         |      AND O.closed = 0
+         |      AND O.portfolioID = P.portfolioID
+         |      AND P.userID = ?) AS totalBuyOrders,
+         |    (SELECT SUM(S.lastTrade * O.quantity)
+         |      FROM orders O
+         |      INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
+         |      LEFT JOIN stocks S ON S.symbol = O.symbol
+         |      WHERE O.orderType = 'SELL'
+         |      AND O.closed = 0
+         |      AND O.portfolioID = P.portfolioID
+         |      AND P.userID = ?) AS totalSellOrders
+         |FROM portfolios P
          |INNER JOIN contests C ON C.contestID = P.contestID
-         |LEFT JOIN orders O ON O.portfolioID = P.portfolioID
-         |LEFT JOIN stocks SO ON SO.symbol = O.symbol
-         |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID AND PS.quantity > 0
-         |LEFT JOIN stocks SP ON SP.symbol = PS.symbol
-         |WHERE C.contestID = ? AND U.userID = ?
-         |GROUP BY C.contestID, C.name, U.userID, U.username, U.wallet, P.funds
+         |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+         |LEFT JOIN stocks S ON S.symbol = PS.symbol
+         |WHERE C.contestID = ? AND P.userID = ?
+         |GROUP BY P.userID, P.funds
          |""".stripMargin,
-      js.Array(contestID, userID)).map(_._1.headOption)
+      js.Array(userID, userID, contestID, userID)).map(_._1.headOption)
   }
 
   override def findPortfolioByID(portfolioID: String): Future[Option[PortfolioData]] = {
