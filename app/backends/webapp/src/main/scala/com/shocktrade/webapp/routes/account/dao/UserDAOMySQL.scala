@@ -35,23 +35,6 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
-  //    Account Management
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  override def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
-    import account._
-    for {
-      ok <- conn.executeFuture(
-        """|INSERT INTO users (userID, username, email, password, wallet)
-           |VALUES (uuid(), ?, ?, ?, ?)
-           |""".stripMargin,
-        js.Array(username, email, password, wallet)) if ok.affectedRows == 1
-
-      newAccount <- findUserByName(username.orNull)
-    } yield newAccount
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
   //    Awards
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -63,12 +46,6 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    Icon Management
   /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  override def createIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int] = {
-    import icon._
-    conn.executeFuture("REPLACE INTO user_icons (userID, name, mime, image) VALUES (?, ?, ?, ?)", js.Array(userID, name, mime, image))
-      .map(_.affectedRows)
-  }
 
   override def findUserIcon(userID: String)(implicit ec: ExecutionContext): Future[Option[UserIconData]] = {
     conn.queryFuture[UserIconData]("SELECT * FROM user_icons WHERE userID = ?", js.Array(userID))

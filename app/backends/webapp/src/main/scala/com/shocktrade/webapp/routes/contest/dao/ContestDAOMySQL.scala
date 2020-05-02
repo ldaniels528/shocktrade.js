@@ -110,11 +110,6 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
        |""".stripMargin
   }
 
-  override def updateContest(contest: ContestData): Future[Int] = {
-    import contest._
-    conn.executeFuture("UPDATE contests SET name = ? WHERE contestID = ?", js.Array(name, contestID)).map(_.affectedRows)
-  }
-
   override def findChatMessages(contestID: String): Future[js.Array[ChatMessage]] = {
     conn.queryFuture[ChatMessage](
       """|SELECT CC.*, U.username

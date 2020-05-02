@@ -6,7 +6,7 @@ import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationRespo
 import com.shocktrade.common.models.Award
 import com.shocktrade.common.models.contest.{ContestRanking, Perk}
 import com.shocktrade.server.dao.MySQLDAO
-import com.shocktrade.webapp.routes.account.dao.UserProfileData
+import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData, UserProfileData}
 import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData, PortfolioData, PositionData}
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.{AwardsRecommendation, Proceeds, _}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -21,8 +21,30 @@ import scala.scalajs.js.JSConverters._
  * Virtual Machine DAO (MySQL implementation)
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext)
-  extends MySQLDAO(options) with VirtualMachineDAO {
+class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options)
+  with VirtualMachineDAO {
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Account Management
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  override def createIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int] = {
+    import icon._
+    conn.executeFuture(
+      """|REPLACE INTO user_icons (userID, name, mime, image)
+         |VALUES (?, ?, ?, ?)
+         |""".stripMargin,
+      js.Array(userID, name, mime, image)).map(_.affectedRows)
+  }
+
+  override def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Int] = {
+    import account._
+    conn.executeFuture(
+      """|INSERT INTO users (userID, username, email, password, wallet)
+         |VALUES (uuid(), ?, ?, ?, ?)
+         |""".stripMargin,
+      js.Array(username, email, password, wallet)).map(_.affectedRows) map checkInsertCount
+  }
 
   //////////////////////////////////////////////////////////////////
   //    Contest Functions
@@ -83,6 +105,11 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
           |WHERE contestID = ? AND hostUserID = ? AND statusID <> CS.statusID
           |""".stripMargin,
       js.Array(contestID, userID)) map (_.affectedRows > 0)
+  }
+
+  override def updateContest(contest: ContestData): Future[Int] = {
+    import contest._
+    conn.executeFuture("UPDATE contests SET name = ? WHERE contestID = ?", js.Array(name, contestID)).map(_.affectedRows)
   }
 
   //////////////////////////////////////////////////////////////////

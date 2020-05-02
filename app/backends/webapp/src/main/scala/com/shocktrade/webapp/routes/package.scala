@@ -1,7 +1,7 @@
 package com.shocktrade.webapp
 
 import com.shocktrade.server.common.TradingClock
-import com.shocktrade.webapp.routes.account.dao.{AuthenticationDAO, UserDAO}
+import com.shocktrade.webapp.routes.account.dao.UserDAO
 import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.routes.discover.dao._
 import com.shocktrade.webapp.routes.research.dao.ResearchDAO
@@ -21,7 +21,6 @@ package object routes {
 
   object dao {
 
-    implicit val authenticationDAO: AuthenticationDAO = AuthenticationDAO()
     implicit val autoCompleteDAO: AutoCompleteDAO = AutoCompleteDAO()
     implicit val contestDAO: ContestDAO = ContestDAO()
     implicit val exploreDAO: ExploreDAO = ExploreDAO()

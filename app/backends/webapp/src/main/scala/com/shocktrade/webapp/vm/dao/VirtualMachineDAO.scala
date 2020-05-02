@@ -2,7 +2,8 @@ package com.shocktrade.webapp.vm.dao
 
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
 import com.shocktrade.server.dao.DataAccessObjectHelper
-import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
+import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData}
+import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData, PositionData}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -13,6 +14,14 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 trait VirtualMachineDAO {
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Account Management
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  def createIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int]
+
+  def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Int]
 
   //////////////////////////////////////////////////////////////////
   //    Contest Functions
@@ -29,6 +38,8 @@ trait VirtualMachineDAO {
   def sendChatMessage(contestID: String, userID: String, message: String): Future[Int]
 
   def startContest(contestID: String, userID: String): Future[Boolean]
+
+  def updateContest(contest: ContestData): Future[Int]
 
   //////////////////////////////////////////////////////////////////
   //    Player Functions

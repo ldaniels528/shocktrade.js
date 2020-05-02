@@ -24,7 +24,9 @@ import scala.util.{Failure, Success}
  * Contest Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine) extends ContestAPI {
+class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
+  extends ContestAPI {
+
   // individual contests
   app.post(createNewGameURL, (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
   app.get(findContestByIDURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))

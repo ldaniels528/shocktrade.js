@@ -2,12 +2,15 @@ package com.shocktrade.webapp.routes.account
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.UserAPI
-import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
+import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm}
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.SignUpForm
 import com.shocktrade.common.models.user.OnlineStatus
 import com.shocktrade.webapp.routes._
-import com.shocktrade.webapp.routes.account.dao.{AuthenticationDAO, UserAccountData, UserDAO, UserIconData}
+import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserDAO, UserIconData}
+import com.shocktrade.webapp.vm.VirtualMachine
+import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
+import com.shocktrade.webapp.vm.opcodes.{CreateIcon, CreateUserAccount}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
@@ -22,7 +25,7 @@ import scala.util.{Failure, Random, Success}
  * User Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class UserRoutes(app: Application)(implicit ec: ExecutionContext, authenticationDAO: AuthenticationDAO, userDAO: UserDAO)
+class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
   extends UserAPI with RemoteEventSupport {
   private val onlineStatuses = js.Dictionary[OnlineStatus]()
 
@@ -113,12 +116,13 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
     args match {
       case Some((username, email, password, passwordConfirm)) =>
         val outcome = for {
-          account_? <- userDAO.createUserAccount(new UserAccountData(
+           _ <- vm.invoke(CreateUserAccount(new UserAccountData(
             username = username,
             email = email,
             password = password,
             wallet = 250e+3,
-          ))
+          )))
+          account_? <- userDAO.findUserByName(username)
         } yield account_?
 
         outcome onComplete {
@@ -202,19 +206,10 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
 
     args match {
       case Some((username, password, authCode)) =>
-        authenticationDAO.findByUsername(username) onComplete {
-          case Success(Some(accountData)) =>
-            response.send(new AuthenticationResponse(
-              userID = accountData.userID,
-              username = accountData.username,
-              email = accountData.email,
-              wallet = accountData.wallet
-            ))
-            next()
-          case Success(None) =>
-            response.notFound(form); next()
-          case Failure(e) =>
-            response.internalServerError(e.getMessage); next()
+        userDAO.findUserByName(username) onComplete {
+          case Success(Some(accountData)) => response.send(accountData); next()
+          case Success(None) => response.notFound(form); next()
+          case Failure(e) => response.internalServerError(e.getMessage); next()
         }
       case None =>
         response.badRequest("The username and password are required"); next()
@@ -270,7 +265,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, authentication
  */
 object UserRoutes {
 
-  def writeImage(name: String, path: String)(implicit userDAO: UserDAO): Future[Int] = {
+  def writeImage(name: String, path: String)(implicit userDAO: UserDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine): Future[Int] = {
     val suffix = path.lastIndexOf(".") match {
       case -1 => None
       case index => Some(path.substring(index + 1).toLowerCase())
@@ -283,8 +278,8 @@ object UserRoutes {
     for {
       data <- Fs.readFileFuture(path)
       Some(user) <- userDAO.findUserByName(name)
-      w <- userDAO.createIcon(new UserIconData(userID = user.userID, name = name, mime = mime, image = data))
-    } yield w
+      _ <- vm.invoke(CreateIcon(new UserIconData(userID = user.userID, name = name, mime = mime, image = data)))
+    } yield 1
   }
 
 }

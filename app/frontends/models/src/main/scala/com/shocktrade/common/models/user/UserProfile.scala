@@ -8,6 +8,7 @@ import scala.scalajs.js
  */
 class UserProfile(var userID: js.UndefOr[String] = js.undefined,
                   var username: js.UndefOr[String] = js.undefined,
+                  var email: js.UndefOr[String] = js.undefined,
                   var level: js.UndefOr[Int] = js.undefined,
                   var equity: js.UndefOr[Double] = js.undefined,
                   var funds: js.UndefOr[Double] = js.undefined,

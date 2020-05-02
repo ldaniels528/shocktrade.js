@@ -20,8 +20,6 @@ trait ContestDAO {
 
   def contestSearch(form: ContestSearchOptions): Future[js.Array[ContestSearchResult]]
 
-  def updateContest(contest: ContestData): Future[Int]
-
   def findChatMessages(contestID: String): Future[js.Array[ChatMessage]]
 
 }
