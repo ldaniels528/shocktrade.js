@@ -1,6 +1,5 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.contest.PerksDialog._
@@ -38,6 +37,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
                                $cookies: Cookies, $interval: Interval, $timeout: Timeout, toaster: Toaster, $window: Window,
                                @injected("ContestFactory") contestFactory: ContestFactory,
                                @injected("ContestService") contestService: ContestService,
+                               @injected("GameStateService") gameStateService: GameStateService,
                                @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
                                @injected("MarketStatusService") marketStatusService: MarketStatusService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
@@ -58,7 +58,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.maxPlayers = AppConstants.MaxPlayers
 
-  private val _userID = $cookies.getGameState.userID
+  private val _userID = gameStateService.getUserID
 
   private val portfolioTabs = js.Array(
     new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html"),

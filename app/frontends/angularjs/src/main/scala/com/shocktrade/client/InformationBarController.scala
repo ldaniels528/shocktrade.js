@@ -1,6 +1,5 @@
 package com.shocktrade.client
 
-import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestEntrySupport, ContestEntrySupportScope}
 import com.shocktrade.client.dialogs.StockQuoteDialog.{StockQuoteDialogSupport, StockQuoteDialogSupportScope}
@@ -26,6 +25,7 @@ import scala.util.{Failure, Success}
  */
 case class InformationBarController($scope: InformationBarControllerScope, $cookies: Cookies,
                                     $location: Location, $q: Q, toaster: Toaster,
+                                    @injected("GameStateService") gameStateService: GameStateService,
                                     @injected("PlayerProfileDialog") playerProfileDialog: PlayerProfileDialog,
                                     @injected("ReactiveSearchService") reactiveSearchSvc: ReactiveSearchService,
                                     @injected("StockQuoteDialog") stockQuoteDialog: StockQuoteDialog,
@@ -45,7 +45,7 @@ case class InformationBarController($scope: InformationBarControllerScope, $cook
 
   $scope.initInfoBar = () => {
     console.log(s"${getClass.getSimpleName} is initializing...")
-    $cookies.getGameState.userID.map(initInfoBar)
+    gameStateService.getUserID.map(initInfoBar)
   }
 
   $scope.onUserProfileUpdated { (_, profile) => $scope.userProfile = profile }

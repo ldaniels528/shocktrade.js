@@ -1,18 +1,16 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GameState._
-import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.contest.OrderReviewDialog.{OrderReviewDialogPopupSupport, OrderReviewDialogPopupSupportScope}
 import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
-import com.shocktrade.client.users.UserService
+import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope, UserService}
+import com.shocktrade.client.{GameStateService, GlobalLoading}
 import com.shocktrade.common.Ok
 import com.shocktrade.common.models.contest.Order
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
-import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
@@ -31,13 +29,13 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRouteParams,
-                            $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                            $timeout: Timeout, toaster: Toaster,
+                            @injected("GameStateService") gameStateService: GameStateService,
                             @injected("OrderReviewDialog") orderReviewDialog: OrderReviewDialog,
                             @injected("PortfolioService") portfolioService: PortfolioService,
                             @injected("UserService") userService: UserService)
-  extends Controller with GlobalLoading with OrderReviewDialogPopupSupport {
+  extends Controller with GlobalLoading with OrderReviewDialogPopupSupport with PersonalSymbolSupport {
 
-  implicit val cookies: Cookies = $cookies
   private val marketOrderTypes = js.Array("MARKET", "MARKET_ON_CLOSE")
 
   $scope.showOpenOrders = true
@@ -51,7 +49,7 @@ case class OrdersController($scope: OrdersControllerScope, $routeParams: Dashboa
   $scope.initOrders = () => {
     for {
       contestID <- $routeParams.contestID
-      userID <- $cookies.getGameState.userID
+      userID <- gameStateService.getUserID
     } yield initOrders(contestID, userID)
   }
 
@@ -121,7 +119,7 @@ object OrdersController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait OrdersControllerScope extends Scope with OrderReviewDialogPopupSupportScope {
+  trait OrdersControllerScope extends Scope with OrderReviewDialogPopupSupportScope with PersonalSymbolSupportScope {
     // functions
     var initOrders: js.Function0[js.UndefOr[js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Order]])]]] = js.native
     var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native

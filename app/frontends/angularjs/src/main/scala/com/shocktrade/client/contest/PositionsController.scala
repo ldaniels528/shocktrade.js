@@ -1,6 +1,5 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.PositionsController.PositionsControllerScope
@@ -12,7 +11,6 @@ import com.shocktrade.common.models.contest.Position
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
-import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, injected}
@@ -27,15 +25,12 @@ import scala.util.{Failure, Success}
  * Positions Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-case class PositionsController($scope: PositionsControllerScope, $routeParams: DashboardRouteParams,
-                               $cookies: Cookies, toaster: Toaster,
+case class PositionsController($scope: PositionsControllerScope, $routeParams: DashboardRouteParams, toaster: Toaster,
                                @injected("GameStateService") gameStateService: GameStateService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("PortfolioService") portfolioService: PortfolioService,
                                @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading with PersonalSymbolSupport {
-
-  implicit val cookies: Cookies = $cookies
 
   $scope.selectedPosition = js.undefined
   $scope.userProfile = js.undefined
@@ -44,7 +39,7 @@ case class PositionsController($scope: PositionsControllerScope, $routeParams: D
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.initPositions = () => for (contestID <- $routeParams.contestID; userID <- $cookies.getGameState.userID) yield {
+  $scope.initPositions = () => for (contestID <- $routeParams.contestID; userID <- gameStateService.getUserID) yield {
     initPositions(contestID, userID)
   }
 
@@ -83,7 +78,7 @@ case class PositionsController($scope: PositionsControllerScope, $routeParams: D
   $scope.sellPosition = (aSymbol: js.UndefOr[String], aQuantity: js.UndefOr[Double]) => {
     for {
       contestID <- $routeParams.contestID
-      userID <- $cookies.getGameState.userID
+      userID <- gameStateService.getUserID
       symbol <- aSymbol
       quantity <- aQuantity
     } yield newOrderDialog.popup(new NewOrderParams(contestID, userID, symbol = symbol, quantity = quantity))

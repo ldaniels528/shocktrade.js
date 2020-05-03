@@ -32,7 +32,7 @@ trait PersonalSymbolSupport {
 
   $scope.isHeldSymbol = (aSymbol: js.UndefOr[String]) => aSymbol.exists($scope.heldSymbols.contains)
 
-  $scope.addRecentSymbol = (aSymbol: js.UndefOr[String]) => aSymbol.foreach(gameStateService.toggleRecentSymbol)
+  $scope.toggleRecentSymbol = (aSymbol: js.UndefOr[String]) => aSymbol.foreach(gameStateService.toggleRecentSymbol)
 
   $scope.isRecentSymbol = (aSymbol: js.UndefOr[String]) => aSymbol.exists(gameStateService.isRecentSymbol)
 
@@ -55,7 +55,7 @@ trait PersonalSymbolSupportScope extends Scope {
   var isHeldSymbol: js.Function1[js.UndefOr[String], Boolean] = js.native
 
   // recently-viewed symbols functions
-  var addRecentSymbol: js.Function1[js.UndefOr[String], Unit] = js.native
+  var toggleRecentSymbol: js.Function1[js.UndefOr[String], Unit] = js.native
   var isRecentSymbol: js.Function1[js.UndefOr[String], Boolean] = js.native
 
 }

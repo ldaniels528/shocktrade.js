@@ -1,9 +1,8 @@
 package com.shocktrade.client.users
 
-import com.shocktrade.client.GameState._
 import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope}
 import com.shocktrade.client.users.HomeController.HomeControllerScope
-import com.shocktrade.client.{GlobalLoading, GlobalNavigation, RootScope}
+import com.shocktrade.client.{GameStateService, GlobalLoading, GlobalNavigation, RootScope}
 import com.shocktrade.common.forms.ContestSearchOptions
 import com.shocktrade.common.forms.ContestSearchOptions.ContestStatus
 import io.scalajs.dom.html.browser.console
@@ -20,13 +19,14 @@ import scala.scalajs.js.JSConverters._
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class HomeController($scope: HomeControllerScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                          @injected("GameStateService") gameStateService: GameStateService,
                           @injected("UserService") userService: UserService)
   extends Controller with AwardsSupport with GlobalLoading {
 
   $scope.statuses = ContestSearchOptions.contestStatuses
 
   $scope.myGamesSearchOptions = new ContestSearchOptions(
-    userID = $cookies.getGameState.userID,
+    userID = gameStateService.getUserID,
     buyIn = js.undefined,
     continuousTrading = false,
     duration = js.undefined,

@@ -1,10 +1,9 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GameState._
-import com.shocktrade.client.RootScope
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.PerksController.PerksControllerScope
 import com.shocktrade.client.users.UserService
+import com.shocktrade.client.{GameStateService, RootScope}
 import com.shocktrade.common.forms.PerksResponse
 import com.shocktrade.common.models.contest.{Perk, Portfolio}
 import io.scalajs.dom.html.browser.console
@@ -27,6 +26,7 @@ import scala.util.{Failure, Success}
  */
 case class PerksController($scope: PerksControllerScope, $routeParams: DashboardRouteParams,
                            $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                           @injected("GameStateService") gameStateService: GameStateService,
                            @injected("PortfolioService") portfolioService: PortfolioService,
                            @injected("UserService") userService: UserService) extends Controller {
 
@@ -43,7 +43,7 @@ case class PerksController($scope: PerksControllerScope, $routeParams: Dashboard
     console.info(s"Initializing ${getClass.getSimpleName}...")
     for {
       contestID <- $routeParams.contestID
-      userID <- $cookies.getGameState.userID
+      userID <- gameStateService.getUserID
     } yield initPerks(contestID, userID)
   }
 

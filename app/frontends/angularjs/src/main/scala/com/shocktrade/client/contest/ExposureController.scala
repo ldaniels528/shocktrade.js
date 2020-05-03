@@ -1,6 +1,6 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GameState._
+import com.shocktrade.client.GameStateService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.ExposureController._
@@ -31,6 +31,7 @@ import scala.util.{Failure, Success}
  */
 class ExposureController($scope: ExposureControllerScope, $routeParams: DashboardRouteParams,
                          $cookies: Cookies, toaster: Toaster,
+                         @injected("GameStateService") gameStateService: GameStateService,
                          @injected("PortfolioService") portfolioService: PortfolioService,
                          @injected("UserService") userService: UserService)
   extends Controller {
@@ -74,7 +75,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
     $scope.showChart($scope.selectedExposure)
 
     // attempt to load the user profile
-    $cookies.getGameState.userID map { userID =>
+    gameStateService.getUserID map { userID =>
       val outcome = userService.findUserByID(userID)
       outcome onComplete {
         case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
@@ -93,7 +94,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   $scope.showChart = (aChart: js.UndefOr[ChartSelection]) => {
     for {
       contestID <- $routeParams.contestID
-      userID <- $cookies.getGameState.userID
+      userID <- gameStateService.getUserID
       chart <- aChart
       value <- chart.value
     } yield showChart(contestID, userID, chart, value)

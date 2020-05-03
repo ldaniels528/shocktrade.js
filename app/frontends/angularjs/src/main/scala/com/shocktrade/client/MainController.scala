@@ -1,6 +1,5 @@
 package com.shocktrade.client
 
-import com.shocktrade.client.GameState._
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameLevel
@@ -34,6 +33,7 @@ import scala.util.{Failure, Success}
  */
 class MainController($scope: MainControllerScope, $cookies: Cookies, $location: Location,
                      $timeout: Timeout, toaster: Toaster, $window: Window,
+                     @injected("GameStateService") gameStateService: GameStateService,
                      @injected("OnlineStatusService") onlineStatusService: OnlineStatusService,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
@@ -102,11 +102,11 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 
   private def mainInit(): js.UndefOr[js.Promise[HttpResponse[UserProfile]]] = {
     console.log(s"Initializing ${getClass.getSimpleName}...")
-    $cookies.getGameState.userID map { userID =>
+    gameStateService.getUserID map { userID =>
       val outcome = userService.findUserByID(userID)
       outcome onComplete {
         case Success(profile) =>
-          $cookies.getGameState.setUser(profile.data.userID)
+          gameStateService.setUser(profile.data.userID)
           $scope.userProfile = profile.data
         case Failure(e) =>
           toaster.error("Failed to retrieve user profile")
@@ -131,7 +131,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
   $scope.signUp = () => signUp()
 
   private def clearLoggedInItems(): Unit = {
-    $cookies.removeGameState()
+    gameStateService.removeGameState()
     $cookies.remove(AUTHENTICATED_USER_KEY)
     $scope.favoriteSymbols.clear()
     $scope.recentSymbols.clear()
@@ -155,9 +155,9 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
     $scope.isLoggingOut = true
     val outcome = for {
       _ <- userService.logout()
-      _ <- $cookies.getGameState.userID.map(userService.setIsOffline).getOrElse(js.Promise.reject("Missing user ID"))
+      _ <- gameStateService.getUserID.map(userService.setIsOffline).getOrElse(js.Promise.reject("Missing user ID"))
     } yield {
-      $cookies.getGameState.userID.foreach(onlineStatusService.setIsOffline)
+      gameStateService.getUserID.foreach(onlineStatusService.setIsOffline)
     }
 
     outcome onComplete { _ =>
@@ -182,7 +182,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 
     outcome onComplete {
       case Success(userProfile) =>
-        $cookies.getGameState.setUser(userProfile.data.userID)
+        gameStateService.setUser(userProfile.data.userID)
         $scope.$apply { () => $scope.userProfile = userProfile.data }
         $window.location.reload()
       case Failure(e) =>
@@ -202,7 +202,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 
     outcome onComplete {
       case Success(userProfile) =>
-        $cookies.getGameState.setUser(userProfile.data.userID)
+        gameStateService.setUser(userProfile.data.userID)
         $scope.$apply { () => $scope.userProfile = userProfile.data }
         $window.location.reload()
       case Failure(e) =>
@@ -228,7 +228,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
   $scope.switchToTab = (anIndex: js.UndefOr[Int]) => anIndex foreach switchToTab
 
   private def switchToTab(tabIndex: Int): Unit = {
-    $cookies.getGameState.userID.toOption match {
+    gameStateService.getUserID.toOption match {
       case Some(userID) =>
         asyncLoading($scope)(userService.setIsOnline(userID)) onComplete {
           case Success(response) =>

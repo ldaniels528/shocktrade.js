@@ -1,12 +1,11 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameSearchController._
 import com.shocktrade.client.dialogs.NewGameDialogController.NewGameDialogResult
 import com.shocktrade.client.dialogs.{NewGameDialog, PlayerProfileDialog}
 import com.shocktrade.client.users.UserService
-import com.shocktrade.client.{GlobalLoading, PlayerProfilePopupSupport, PlayerProfilePopupSupportScope, RootScope}
+import com.shocktrade.client._
 import com.shocktrade.common.AppConstants
 import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration}
 import com.shocktrade.common.forms.ContestSearchOptions.ContestStatus
@@ -35,6 +34,7 @@ import scala.util.{Failure, Success}
  */
 case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $location: Location, $timeout: Timeout, toaster: Toaster,
                                 @injected("ContestService") contestService: ContestService,
+                                @injected("GameStateService") gameStateService: GameStateService,
                                 @injected("NewGameDialog") newGameDialog: NewGameDialog,
                                 @injected("PlayerProfileDialog") playerProfileDialog: PlayerProfileDialog,
                                 @injected("PortfolioService") portfolioService: PortfolioService,
@@ -55,7 +55,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
   $scope.statuses = ContestSearchOptions.contestStatuses
 
   $scope.searchOptions = new ContestSearchOptions(
-    userID = $cookies.getGameState.userID,
+    userID = gameStateService.getUserID,
     buyIn = js.undefined,
     continuousTrading = false,
     duration = js.undefined,
@@ -83,7 +83,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
   $scope.isActive = (aContest: js.UndefOr[ContestSearchResult]) => aContest.map(_.isActive)
 
   private def contestSearch(searchOptions: ContestSearchOptions): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = {
-    searchOptions.userID = $cookies.getGameState.userID
+    searchOptions.userID = gameStateService.getUserID
     val outcome = contestService.contestSearch(searchOptions)
     asyncLoading($scope)(outcome) onComplete {
       case Success(contests) =>

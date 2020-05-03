@@ -1,12 +1,11 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.Filters.toDuration
-import com.shocktrade.client.GameState._
-import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.users.UserService
+import com.shocktrade.client.{GameStateService, GlobalLoading}
 import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
@@ -30,6 +29,7 @@ import scala.util.{Failure, Success}
 case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRouteParams,
                           $anchorScroll: AnchorScroll, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
+                          @injected("GameStateService") gameStateService: GameStateService,
                           @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
@@ -56,7 +56,7 @@ case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRo
 
   private def initChat(contestID: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
     // attempt to load the user profile
-    $cookies.getGameState.userID map { userID =>
+    gameStateService.getUserID map { userID =>
       val outcome0 = userService.findUserByID(userID)
       outcome0 onComplete {
         case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
@@ -128,7 +128,7 @@ case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRo
    */
   private def sendChatMessage(messageText: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
     val result = for {
-      userID <- $cookies.getGameState.userID.toOption
+      userID <- gameStateService.getUserID.toOption
       contestID <- $routeParams.contestID.toOption
     } yield (userID, contestID)
 
