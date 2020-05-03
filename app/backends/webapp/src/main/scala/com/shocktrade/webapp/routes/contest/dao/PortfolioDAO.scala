@@ -56,6 +56,8 @@ trait PortfolioDAO {
 
   def findHeldSecurities(portfolioID: String): Future[js.Array[Ticker]]
 
+  def findPositionByID(positionID: String): Future[Option[PositionData]]
+
   def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]]
 
 }

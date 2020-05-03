@@ -8,6 +8,7 @@ import scala.scalajs.js
  */
 class Position(var positionID: js.UndefOr[String],
                var portfolioID: js.UndefOr[String],
+               var businessName: js.UndefOr[String],
                var symbol: js.UndefOr[String],
                var exchange: js.UndefOr[String],
                var quantity: js.UndefOr[Double],

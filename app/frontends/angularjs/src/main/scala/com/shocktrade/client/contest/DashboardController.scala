@@ -4,11 +4,12 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.contest.PerksDialog._
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
-import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
+import com.shocktrade.client.dialogs.NewOrderDialog.NewOrderDialogResult
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PlayerProfileDialog}
 import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
+import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.{Contest, ContestRanking, Portfolio}
 import com.shocktrade.common.{AppConstants, Ok}
 import io.scalajs.JSON
@@ -179,7 +180,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   }
 
   private def popupNewOrderDialog(contestID: String, userID: String, aSymbol: js.UndefOr[String]): js.Promise[NewOrderDialogResult] = {
-    val outcome = newOrderDialog.popup(new NewOrderParams(contestID = contestID, userID = userID, symbol = aSymbol))
+    val outcome = newOrderDialog.popup(contestID, userID, NewOrderForm(symbol = aSymbol))
     outcome onComplete {
       case Success(result) =>
         console.log(s"result = ${JSON.stringify(result)}")

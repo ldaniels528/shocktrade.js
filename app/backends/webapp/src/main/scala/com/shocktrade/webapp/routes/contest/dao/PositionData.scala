@@ -16,6 +16,7 @@ class PositionData(val positionID: js.UndefOr[String] = UUID.randomUUID().toStri
                    val symbol: js.UndefOr[String],
                    val exchange: js.UndefOr[String],
                    val quantity: js.UndefOr[Double],
+                   val businessName: js.UndefOr[String] = js.undefined,
                    val processedTime: js.UndefOr[js.Date] = js.undefined) extends PositionLike
 
 /**
@@ -33,6 +34,7 @@ object PositionData {
     @inline
     def copy(positionID: js.UndefOr[String] = js.undefined,
              portfolioID: js.UndefOr[String] = js.undefined,
+             businessName: js.UndefOr[String],
              symbol: js.UndefOr[String] = js.undefined,
              exchange: js.UndefOr[String] = js.undefined,
              quantity: js.UndefOr[Double] = js.undefined,
@@ -40,6 +42,7 @@ object PositionData {
       new PositionData(
         positionID = positionID ?? position.positionID,
         portfolioID = portfolioID ?? position.portfolioID,
+        businessName = businessName ?? position.businessName,
         symbol = symbol ?? position.symbol,
         exchange = exchange ?? position.exchange,
         quantity = quantity ?? position.quantity,

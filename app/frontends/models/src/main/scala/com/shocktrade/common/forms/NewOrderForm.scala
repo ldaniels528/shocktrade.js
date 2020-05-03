@@ -8,15 +8,15 @@ import scala.scalajs.js
  * New Order Form
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class NewOrderForm(var symbol: js.UndefOr[String] = js.undefined,
-                   var exchange: js.UndefOr[String] = js.undefined,
-                   var orderType: js.UndefOr[String] = js.undefined,
-                   var orderTerm: js.UndefOr[String] = js.undefined,
-                   var priceType: js.UndefOr[String] = js.undefined,
-                   var quantity: js.UndefOr[Double] = js.undefined,
-                   var limitPrice: js.UndefOr[Double] = js.undefined,
-                   var perks: js.UndefOr[js.Array[String]] = js.undefined,
-                   var emailNotify: js.UndefOr[Boolean] = js.undefined) extends js.Object
+class NewOrderForm(var symbol: js.UndefOr[String],
+                   var exchange: js.UndefOr[String],
+                   var orderType: js.UndefOr[String],
+                   var orderTerm: js.UndefOr[String],
+                   var priceType: js.UndefOr[String],
+                   var quantity: js.UndefOr[Double],
+                   var limitPrice: js.UndefOr[Double],
+                   var perks: js.UndefOr[js.Array[String]],
+                   var emailNotify: js.UndefOr[Boolean]) extends js.Object
 
 /**
  * New Order Form
@@ -24,17 +24,45 @@ class NewOrderForm(var symbol: js.UndefOr[String] = js.undefined,
  */
 object NewOrderForm {
 
+  def apply(symbol: js.UndefOr[String] = js.undefined,
+            exchange: js.UndefOr[String] = js.undefined,
+            orderType: js.UndefOr[String] = js.undefined,
+            orderTerm: js.UndefOr[String] = js.undefined,
+            priceType: js.UndefOr[String] = js.undefined,
+            quantity: js.UndefOr[Double] = js.undefined,
+            limitPrice: js.UndefOr[Double] = js.undefined,
+            perks: js.UndefOr[js.Array[String]] = js.undefined,
+            emailNotify: js.UndefOr[Boolean] = js.undefined): NewOrderForm = {
+    new NewOrderForm(
+      symbol = symbol,
+      exchange = exchange,
+      orderType = orderType,
+      orderTerm = orderTerm,
+      priceType = priceType,
+      quantity = quantity,
+      limitPrice = limitPrice,
+      perks = perks,
+      emailNotify = emailNotify
+    )
+  }
+
   /**
    * New Order Form Enrichment
    * @param form the given [[NewOrderForm form]]
    */
-  implicit class NewOrderFormEnrichment(val form: NewOrderForm) extends AnyVal {
+  final implicit class NewOrderFormEnrichment(val form: NewOrderForm) extends AnyVal {
+
+    @inline
+    def isBuyOrder: Boolean = form.orderType.contains("BUY")
+
+    @inline
+    def isSellOrder: Boolean = form.orderType.contains("SELL")
+
+    @inline
+    def isLimitOrder: Boolean = form.priceType.contains("LIMIT")
 
     @inline
     def isMarketOrder: Boolean = form.priceType.contains("MARKET")
-
-    @inline
-    def isMarketAtCloseOrder: Boolean = form.priceType.contains("MARKET_AT_CLOSE")
 
     @inline
     def validate: js.Array[String] = {
@@ -48,15 +76,6 @@ object NewOrderForm {
       if (!form.isBuyOrder && !form.isSellOrder) messages.append("BUY or SELL is required")
       messages
     }
-
-    @inline
-    def isBuyOrder: Boolean = form.orderType.contains("BUY")
-
-    @inline
-    def isSellOrder: Boolean = form.orderType.contains("SELL")
-
-    @inline
-    def isLimitOrder: Boolean = form.priceType.contains("LIMIT")
 
   }
 

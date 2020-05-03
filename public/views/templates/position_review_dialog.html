@@ -1,0 +1,56 @@
+<script type="text/ng-template" id="position_review_dialog.html">
+    <div class="modal-header st_modal_header">
+        <h4 style="color: #345688">Position Review</h4>
+    </div>
+    <div class="modal-body" ng-init="initPositionReview()">
+        <div class="row">
+            <span class="col-md-5 bold">Position #</span>
+            <span class="col-md-7">{{ position.positionID }}</span>
+        </div>
+        <div class="row">
+            <span class="col-md-5 bold">Business</span>
+            <span class="col-md-7">{{ position.businessName }}</span>
+        </div>
+        <div class="row">
+            <span class="col-md-5 bold">Symbol</span>
+            <span class="col-md-7">
+                <span ng-class="position.exchange">{{ position.symbol }}</span>
+                (<span ng-class="position.exchange">{{ position.exchange }}</span>)
+            </span>
+        </div>
+        <div class="row">
+            <span class="col-md-5 bold">Market Value</span>
+            <span class="col-md-7">$ {{ position.marketValue | quoteNumber }}</span>
+        </div>
+        <div class="row">
+            <span class="col-md-5 bold">Market Price</span>
+            <span class="col-md-7" ng-show="position.lastTrade" class="profitable">$ {{ position.lastTrade | quoteNumber }}</span>
+            <span class="col-md-7" ng-hide="position.lastTrade" class="null">Not Available</span>
+        </div>
+        <div class="row">
+            <span class="col-md-5 bold">Shares Owned</span>
+            <span class="col-md-7">{{ position.quantity | number }}</span>
+        </div>
+        <div class="row">
+            <span class="col-md-5 bold">Purchased Time</span>
+            <span class="col-md-7">{{ position.processedTime | duration }}</span>
+        </div>
+        <div class="row">
+            <span class="col-md-5 bold">Commission(s) Paid</span>
+            <span class="col-md-7">$ {{ position.commission || 4.99 | number:2 }}</span>
+        </div>
+    </div>
+
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12" style="margin-top: 10px">
+            <button class="btn btn-primary pull-left" ng-click="dismiss()">Dismiss</button>
+            <button class="btn btn-success pull-right"
+                    ng-show="!position.closed"
+                    ng-click="sellPosition(position.positionID)"
+                    ng-disabled="isSellingPosition">
+                <img ng-show="isSellingPosition" src="/images/status/loading16.gif">
+                Sell
+            </button>
+        </div>
+    </div>
+</script>

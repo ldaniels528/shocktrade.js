@@ -58,16 +58,24 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
   def findChart(contestID: String, userID: String, chart: String): Future[Portfolio] = get(findChartURL(contestID, userID, chart))
 
   ///////////////////////////////////////////////////////////////
-  //          Positions & Orders
+  //          Orders
   ///////////////////////////////////////////////////////////////
 
   def cancelOrder(orderID: String): Future[Portfolio] = delete(cancelOrderURL(orderID))
 
   def createOrder(contestID: String, userID: String, order: NewOrderForm): Future[Ok] = post(createOrderURL(contestID, userID), data = order)
 
-  def findHeldSecurities(portfolioID: String): Future[js.Array[String]] = get(findHeldSecuritiesURL(portfolioID))
+  def findOrderByID(orderID: String): Future[Order] = get(findOrderByIDURL(orderID))
 
   def findOrders(contestID: String, userID: String): Future[js.Array[Order]] = get(findOrdersURL(contestID, userID))
+
+  ///////////////////////////////////////////////////////////////
+  //          Positions
+  ///////////////////////////////////////////////////////////////
+
+  def findHeldSecurities(portfolioID: String): Future[js.Array[String]] = get(findHeldSecuritiesURL(portfolioID))
+
+  def findPositionByID(positionID: String): Future[Position] = get(findPositionByIDURL(positionID))
 
   def findPositions(contestID: String, userID: String): Future[js.Array[Position]] = get(findPositionsURL(contestID, userID))
 

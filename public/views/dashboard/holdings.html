@@ -4,97 +4,44 @@
         <span ng-show="getPositions().length === 1">{{ getPositions().length }} position found</span>
         <span ng-show="getPositions().length > 1">{{ getPositions().length }} positions found</span>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-2 bold left">Symbol</div>
-        <div class="col-md-3 bold right" ng-hide="isPositionSelected()">Shares</div>
-        <div class="col-md-3 bold right" ng-hide="isPositionSelected()">Market Price</div>
-        <div class="col-md-4 bold right" ng-hide="isPositionSelected()">Market Value</div>
 
-        <div class="col-md-8 bold" ng-show="isPositionSelected()">
-            <span ng-class="getExchangeClass(selectedPosition.exchange)"
-                  ng-click="loadQuote(selectedPosition.symbol, true)"
-                  class="clickable">{{ selectedPosition.companyName }}</span>
-        </div>
-        <div class="col-md-2" ng-show="isPositionSelected()">
-            <span class="st_bkg_color clickable pull-right" ng-click="toggleSelectedPosition()">
-                <i class="fa fa-chevron-circle-left st_control"
-                   title="Return to results"></i> Back
-            </span>
-        </div>
+    <div class="col-md-12">
+        <div class="col-md-3 bold left">Symbol</div>
+        <div class="col-md-3 bold right">Shares</div>
+        <div class="col-md-3 bold right">Market Price</div>
+        <div class="col-md-3 bold right">Market Value</div>
     </div>
 
     <div class="positionsContainer">
-        <!-- Data Rows -->
-        <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-2':(isPositionSelected())}" class="clickable">
-            <div class="col-md-12 clickable" ng-repeat="p in getPositions() track by $index"
-                 ng-class-even="'contest_even'"
-                 ng-class-odd="'contest_odd'"
-                 ng-click="selectPosition(p)">
-                <!-- symbol -->
-                <div class="col-md-2 left">
-                    <span ng-class="getExchangeClass(p.exchange)">
-                        <span ng-class="selectedPosition.positionID === p.positionID ? 'underlined' : ''">
-                            <i ng-click="toggleFavoriteSymbol(order.symbol)"
-                               ng-class="isFavoriteSymbol(order.symbol) ? 'fa-heart heart' : 'fa-heart-o null'"
-                               class="fa clickable"></i>
-                            {{ p.symbol }}
-                        </span>
-                    </span>
-                </div>
-                <!-- shares -->
-                <div class="col-md-3 right" ng-hide="isPositionSelected()">
-                    {{ p.quantity | number }}
-                </div>
-                <!-- market price -->
-                <div class="col-md-3 right" ng-hide="isPositionSelected()">
-                    <span ng-show="p.lastTrade" class="right">$ {{ p.lastTrade | quoteNumber }}</span>
-                    <span ng-hide="p.lastTrade" class="right null">Unavailable</span>
-                </div>
-                <!-- market value -->
-                <div class="col-md-4 right" ng-hide="isPositionSelected()">
-                    $ {{ p.marketValue | quoteNumber }}
-                </div>
-            </div>
-        </div>
+        <div class="col-md-12" ng-repeat="p in getPositions() track by $index"
+             ng-class-even="'contest_even'"
+             ng-class-odd="'contest_odd'"
+             ng-click="selectPosition(p)">
 
-        <!-- Expanded Section -->
-        <div ng-if="isPositionSelected()" class="col-md-10">
-            <div class="row">
-                <div class="col-md-5 bold">Purchased Time</div>
-                <div class="col-md-7">{{ selectedPosition.processedTime | duration }}</div>
+            <!-- symbol -->
+            <div class="col-md-3 left">
+                <span ng-class="getExchangeClass(p.exchange)">
+                    <i ng-click="toggleFavoriteSymbol(p.symbol)"
+                       ng-class="isFavoriteSymbol(p.symbol) ? 'fa-heart heart' : 'fa-heart-o null'"
+                       class="fa clickable"></i>
+                    <span ng-click="popupPositionReviewDialog(contest.contestID, p.positionID)" class="clickable">{{ p.symbol }}</span>
+                </span>
             </div>
-            <div class="row">
-                <div class="col-md-5 bold">Exchange</div>
-                <div class="col-md-7">
-                    <span ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.exchange }}</span>
-                </div>
+
+            <!-- quantity -->
+            <div class="col-md-3 right">
+                {{ p.quantity | number }}
             </div>
-            <div class="row">
-                <div class="col-md-5 bold">Market Value</div>
-                <div class="col-md-7">$ {{ selectedPosition.marketValue | quoteNumber }}</div>
+
+            <!-- market price -->
+            <div class="col-md-3 right">
+                <span ng-show="p.lastTrade" class="right">$ {{ p.lastTrade | quoteNumber }}</span>
+                <span ng-hide="p.lastTrade" class="right null">Unavailable</span>
             </div>
-            <div class="row">
-                <div class="col-md-5 bold">Market Price</div>
-                <div class="col-md-7" ng-show="selectedPosition.lastTrade">$ {{ selectedPosition.lastTrade | quoteNumber }}</div>
-                <div class="col-md-7" ng-hide="selectedPosition.lastTrade">
-                    <span class="null">Not Available</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Shares Owned</div>
-                <div class="col-md-7">{{ selectedPosition.quantity | number }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 bold">Commission(s) Paid</div>
-                <div class="col-md-7">$ {{ selectedPosition.commission || 4.99 | number:2 }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-offset-5 col-md-7">
-                    <button class="btn btn-default sell_button"
-                        ng-click="sellPosition(selectedPosition.symbol, selectedPosition.quantity)">
-                        <i class="fa fa-cart-plus"></i> Sell
-                    </button>
-                </div>
+
+            <!-- market value -->
+            <div class="col-md-3 right">
+                $ {{ p.marketValue | quoteNumber }}
             </div>
         </div>
     </div>

@@ -3,9 +3,10 @@ package com.shocktrade.client.discover
 import com.shocktrade.client._
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialog
-import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
+import com.shocktrade.client.dialogs.NewOrderDialog.NewOrderDialogResult
 import com.shocktrade.client.discover.DiscoverController._
 import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope}
+import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -88,7 +89,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
       contestID <- aContestID
       userID <- aUserID
       symbol <- aSymbol
-    } yield newOrderDialog.popup(new NewOrderParams(contestID = contestID, userID = userID, symbol = symbol))
+    } yield newOrderDialog.popup(contestID, userID, NewOrderForm(symbol = symbol))
   }
 
   $scope.loadQuote = (aValue: js.UndefOr[Any]) => aValue foreach {

@@ -91,6 +91,22 @@ object WebClientJsApp {
     module.serviceOf[InvitePlayerDialog]("InvitePlayerDialog")
     module.controllerOf[InvitePlayerDialogController]("InvitePlayerDialogController")
 
+    // New Game Dialog
+    module.serviceOf[NewGameDialog]("NewGameDialog")
+    module.controllerOf[NewGameDialogController]("NewGameDialogController")
+
+    // New Order Dialog
+    module.serviceOf[NewOrderDialog]("NewOrderDialog")
+    module.controllerOf[NewOrderDialog.NewOrderDialogController]("NewOrderDialogController")
+
+    // News Quote Dialog
+    module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
+    module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
+
+    // Order Review Dialog
+    module.serviceOf[OrderReviewDialog]("OrderReviewDialog")
+    module.controllerOf[OrderReviewDialog.OrderReviewDialogController]("OrderReviewDialogController")
+
     // Perks Dialog
     module.serviceOf[PerksDialog]("PerksDialog")
     module.controllerOf[PerksDialog.PerksDialogController]("PerksDialogController")
@@ -99,21 +115,9 @@ object WebClientJsApp {
     module.serviceOf[PlayerProfileDialog]("PlayerProfileDialog")
     module.controllerOf[PlayerProfileDialogController]("PlayerProfileDialogController")
 
-    // Order Review Dialog
-    module.serviceOf[OrderReviewDialog]("OrderReviewDialog")
-    module.controllerOf[OrderReviewDialog.OrderReviewDialogController]("OrderReviewDialogController")
-
-    // New Game Dialog
-    module.serviceOf[NewGameDialog]("NewGameDialog")
-    module.controllerOf[NewGameDialogController]("NewGameDialogController")
-
-    // New Order Dialog
-    module.serviceOf[NewOrderDialog]("NewOrderDialog")
-    module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
-
-    // News Quote Dialog
-    module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
-    module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
+    // Position Review Dialog
+    module.serviceOf[PositionReviewDialog]("PositionReviewDialog")
+    module.controllerOf[PositionReviewDialog.PositionReviewDialogController]("PositionReviewDialogController")
 
     // Sign In Dialog
     module.serviceOf[SignInDialog]("SignInDialog")

@@ -174,7 +174,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
 
   override def findHeldSecurities(portfolioID: String): Future[js.Array[Ticker]] = {
     conn.queryFuture[Ticker](
-      """|SELECT S.symbol, S.exchange, S.lastTrade, S.tradeDateTime
+      """|SELECT S.symbol, S.exchange, S.lastTrade, S.tradeDateTime,
+         |       S.name AS businessName,
+         |       S.lastTrade * PS.quantity AS marketValue
          |FROM portfolios P
          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
          |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
@@ -184,21 +186,23 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
       js.Array(portfolioID)).map(_._1)
   }
 
+  override def findPositionByID(positionID: String): Future[Option[PositionData]] = {
+    conn.queryFuture[PositionData](
+      """|SELECT PS.*, S.lastTrade, S.name AS businessName, S.lastTrade * PS.quantity AS marketValue
+         |FROM positions PS
+         |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+         |WHERE PS.positionID = ?
+         |""".stripMargin,
+      js.Array(positionID)).map(_._1.headOption)
+  }
+
   override def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]] = {
     conn.queryFuture[PositionData](
-      """|SELECT PS.*, S.lastTrade, PS.quantity * S.lastTrade AS marketValue, ((S.lastTrade - O.price) / O.price)*100 AS gainLossPct
+      """|SELECT PS.*, S.lastTrade, S.name AS businessName, PS.quantity * S.lastTrade AS marketValue
          |FROM positions PS
-         |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
+         |INNER JOIN portfolios P on P.portfolioID = PS.portfolioID AND PS.quantity > 0
          |LEFT  JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-         |LEFT  JOIN (
-         |  SELECT portfolioID, symbol, exchange, AVG(price) AS price
-         |  FROM orders
-         |  WHERE orderType = 'BUY' AND fulfilled = 1
-         |  GROUP BY portfolioID, symbol, exchange
-         |) O ON O.portfolioID = PS.portfolioID AND O.symbol = PS.symbol AND O.exchange = PS.exchange
-         |WHERE P.contestID = ?
-         |AND P.userID = ?
-         |AND PS.quantity > 0
+         |WHERE P.contestID = ? AND P.userID = ?
          |""".stripMargin, js.Array(contestID, userID)).map(_._1)
   }
 

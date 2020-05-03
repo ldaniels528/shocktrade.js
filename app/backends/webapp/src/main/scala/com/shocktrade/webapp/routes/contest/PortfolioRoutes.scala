@@ -31,6 +31,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   app.post(purchasePerksURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
 
   // positions
+  app.get(findPositionByIDURL(":positionID"), (request: Request, response: Response, next: NextFunction) => findPositionByID(request, response, next))
   app.get(findPositionsURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => findPositions(request, response, next))
 
   // orders
@@ -163,6 +164,18 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val perkCodes = request.bodyAs[js.Array[String]]
     vm.invoke(new PurchasePerks(portfolioID, perkCodes)) onComplete {
       case Success(_) => response.send(new Ok(1)); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
+    }
+  }
+
+  /**
+   * Retrieves a position by its ID
+   */
+  def findPositionByID(request: Request, response: Response, next: NextFunction): Unit = {
+    val positionID = request.params("positionID")
+    portfolioDAO.findPositionByID(positionID) onComplete {
+      case Success(Some(position)) => response.send(position); next()
+      case Success(None) => response.notFound(request.params); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

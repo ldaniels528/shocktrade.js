@@ -1,5 +1,6 @@
 package com.shocktrade.robots
 
+import com.shocktrade.common.OrderConstants._
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.{NewOrderForm, ResearchOptions}
 import com.shocktrade.common.models.contest.Portfolio
@@ -109,14 +110,6 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object RobotProcessor {
-  type OrderType = String
-  val Buy: OrderType = "BUY"
-  val Sell: OrderType = "SELL"
-
-  type PriceType = String
-  val Limit: PriceType = "LIMIT"
-  val Market: PriceType = "MARKET"
-  val MarketAtClose: PriceType = "MARKET_AT_CLOSE"
 
   class RobotReport(val contestID: js.UndefOr[String],
                     val userID: js.UndefOr[String],
@@ -148,19 +141,19 @@ object RobotProcessor {
 
   final implicit class ResearchQuoteMagic(val quote: ResearchQuote) extends AnyVal {
 
-    def toBuyOrder(quantity: Double) = new NewOrderForm(
+    def toBuyOrder(quantity: Double): NewOrderForm = NewOrderForm(
       symbol = quote.symbol,
       exchange = quote.exchange,
-      orderType = Buy,
+      orderType = BUY,
       orderTerm = "3",
       priceType = Limit,
       quantity = quantity,
       limitPrice = quote.lastTrade)
 
-    def toSellOrder(quantity: Double) = new NewOrderForm(
+    def toSellOrder(quantity: Double): NewOrderForm = NewOrderForm(
       symbol = quote.symbol,
       exchange = quote.exchange,
-      orderType = Sell,
+      orderType = SELL,
       orderTerm = "3",
       priceType = Limit,
       quantity = quantity,

@@ -2,11 +2,13 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
+import com.shocktrade.client.contest.PositionReviewDialog.{PositionReviewDialogPopupSupport, PositionReviewDialogPopupSupportScope}
 import com.shocktrade.client.contest.PositionsController.PositionsControllerScope
 import com.shocktrade.client.dialogs.NewOrderDialog
-import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
+import com.shocktrade.client.dialogs.NewOrderDialog.NewOrderDialogResult
 import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope, UserService}
 import com.shocktrade.client.{GameStateService, GlobalLoading}
+import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.Position
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
@@ -29,10 +31,10 @@ case class PositionsController($scope: PositionsControllerScope, $routeParams: D
                                @injected("GameStateService") gameStateService: GameStateService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("PortfolioService") portfolioService: PortfolioService,
+                               @injected("PositionReviewDialog") positionReviewDialog: PositionReviewDialog,
                                @injected("UserService") userService: UserService)
-  extends Controller with GlobalLoading with PersonalSymbolSupport {
+  extends Controller with GlobalLoading with PersonalSymbolSupport with PositionReviewDialogPopupSupport {
 
-  $scope.selectedPosition = js.undefined
   $scope.userProfile = js.undefined
 
   /////////////////////////////////////////////////////////////////////
@@ -71,20 +73,14 @@ case class PositionsController($scope: PositionsControllerScope, $routeParams: D
 
   $scope.getPositions = () => $scope.positions
 
-  $scope.isPositionSelected = () => $scope.getPositions().nonEmpty && $scope.selectedPosition.nonEmpty
-
-  $scope.selectPosition = (position: js.UndefOr[Position]) => $scope.selectedPosition = position
-
   $scope.sellPosition = (aSymbol: js.UndefOr[String], aQuantity: js.UndefOr[Double]) => {
     for {
       contestID <- $routeParams.contestID
       userID <- gameStateService.getUserID
       symbol <- aSymbol
       quantity <- aQuantity
-    } yield newOrderDialog.popup(new NewOrderParams(contestID, userID, symbol = symbol, quantity = quantity))
+    } yield newOrderDialog.popup(contestID, userID, NewOrderForm(symbol = symbol, quantity = quantity))
   }
-
-  $scope.toggleSelectedPosition = () => $scope.selectedPosition = js.undefined
 
 }
 
@@ -99,18 +95,14 @@ object PositionsController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait PositionsControllerScope extends Scope with PersonalSymbolSupportScope {
+  trait PositionsControllerScope extends Scope with PersonalSymbolSupportScope with PositionReviewDialogPopupSupportScope {
     // functions
     var initPositions: js.Function0[js.UndefOr[js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Position]])]]] = js.native
     var getPositions: js.Function0[js.UndefOr[js.Array[Position]]] = js.native
-    var isPositionSelected: js.Function0[Boolean] = js.native
-    var selectPosition: js.Function1[js.UndefOr[Position], Unit] = js.native
     var sellPosition: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native
-    var toggleSelectedPosition: js.Function0[Unit] = js.native
 
     // variables
     var positions: js.UndefOr[js.Array[Position]] = js.native
-    var selectedPosition: js.UndefOr[Position] = js.native
     var userProfile: js.UndefOr[UserProfile] = js.native
   }
 
