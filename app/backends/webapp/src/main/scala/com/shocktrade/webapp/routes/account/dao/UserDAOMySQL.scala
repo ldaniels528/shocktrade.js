@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.routes.account.dao
 
-import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.UserDAOMySQL.UserAwardData
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -50,38 +49,6 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
   override def findUserIcon(userID: String)(implicit ec: ExecutionContext): Future[Option[UserIconData]] = {
     conn.queryFuture[UserIconData]("SELECT * FROM user_icons WHERE userID = ?", js.Array(userID))
       .map { case (rows, _) => rows.headOption }
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //    Favorite Symbols
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  override def addFavoriteSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int] = {
-    conn.executeFuture("REPLACE INTO favorite_symbols (userID, symbol) VALUES (?, ?)", js.Array(userID, symbol)) map (_.affectedRows)
-  }
-
-  override def findFavoriteSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[Ticker]] = {
-    conn.queryFuture[Ticker]("SELECT symbol FROM favorite_symbols WHERE userID = ?", js.Array(userID)).map(_._1)
-  }
-
-  override def removeFavoriteSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int] = {
-    conn.executeFuture("DELETE FROM favorite_symbols WHERE userID = ? AND symbol = ?", js.Array(userID, symbol)) map (_.affectedRows)
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //    Recent Symbols
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  override def addRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int] = {
-    conn.executeFuture("REPLACE INTO recent_symbols (userID, symbol) VALUES (?, ?)", js.Array(userID, symbol)) map (_.affectedRows)
-  }
-
-  override def findRecentSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[Ticker]] = {
-    conn.queryFuture[Ticker]("SELECT symbol FROM recent_symbols WHERE userID = ?", js.Array(userID)).map(_._1)
-  }
-
-  override def removeRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int] = {
-    conn.executeFuture("DELETE FROM recent_symbols WHERE userID = ? AND symbol = ?", js.Array(userID, symbol)) map (_.affectedRows)
   }
 
 }

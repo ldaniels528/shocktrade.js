@@ -42,67 +42,11 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
   app.post(loginURL, (request: Request, response: Response, next: NextFunction) => login(request, response, next))
   app.post(logoutURL, (request: Request, response: Response, next: NextFunction) => logout(request, response, next))
 
-  // favorites API
-  app.put(addFavoriteSymbolURL(":userID", ":symbol"), (request: Request, response: Response, next: NextFunction) => addFavoriteSymbol(request, response, next))
-  app.get(findFavoriteSymbolsURL(":userID"), (request: Request, response: Response, next: NextFunction) => findFavoriteSymbols(request, response, next))
-
-  // recents API
-  app.put(addRecentSymbolURL(":userID",":symbol"), (request: Request, response: Response, next: NextFunction) => addRecentSymbol(request, response, next))
-  app.get(findRecentSymbolsURL(":userID"), (request: Request, response: Response, next: NextFunction) => findRecentSymbols(request, response, next))
-
   // session API
   app.get(getOnlineStatusURL(":userID"), (request: Request, response: Response, next: NextFunction) => getOnlineStatus(request, response, next))
   app.get(getOnlineStatusUpdatesURL(":since"), (request: Request, response: Response, next: NextFunction) => getOnlineStatusUpdates(request, response, next))
   app.put(setIsOnlineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOnline(request, response, next))
   app.delete(setIsOfflineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOffline(request, response, next))
-
-  //////////////////////////////////////////////////////////////////////////////////////
-  //      API Methods
-  //////////////////////////////////////////////////////////////////////////////////////
-
-  def addFavoriteSymbol(request: Request, response: Response, next: NextFunction): Unit = {
-    val (userID, symbol) = (request.params("userID"), request.params("symbol"))
-    userDAO.addFavoriteSymbol(userID, symbol) onComplete {
-      case Success(result) => response.send(new Ok(result)); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  def findMyAwards(request: Request, response: Response, next: NextFunction): Unit = {
-    val userID = request.params("userID")
-    userDAO.findMyAwards(userID) onComplete {
-      case Success(results) => response.send(results); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  def findFavoriteSymbols(request: Request, response: Response, next: NextFunction): Unit = {
-    val userID = request.params("userID")
-    userDAO.findFavoriteSymbols(userID) onComplete {
-      case Success(results) => response.send(results); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  def addRecentSymbol(request: Request, response: Response, next: NextFunction): Unit = {
-    val (userID, symbol) = (request.params("userID"), request.params("symbol"))
-    userDAO.addRecentSymbol(userID, symbol) onComplete {
-      case Success(result) if result > 0 =>
-        response.send(new Ok(result)); next()
-      case Success(_) =>
-        response.badRequest(request.params); next()
-      case Failure(e) =>
-        response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  def findRecentSymbols(request: Request, response: Response, next: NextFunction): Unit = {
-    val userID = request.params("userID")
-    userDAO.findRecentSymbols(userID) onComplete {
-      case Success(results) => response.send(results); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
 
   def createAccount(request: Request, response: Response, next: NextFunction): Unit = {
     val form = request.bodyAs[SignUpForm]
@@ -132,6 +76,14 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
         }
       case None =>
         response.badRequest("The username and password are required"); next()
+    }
+  }
+
+  def findMyAwards(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    userDAO.findMyAwards(userID) onComplete {
+      case Success(results) => response.send(results); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 

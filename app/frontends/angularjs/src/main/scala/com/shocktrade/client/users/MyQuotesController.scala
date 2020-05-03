@@ -1,10 +1,9 @@
 package com.shocktrade.client.users
 
-import com.shocktrade.client.RootScope
-import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.users.MyQuotesController._
+import com.shocktrade.client.{GameStateService, RootScope}
 import com.shocktrade.common.models.quote.{OrderQuote, ResearchQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
@@ -22,8 +21,8 @@ import scala.util.{Failure, Success}
  */
 case class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, $q: Q, toaster: Toaster,
                               @injected("ContestService") contestService: ContestService,
+                              @injected("GameStateService") gameStateService: GameStateService,
                               @injected("PortfolioService") portfolioService: PortfolioService,
-                              @injected("UserService") userService: UserService,
                               @injected("QuoteService") quoteService: QuoteService)
   extends Controller with PersonalSymbolSupport {
 
@@ -54,13 +53,14 @@ case class MyQuotesController($scope: MyQuotesControllerScope, $location: Locati
       obj.expanded = !obj.expanded
       if (obj.expanded && !isDefined(obj.quotes)) {
         obj.quotes = emptyArray[OrderQuote]
+        /* TODO what to do here?
         name match {
           case Favorites => loadQuotes(name, $scope.favoriteSymbols, obj)
           case Held => loadHeldSecurities(obj)
           case Recents => loadQuotes(name, $scope.recentSymbols, obj)
           case _ =>
             console.error(s"$name is not a recognized list")
-        }
+        }*/
       }
     }
   }
@@ -93,15 +93,6 @@ case class MyQuotesController($scope: MyQuotesControllerScope, $location: Locati
       }
     }
   }
-
-  /////////////////////////////////////////////////////////////////////////////
-  //			Event Listeners
-  /////////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Listen for changes to the player's profile
-   */
-  $scope.onUserProfileUpdated((_, profile) => profile.userID.foreach(refreshMySymbols))
 
 }
 

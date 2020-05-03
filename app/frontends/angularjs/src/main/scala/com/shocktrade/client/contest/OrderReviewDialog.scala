@@ -1,6 +1,8 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.GameStateService
 import com.shocktrade.client.contest.OrderReviewDialog._
+import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope}
 import com.shocktrade.common.Ok
 import com.shocktrade.common.models.contest.Order
 import io.scalajs.JSON
@@ -54,9 +56,10 @@ object OrderReviewDialog {
    */
   case class OrderReviewDialogController($scope: OrderReviewDialogScope, $uibModalInstance: ModalInstance[OrderReviewDialogResult],
                                          $timeout: Timeout, toaster: Toaster,
+                                         @injected("GameStateService") gameStateService: GameStateService,
                                          @injected("PortfolioService") portfolioService: PortfolioService,
                                          @injected("orderID") orderID: () => String)
-    extends Controller {
+    extends Controller with PersonalSymbolSupport {
 
     $scope.errors = emptyArray[String]
 
@@ -103,7 +106,7 @@ object OrderReviewDialog {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait OrderReviewDialogScope extends Scope {
+  trait OrderReviewDialogScope extends Scope with PersonalSymbolSupportScope {
     // functions
     var cancelOrder: js.Function0[js.Promise[HttpResponse[Ok]]] = js.native
     var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native

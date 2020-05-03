@@ -37,16 +37,6 @@ trait UserAPI extends BaseAPI {
   def logoutURL = s"$baseURL/api/auth/logout"
 
   //////////////////////////////////////////////////////////////////////
-  //              Favorite Symbols Functions
-  //////////////////////////////////////////////////////////////////////
-
-  def addFavoriteSymbolURL(userID: String, symbol: String) = s"$baseURL/api/user/$userID/favorite/$symbol"
-
-  def findFavoriteSymbolsURL(userID: String) = s"$baseURL/api/user/$userID/favorite"
-
-  def removeFavoriteSymbolURL(userID: String, symbol: String) = s"$baseURL/api/user/$userID/favorite/$symbol"
-
-  //////////////////////////////////////////////////////////////////////
   //              Online Status Functions
   /////////////////////////////////////////////////////////////////////
 
@@ -57,15 +47,5 @@ trait UserAPI extends BaseAPI {
   def setIsOnlineURL(userID: String) = s"$baseURL/api/online/$userID"
 
   def setIsOfflineURL(userID: String) = s"$baseURL/api/online/$userID"
-
-  //////////////////////////////////////////////////////////////////////
-  //              Recent Symbols Functions
-  //////////////////////////////////////////////////////////////////////
-
-  def addRecentSymbolURL(userID: String, symbol: String) = s"$baseURL/api/user/$userID/recent/$symbol"
-
-  def findRecentSymbolsURL(userID: String) = s"$baseURL/api/user/$userID/recent"
-
-  def removeRecentSymbolURL(userID: String, symbol: String) = s"$baseURL/api/user/$userID/recent/$symbol"
 
 }

@@ -125,7 +125,7 @@ object WebClientJsApp {
 
     // Stock Quote Dialog
     module.serviceOf[StockQuoteDialog]("StockQuoteDialog")
-    module.controllerOf[StockQuoteDialogController]("StockQuoteDialogController")
+    module.controllerOf[StockQuoteDialog.StockQuoteDialogController]("StockQuoteDialogController")
     ()
   }
 
@@ -138,6 +138,7 @@ object WebClientJsApp {
     module.serviceOf[AwardService]("AwardService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[ExploreService]("ExploreService")
+    module.serviceOf[GameStateService]("GameStateService")
     module.serviceOf[MarketStatusService]("MarketStatusService")
     module.serviceOf[OnlineStatusService]("OnlineStatusService")
     module.serviceOf[PortfolioService]("PortfolioService")

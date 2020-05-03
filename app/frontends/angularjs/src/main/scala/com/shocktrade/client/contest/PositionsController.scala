@@ -1,13 +1,13 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.GameState._
-import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.PositionsController.PositionsControllerScope
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
-import com.shocktrade.client.users.UserService
+import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope, UserService}
+import com.shocktrade.client.{GameStateService, GlobalLoading}
 import com.shocktrade.common.models.contest.Position
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
@@ -15,7 +15,7 @@ import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
+import io.scalajs.npm.angularjs.{Controller, Scope, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -27,12 +27,13 @@ import scala.util.{Failure, Success}
  * Positions Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PositionsController($scope: PositionsControllerScope, $routeParams: DashboardRouteParams,
-                          $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
-                          @injected("PortfolioService") portfolioService: PortfolioService,
-                          @injected("UserService") userService: UserService)
-  extends Controller with GlobalLoading {
+case class PositionsController($scope: PositionsControllerScope, $routeParams: DashboardRouteParams,
+                               $cookies: Cookies, toaster: Toaster,
+                               @injected("GameStateService") gameStateService: GameStateService,
+                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
+                               @injected("PortfolioService") portfolioService: PortfolioService,
+                               @injected("UserService") userService: UserService)
+  extends Controller with GlobalLoading with PersonalSymbolSupport {
 
   implicit val cookies: Cookies = $cookies
 
@@ -103,7 +104,7 @@ object PositionsController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait PositionsControllerScope extends Scope {
+  trait PositionsControllerScope extends Scope with PersonalSymbolSupportScope {
     // functions
     var initPositions: js.Function0[js.UndefOr[js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Position]])]]] = js.native
     var getPositions: js.Function0[js.UndefOr[js.Array[Position]]] = js.native

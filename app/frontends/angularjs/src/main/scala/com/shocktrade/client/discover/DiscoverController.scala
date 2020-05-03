@@ -5,7 +5,7 @@ import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.DiscoverController._
-import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope, UserService}
+import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope}
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -26,11 +26,11 @@ import scala.util.{Failure, Success, Try}
  */
 case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $location: Location, $q: Q,
                               $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
+                              @injected("GameStateService") gameStateService: GameStateService,
                               @injected("MarketStatusService") marketStatusService: MarketStatusService,
                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                               @injected("PortfolioService") portfolioService: PortfolioService,
-                              @injected("QuoteService") quoteService: QuoteService,
-                              @injected("UserService") userService: UserService)
+                              @injected("QuoteService") quoteService: QuoteService)
   extends AutoCompletionController($scope, $q, quoteService)
     with GlobalLoading
     with GlobalSelectedSymbol
@@ -187,7 +187,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
           $location.search("symbol", quote.symbol)
 
           // add the symbol to the Recently-viewed Symbols
-          $scope.userProfile.flatMap(_.userID) foreach { userID => userService.addRecentSymbol(userID, symbol) }
+          $scope.userProfile.flatMap(_.userID) foreach { userID => gameStateService.toggleRecentSymbol(symbol) }
 
           // load the trading history
           $scope.tradingHistory = null

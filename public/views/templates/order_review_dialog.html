@@ -10,7 +10,11 @@
         <div class="row">
             <div class="col-md-4 bold">Symbol</div>
             <div class="col-md-8">
-                <span ng-class="order.exchange">{{ order.symbol }}</span> (<span ng-class="order.exchange">{{ order.exchange }}</span>)
+                <span ng-class="order.exchange">
+                    {{ order.symbol }}</span> (<span ng-class="order.exchange">{{ order.exchange }}</span>)
+                    <i ng-click="toggleFavoriteSymbol(order.symbol)"
+                       ng-class="isFavoriteSymbol(order.symbol) ? 'fa-heart heart' : 'fa-heart-o null'"
+                       class="fa clickable"></i>
             </div>
         </div>
         <div class="row">

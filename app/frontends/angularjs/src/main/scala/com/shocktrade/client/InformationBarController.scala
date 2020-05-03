@@ -3,6 +3,7 @@ package com.shocktrade.client
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestEntrySupport, ContestEntrySupportScope}
+import com.shocktrade.client.dialogs.StockQuoteDialog.{StockQuoteDialogSupport, StockQuoteDialogSupportScope}
 import com.shocktrade.client.dialogs.{PlayerProfileDialog, StockQuoteDialog}
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.user.UserProfile

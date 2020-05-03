@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.routes.account.dao
 
-import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -45,30 +44,6 @@ trait UserDAO {
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
   def findMyAwards(userID: String)(implicit ec: ExecutionContext): Future[js.Array[String]]
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //    Favorite Symbols
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // TODO migrate favorite symbols to $cookies ($cookies-based DAO?)
-
-  def addFavoriteSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
-
-  def findFavoriteSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[Ticker]]
-
-  def removeFavoriteSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //    Recent Symbols
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // TODO migrate recent symbols to $cookies
-
-  def addRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
-
-  def findRecentSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[Ticker]]
-
-  def removeRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
 
 }
 

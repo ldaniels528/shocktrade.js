@@ -1,6 +1,10 @@
 <script type="text/ng-template" id="stock_quote_dialog.html">
     <div class="modal-header st_modal_header">
-        <h4>{{ q.name }} (<span ng-class="q.exchange">{{ q.symbol }}</span>:<span ng-class="q.exchange">{{ q.exchange }}</span>)</h4>
+        <h4>{{ q.name }} (<span ng-class="q.exchange">{{ q.symbol }}</span>:<span ng-class="q.exchange">{{ q.exchange }}</span>)
+            <i ng-click="toggleFavoriteSymbol(q.symbol)"
+               ng-class="isFavoriteSymbol(q.symbol) ? 'fa-heart heart' : 'fa-heart-o null'"
+               class="fa clickable"></i>
+        </h4>
     </div>
     <div class="modal-body" ng-init="init()">
         <div class="row">

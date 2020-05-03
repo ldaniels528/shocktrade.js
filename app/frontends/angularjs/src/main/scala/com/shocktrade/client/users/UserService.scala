@@ -3,8 +3,6 @@ package com.shocktrade.client.users
 import com.shocktrade.common.api.UserAPI
 import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
 import com.shocktrade.common.forms.SignUpForm
-import com.shocktrade.common.models.OperationResult
-import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.common.models.user.{OnlineStatus, UserProfile}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
@@ -71,37 +69,5 @@ class UserService($http: Http) extends Service with UserAPI {
   def setIsOnline(userID: String): js.Promise[HttpResponse[js.Any]] = $http.put(setIsOnlineURL(userID))
 
   def setIsOffline(userID: String): js.Promise[HttpResponse[js.Any]] = $http.delete(setIsOfflineURL(userID))
-
-  //////////////////////////////////////////////////////////////////////
-  //              Favorite Symbols Functions
-  //////////////////////////////////////////////////////////////////////
-
-  def addFavoriteSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
-    $http.put(addFavoriteSymbolURL(userID, symbol))
-  }
-
-  def findFavoriteSymbols(userID: String): js.Promise[HttpResponse[js.Array[Ticker]]] = {
-    $http.get(findFavoriteSymbolsURL(userID))
-  }
-
-  def removeFavoriteSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
-    $http.delete(removeFavoriteSymbolURL(userID, symbol))
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  //              Recent Symbols Functions
-  //////////////////////////////////////////////////////////////////////
-
-  def addRecentSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
-    $http.put(addRecentSymbolURL(userID, symbol))
-  }
-
-  def findRecentSymbols(userID: String): js.Promise[HttpResponse[js.Array[Ticker]]] = {
-    $http.get(findRecentSymbolsURL(userID))
-  }
-
-  def removeRecentSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
-    $http.delete(removeRecentSymbolURL(userID, symbol))
-  }
 
 }

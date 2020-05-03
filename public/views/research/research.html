@@ -164,12 +164,17 @@
             <table class="results">
                 <tr ng-repeat="quote in filteredResults | orderBy: (searchOptions.reverse ? '-' : '') + searchOptions.sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
                     <td class="results">
-                        <a class="links" ng-click="stockQuotePopup(quote.symbol)"> <!-- ng-href="/#!/discover/{{ quote.symbol }}" -->
-                            <i ng-class="getPreferenceIcon(row)"></i>
+                        <a class="links">
+                            <i ng-click="toggleFavoriteSymbol(quote.symbol)"
+                               ng-class="isFavoriteSymbol(quote.symbol) ? 'fa-heart heart' : 'fa-heart-o null'"
+                               class="fa clickable"></i>
                             <span ng-class="quote.exchange"
-                                popover="{{ quote.name }}"
-                                popover-placement="right"
-                                popover-trigger="mouseenter">{{ quote.symbol }}</span>
+                                  ng-click="stockQuotePopup(quote.symbol)"
+                                  popover="{{ quote.name }}"
+                                  popover-placement="right"
+                                  popover-trigger="mouseenter">
+                                {{ quote.symbol }}
+                            </span>
                         </a>
                     </td>
                     <td class="results_num">

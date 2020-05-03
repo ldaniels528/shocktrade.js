@@ -30,7 +30,7 @@
                     ng-click="selectQuote(quote)">
                     <div class="col-md-5" class="qm left">
                         <i class="fa fa-times-circle st_control"
-                        ng-click="removeFavoriteSymbol(quote.symbol)"
+                        ng-click="toggleFavoriteSymbol(quote.symbol)"
                         popover="Remove {{ quote.symbol }} from My Favorites"
                         popover-trigger="mouseenter" popover-placement="right"></i>
                         {{ quote.name }}

@@ -2,8 +2,10 @@ package com.shocktrade.client.discover
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.StockQuoteDialog
+import com.shocktrade.client.dialogs.StockQuoteDialog.{StockQuoteDialogSupport, StockQuoteDialogSupportScope}
 import com.shocktrade.client.discover.ResearchController._
-import com.shocktrade.client.{GlobalLoading, StockQuoteDialogSupport, StockQuoteDialogSupportScope}
+import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope}
+import com.shocktrade.client.{GameStateService, GlobalLoading}
 import com.shocktrade.common.SecuritiesHelper._
 import com.shocktrade.common.events.RemoteEvent.StockUpdateEvent
 import com.shocktrade.common.forms.ResearchOptions
@@ -26,9 +28,10 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class ResearchController($scope: ResearchScope, $rootScope: Scope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                              @injected("GameStateService") gameStateService: GameStateService,
                               @injected("ResearchService") researchService: ResearchService,
                               @injected("StockQuoteDialog") stockQuoteDialog: StockQuoteDialog)
-  extends Controller with GlobalLoading with StockQuoteDialogSupport {
+  extends Controller with GlobalLoading with PersonalSymbolSupport with StockQuoteDialogSupport {
 
   // search reference data components
   private var exchangeCounts = js.Dictionary[Int]()
@@ -192,7 +195,7 @@ object ResearchController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait ResearchScope extends Scope with StockQuoteDialogSupportScope {
+  trait ResearchScope extends Scope with PersonalSymbolSupportScope with StockQuoteDialogSupportScope {
     // variables
     var exchangeSets: js.Dictionary[Boolean] = js.native
     var maxResultsSet: js.Array[Int] = js.native

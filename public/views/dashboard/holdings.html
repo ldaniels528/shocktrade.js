@@ -33,7 +33,12 @@
                 <!-- symbol -->
                 <div class="col-md-2 left">
                     <span ng-class="getExchangeClass(p.exchange)">
-                        <span ng-class="selectedPosition._id === p._id ? 'underlined' : ''">{{ p.symbol }}</span>
+                        <span ng-class="selectedPosition.positionID === p.positionID ? 'underlined' : ''">
+                            <i ng-click="toggleFavoriteSymbol(order.symbol)"
+                               ng-class="isFavoriteSymbol(order.symbol) ? 'fa-heart heart' : 'fa-heart-o null'"
+                               class="fa clickable"></i>
+                            {{ p.symbol }}
+                        </span>
                     </span>
                 </div>
                 <!-- shares -->

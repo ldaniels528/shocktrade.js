@@ -45,7 +45,12 @@
                  ng-class-odd="'contest_odd'">
                 <div class="col-md-2">
                     <span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="popupOrderReviewDialog(o.orderID)">
-                        <span ng-class="selectedOrder.orderID === o.orderID ? 'underlined' : ''">{{ o.symbol }}</span>
+                        <span ng-class="selectedOrder.orderID === o.orderID ? 'underlined' : ''">
+                            <i ng-click="toggleFavoriteSymbol(order.symbol)"
+                               ng-class="isFavoriteSymbol(order.symbol) ? 'fa-heart heart' : 'fa-heart-o null'"
+                               class="fa clickable"></i>
+                            {{ o.symbol }}
+                        </span>
                     </span>
                 </div>
                 <div ng-hide="isOrderSelected()" class="col-md-2 left">{{ o.orderType }} &#8212; {{ o.priceType }}</div>

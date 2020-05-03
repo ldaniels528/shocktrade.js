@@ -3,8 +3,6 @@ package com.shocktrade.remote.proxies
 import com.shocktrade.common.api.UserAPI
 import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
 import com.shocktrade.common.forms.SignUpForm
-import com.shocktrade.common.models.OperationResult
-import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.common.models.user.{OnlineStatus, UserProfile}
 import io.scalajs.nodejs.stream.Readable
 import io.scalajs.npm.request.Request
@@ -76,16 +74,6 @@ class UserProxy(host: String, port: Int)(implicit ec: ExecutionContext) extends 
   def logout(): Future[AuthenticationResponse] = post(logoutURL)
 
   //////////////////////////////////////////////////////////////////////
-  //              Favorite Symbols Functions
-  //////////////////////////////////////////////////////////////////////
-
-  def addFavoriteSymbol(userID: String, symbol: String): Future[OperationResult] = put(addFavoriteSymbolURL(userID, symbol))
-
-  def findFavoriteSymbols(userID: String): Future[js.Array[Ticker]] = get(findFavoriteSymbolsURL(userID))
-
-  def removeFavoriteSymbol(userID: String, symbol: String): Future[OperationResult] = delete(removeFavoriteSymbolURL(userID, symbol))
-
-  //////////////////////////////////////////////////////////////////////
   //              Online Status Functions
   //////////////////////////////////////////////////////////////////////
 
@@ -96,15 +84,5 @@ class UserProxy(host: String, port: Int)(implicit ec: ExecutionContext) extends 
   def setIsOnline(userID: String): Future[OnlineStatus] = put(setIsOnlineURL(userID))
 
   def setIsOffline(userID: String): Future[OnlineStatus] = delete(setIsOfflineURL(userID))
-
-  //////////////////////////////////////////////////////////////////////
-  //              Recent Symbols Functions
-  //////////////////////////////////////////////////////////////////////
-
-  def addRecentSymbol(userID: String, symbol: String): Future[OperationResult] = put(addRecentSymbolURL(userID, symbol))
-
-  def findRecentSymbols(userID: String): Future[js.Array[Ticker]] = get(findRecentSymbolsURL(userID))
-
-  def removeRecentSymbol(userID: String, symbol: String): Future[OperationResult] = delete(removeRecentSymbolURL(userID, symbol))
 
 }
