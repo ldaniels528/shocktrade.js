@@ -39,7 +39,7 @@ class ContestProxy(host: String, port: Int)(implicit ec: ExecutionContext) exten
    * Creates a new game
    * @return the promise of the result of creating a new game
    */
-  def createNewGame(request: ContestCreationRequest): Future[ContestCreationResponse] = post(createNewGameURL, request)
+  def createContest(request: ContestCreationRequest): Future[ContestCreationResponse] = post(createContestURL, request)
 
   def deleteContest(contestID: String): Future[Ok] = delete(deleteContestURL(contestID))
 
@@ -51,6 +51,6 @@ class ContestProxy(host: String, port: Int)(implicit ec: ExecutionContext) exten
 
   def findChatMessages(contestID: String): Future[js.Array[ChatMessage]] = get(findChatMessagesURL(contestID))
 
-  def putChatMessage(contestID: String, message: ChatMessage): Future[Ok] = post(putChatMessageURL(contestID), message)
+  def sendChatMessage(contestID: String, message: ChatMessage): Future[Ok] = post(sendChatMessageURL(contestID), message)
 
 }

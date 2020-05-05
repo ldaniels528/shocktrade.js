@@ -21,7 +21,7 @@ object PowerLoaderJsApp {
     // get the input arguments
     val (host, port, inputFile) = args.toList match {
       case host :: port :: path :: Nil => (host, port.toInt, path)
-      case _ => ("localhost", 9000, "./scripts/restless/replayer2.js")
+      case _ => ("localhost", 9000, "./scripts/restless/cqm-test.js")
       //js.JavaScriptException(s"Syntax: ${getClass.getSimpleName} <host> <port> <inputPath>")
     }
 

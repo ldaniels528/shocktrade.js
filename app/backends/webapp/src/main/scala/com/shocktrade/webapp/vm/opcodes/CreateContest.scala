@@ -2,7 +2,6 @@ package com.shocktrade.webapp.vm
 package opcodes
 
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
-import io.scalajs.JSON
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -13,9 +12,16 @@ import scala.concurrent.{ExecutionContext, Future}
 case class CreateContest(request: ContestCreationRequest) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[ContestCreationResponse] = {
-    ctx.createContest(request)
+    try ctx.createContest(request) catch {
+      case e: Exception =>
+        Future.failed(e)
+    }
   }
 
-  override def toString = s"${getClass.getSimpleName}(${JSON.stringify(request)})"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+    "contestID" -> request.contestID,
+    "userID" -> request.userID,
+    "request" -> request
+  )
 
 }

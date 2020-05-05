@@ -92,6 +92,7 @@ object ContestCreationForm {
     def toRequest: ContestCreationRequest = new ContestCreationRequest(
       name = form.name,
       userID = form.userID,
+      contestID = js.undefined,
       startingBalance = form.startingBalance.map(_.value),
       startAutomatically = form.startAutomatically,
       duration = form.duration.map(_.value),

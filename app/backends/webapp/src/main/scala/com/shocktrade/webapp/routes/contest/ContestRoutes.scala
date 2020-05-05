@@ -1,7 +1,8 @@
 package com.shocktrade.webapp.routes
 package contest
 
-import com.shocktrade.common.Ok
+import java.util.UUID
+
 import com.shocktrade.common.api.ContestAPI
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchOptions, ValidationErrors}
@@ -11,12 +12,11 @@ import com.shocktrade.webapp.routes.account.UserRoutes
 import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
-import com.shocktrade.webapp.vm.opcodes.{CreateContest, JoinContest, SendChatMessage, QuitContest}
+import com.shocktrade.webapp.vm.opcodes.{CreateContest, JoinContest, QuitContest, SendChatMessage}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
@@ -28,12 +28,12 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   extends ContestAPI {
 
   // individual contests
-  app.post(createNewGameURL, (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
+  app.post(createContestURL, (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
   app.get(findContestByIDURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))
 
   // chat messages
   app.get(findChatMessagesURL(":id"), (request: Request, response: Response, next: NextFunction) => findChatMessages(request, response, next))
-  app.post(putChatMessageURL(":id"), (request: Request, response: Response, next: NextFunction) => putChatMessage(request, response, next))
+  app.post(sendChatMessageURL(":id"), (request: Request, response: Response, next: NextFunction) => sendChatMessage(request, response, next))
 
   // contest participation
   app.delete(quitContestURL(":id", ":userID"), (request: Request, response: Response, next: NextFunction) => quitContest(request, response, next))
@@ -73,13 +73,13 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
    * Creates a new contest
    */
   def createContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val form = request.bodyAs[ContestCreationRequest]
+    val form = request.bodyAs[ContestCreationRequest].copy(contestID = UUID.randomUUID().toString)
     form.validate match {
       case messages if messages.nonEmpty =>
         response.badRequest(new ValidationErrors(messages)); next()
       case _ =>
         vm.invoke(CreateContest(form)) onComplete {
-          case Success(result) => response.send(result.asInstanceOf[js.Any]); next()
+          case Success(result) => response.send(result); next()
           case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
@@ -119,29 +119,29 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   def joinContest(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("id"), request.params("userID"))
     vm.invoke(JoinContest(contestID, userID)) onComplete {
-      case Success(data) => response.send(Ok(1)); next()
+      case Success(result) => response.send(result); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
-  def putChatMessage(request: Request, response: Response, next: NextFunction): Unit = {
+  def sendChatMessage(request: Request, response: Response, next: NextFunction): Unit = {
     // get the arguments
     val form = for {
       contestID <- request.params.get("id")
       chatMessage = request.bodyAs[ChatMessage]
       userID <- chatMessage.userID.toOption
       message <- chatMessage.message.toOption
-    } yield (contestID, userID, message)
+    } yield (contestID, userID, message, chatMessage)
 
     // handle the request
     form match {
-      case Some((contestID, userID, message)) =>
+      case Some((contestID, userID, message, chatMessage)) =>
         // asynchronously create the message
         vm.invoke(SendChatMessage(contestID, userID, message)) onComplete {
           // HTTP/200 OK
-          case Success(count) =>
-            response.send(Ok(1))
-            WebSocketHandler.emit(RemoteEvent(RemoteEvent.ChatMessagesUpdated, contestID))
+          case Success(result) =>
+            response.send(result)
+            WebSocketHandler.emit(RemoteEvent.createMessageEvent(chatMessage))
             next()
           // HTTP/500 ERROR
           case Failure(e) =>
@@ -155,8 +155,8 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
 
   def quitContest(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("id"), request.params("userID"))
-    vm.invoke(new QuitContest(contestID, userID)) onComplete {
-      case Success(data) => response.send(Ok(1)); next()
+    vm.invoke(QuitContest(contestID, userID)) onComplete {
+      case Success(result) => response.send(result); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

@@ -38,6 +38,9 @@ object UserProfile {
       nextLevelXP = (xp / 1000 + 1) * 1000
     } yield nextLevelXP
 
+    @inline
+    def userID_! : String = profile.userID.getOrElse(throw js.JavaScriptException("User ID is required"))
+
   }
 
 }

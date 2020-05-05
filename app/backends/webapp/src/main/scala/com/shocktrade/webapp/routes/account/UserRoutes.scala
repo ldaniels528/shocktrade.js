@@ -10,7 +10,7 @@ import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserDAO, UserIconData}
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
-import com.shocktrade.webapp.vm.opcodes.{CreateIcon, CreateUserAccount}
+import com.shocktrade.webapp.vm.opcodes.{CreateUserIcon, CreateUserAccount}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
@@ -230,7 +230,7 @@ object UserRoutes {
     for {
       data <- Fs.readFileFuture(path)
       Some(user) <- userDAO.findUserByName(name)
-      _ <- vm.invoke(CreateIcon(new UserIconData(userID = user.userID, name = name, mime = mime, image = data)))
+      _ <- vm.invoke(CreateUserIcon(new UserIconData(userID = user.userID, name = name, mime = mime, image = data)))
     } yield 1
   }
 

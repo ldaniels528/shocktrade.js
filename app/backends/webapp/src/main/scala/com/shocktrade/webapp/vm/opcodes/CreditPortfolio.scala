@@ -12,8 +12,12 @@ import scala.concurrent.{ExecutionContext, Future}
 case class CreditPortfolio(portfolioID: String, amount: Double) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Double] = {
-    ctx.creditPortfolio(portfolioID, amount)
+    try ctx.creditPortfolio(portfolioID, amount) catch {
+      case e: Exception =>
+        Future.failed(e)
+    }
   }
 
-  override def toString = s"${getClass.getSimpleName}(portfolioID: $portfolioID, amount: $amount)"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex("portfolioID" -> portfolioID, "amount" -> amount)
+
 }

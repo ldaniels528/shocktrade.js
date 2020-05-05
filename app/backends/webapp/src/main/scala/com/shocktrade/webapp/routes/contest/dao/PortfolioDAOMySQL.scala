@@ -186,9 +186,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
       js.Array(portfolioID)).map(_._1)
   }
 
-  override def findPositionByID(positionID: String): Future[Option[PositionData]] = {
-    conn.queryFuture[PositionData](
-      """|SELECT PS.*, S.lastTrade, S.name AS businessName, S.lastTrade * PS.quantity AS marketValue
+  override def findPositionByID(positionID: String): Future[Option[PositionView]] = {
+    conn.queryFuture[PositionView](
+      """|SELECT PS.*, S.lastTrade, S.name AS businessName, S.lastTrade * PS.quantity AS marketValue, S.high, S.low
          |FROM positions PS
          |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
          |WHERE PS.positionID = ?
@@ -196,9 +196,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
       js.Array(positionID)).map(_._1.headOption)
   }
 
-  override def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]] = {
-    conn.queryFuture[PositionData](
-      """|SELECT PS.*, S.lastTrade, S.name AS businessName, PS.quantity * S.lastTrade AS marketValue
+  override def findPositions(contestID: String, userID: String): Future[js.Array[PositionView]] = {
+    conn.queryFuture[PositionView](
+      """|SELECT PS.*, S.lastTrade, S.name AS businessName, PS.quantity * S.lastTrade AS marketValue, S.high, S.low
          |FROM positions PS
          |INNER JOIN portfolios P on P.portfolioID = PS.portfolioID AND PS.quantity > 0
          |LEFT  JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange

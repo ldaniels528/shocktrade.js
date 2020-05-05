@@ -1,5 +1,6 @@
 package com.shocktrade.common.events
 
+import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.common.models.quote.Ticker
 import io.scalajs.JSON
 
@@ -35,6 +36,10 @@ object RemoteEvent {
     action <- event.action.toOption
     data <- event.data.toOption
   } yield (action, data)
+
+  def createMessageEvent(message: ChatMessage): RemoteEvent = {
+    RemoteEvent(action = ChatMessagesUpdated, data = JSON.stringify(message))
+  }
 
   def createStockUpdateEvent(tickers: js.Array[Ticker]): RemoteEvent = {
     RemoteEvent(action = StockUpdateEvent, data = JSON.stringify(new StockUpdateEvent(tickers)))

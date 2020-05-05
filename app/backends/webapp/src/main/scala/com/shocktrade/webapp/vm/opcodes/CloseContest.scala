@@ -17,6 +17,6 @@ case class CloseContest(contestID: String) extends OpCode {
     }
   }
 
-  override def toString: String = s"${getClass.getSimpleName}(contestID: $contestID)"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex("contestID" -> contestID)
 
 }

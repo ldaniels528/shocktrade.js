@@ -9,9 +9,13 @@ import scala.concurrent.{ExecutionContext, Future}
  */
 case class LiquidatePortfolio(portfolioID: String) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Any] = {
-    ctx.liquidatePortfolio(portfolioID)
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Double] = {
+    try ctx.liquidatePortfolio(portfolioID) catch {
+      case e: Exception =>
+        Future.failed(e)
+    }
   }
 
-  override def toString: String = s"${getClass.getSimpleName}(portfolioID: $portfolioID)"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex("portfolioID" -> portfolioID)
+
 }

@@ -5,12 +5,18 @@ import com.shocktrade.webapp.vm.VirtualMachineContext
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
-class PurchasePerks(portfolioID: String, perkCodes: js.Array[String]) extends OpCode {
+case class PurchasePerks(portfolioID: String, perkCodes: js.Array[String]) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
-    ctx.purchasePerks(portfolioID, perkCodes)
+   try ctx.purchasePerks(portfolioID, perkCodes) catch {
+     case e: Exception =>
+       Future.failed(e)
+   }
   }
 
-  override def toString: String = s"${getClass.getSimpleName}(portfolioID: $portfolioID, perkCodes: $perkCodes)"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+    "portfolioID" -> portfolioID,
+    "perkCodes" -> perkCodes
+  )
 
 }

@@ -43,10 +43,11 @@ class MockStockUpdateDaemon(options: MySQLConnectionOptions = DataAccessObjectHe
         val elapsedTime = System.currentTimeMillis() - startTime
         val rate = if (elapsedTime > 0) count / (elapsedTime / 1000.0) else count
         logger.info(f"Processed $count symbols in $elapsedTime msec [$rate%.1f rec/sec]")
+        /*
         if (lastUpdateTime == 0 || js.Date.now() - lastUpdateTime >= 5.minutes.toMillis) {
           transmitUpdates(refreshedStocks.take(75))
           lastUpdateTime = js.Date.now()
-        }
+        }*/
       case Failure(e) =>
         logger.error("Failed while updating mock stocks...")
         e.printStackTrace()

@@ -27,7 +27,7 @@ class Command(val name: String, val args: List[String], val lineNumber: Int, val
       // REST API functions
       case "cancelOrder" => p.cancelOrder(args.oneId)
       case "contestSearch" => c.contestSearch(args.oneJSON)
-      case "createNewGame" => c.createNewGame(args.oneJSON)
+      case "createContest" => c.createContest(args.oneJSON)
       case "createOrder" => args.twoIdsAndJSON map p.createOrder
       case "findContestByID" => c.findContestByID(args.oneId)
       case "findContestRankings" => c.findContestRankings(args.oneId)
@@ -38,7 +38,7 @@ class Command(val name: String, val args: List[String], val lineNumber: Int, val
       case "findUserByID" => u.findUserByID(args.oneId)
       case "findUserByName" => u.findUserByName(args.oneId)
       case "joinContest" => args.twoIds map c.joinContest
-      case "putChatMessage" => args.idAndJSON map c.putChatMessage
+      case "sendChatMessage" => args.idAndJSON map c.sendChatMessage
 
       // builtin functions
       case "arrayContains" => arrayContains(args)

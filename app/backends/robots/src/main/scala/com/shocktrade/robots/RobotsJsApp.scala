@@ -54,7 +54,7 @@ object RobotsJsApp {
       .use(BodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
 
     // setup logging of the request - response cycles
-    app.use { (request: Request, response: Response, next: NextFunction) =>
+    app.use({ (request: Request, response: Response, next: NextFunction) =>
       val startTime = js.Date.now()
       next()
       response.onFinish { () =>
@@ -62,7 +62,7 @@ object RobotsJsApp {
         val query = if (request.query.nonEmpty) (request.query map { case (k, v) => s"$k=$v" } mkString ",").limitTo(120) else "..."
         logger.info("[node] application - %s %s (%s) ~> %d [%d ms]", request.method, request.path, query, response.statusCode, elapsedTime)
       }
-    }
+    }: js.Function)
 
     // disable caching
     app.disable("etag")

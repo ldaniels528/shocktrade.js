@@ -1,9 +1,10 @@
 package com.shocktrade.webapp.vm
 package opcodes
 
-import com.shocktrade.webapp.routes.contest.dao.PositionData
+import com.shocktrade.webapp.vm.dao.PositionData
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
  * Increase Position OpCode
@@ -17,14 +18,25 @@ import scala.concurrent.{ExecutionContext, Future}
 case class IncreasePosition(portfolioID: String, orderID: String, symbol: String, exchange: String, quantity: Double, cost: Double) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
-    ctx.increasePosition(orderID = orderID, cost = cost, position = new PositionData(
+    try ctx.increasePosition(orderID = orderID, cost = cost, position = new PositionData(
+      positionID = js.undefined,
       portfolioID = portfolioID,
       symbol = symbol,
       exchange = exchange,
       quantity = quantity
-    ))
+    )) catch {
+      case e: Exception =>
+        Future.failed(e)
+    }
   }
 
-  override def toString = s"${getClass.getSimpleName}(portfolioID: $portfolioID, symbol: $symbol, exchange: $exchange, quantity: $quantity, cost: $cost)"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+    "portfolioID" -> portfolioID,
+    "orderID" -> orderID,
+    "symbol" -> symbol,
+    "exchange" -> exchange,
+    "quantity" -> quantity,
+    "cost" -> cost
+  )
 
 }

@@ -11,9 +11,15 @@ import scala.concurrent.{ExecutionContext, Future}
 case class QuitContest(contestID: String, userID: String) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Double] = {
-    ctx.quitContest(contestID, userID)
+    try ctx.quitContest(contestID, userID) catch {
+      case e: Exception =>
+        Future.failed(e)
+    }
   }
 
-  override def toString = s"${getClass.getSimpleName}(contestID: $contestID, userID: $userID)"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+    "contestID" -> contestID,
+    "userID" -> userID
+  )
 
 }

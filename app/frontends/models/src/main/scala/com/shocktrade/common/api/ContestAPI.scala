@@ -11,10 +11,10 @@ import scala.scalajs.js
 trait ContestAPI extends BaseAPI {
 
   ///////////////////////////////////////////////////////////////
-  //          Basic C.R.U.D.
+  //          Contest Management
   ///////////////////////////////////////////////////////////////
 
-  def createNewGameURL: String = s"$baseURL/api/contest"
+  def createContestURL: String = s"$baseURL/api/contest"
 
   def deleteContestURL(contestID: String) = s"$baseURL/api/contest/$contestID" // TODO do we need this?
 
@@ -30,7 +30,7 @@ trait ContestAPI extends BaseAPI {
 
   def contestSearchURL(options: js.UndefOr[ContestSearchOptions] = js.undefined): String = {
     val uri = s"$baseURL/api/contests/search"
-    options.map(o => s"$uri?${o.toQueryString}") getOrElse uri
+    options.map(opts => s"$uri?${opts.toQueryString}") getOrElse uri
   }
 
   def findContestByIDURL(contestID: String) = s"$baseURL/api/contest/$contestID"
@@ -43,7 +43,7 @@ trait ContestAPI extends BaseAPI {
 
   def findChatMessagesURL(contestID: String) = s"$baseURL/api/contest/$contestID/chat"
 
-  def putChatMessageURL(contestID: String) = s"$baseURL/api/contest/$contestID/chat"
+  def sendChatMessageURL(contestID: String) = s"$baseURL/api/contest/$contestID/chat"
 
   ///////////////////////////////////////////////////////////////
   //          Administrative Routes

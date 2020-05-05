@@ -11,10 +11,16 @@ import scala.scalajs.js
  */
 case class GrantAwards(portfolioID: String, awardCodes: js.Array[String]) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Any] = {
-    ctx.grantAwards(portfolioID, awardCodes)
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
+    try ctx.grantAwards(portfolioID, awardCodes) catch {
+      case e: Exception =>
+        Future.failed(e)
+    }
   }
 
-  override def toString = s"${getClass.getSimpleName}(portfolioID: $portfolioID, awardCode: [${awardCodes.mkString(",")}])"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+    "portfolioID" -> portfolioID,
+    "awardCodes" -> awardCodes
+  )
 
 }

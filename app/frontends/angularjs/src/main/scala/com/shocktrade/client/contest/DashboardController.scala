@@ -55,7 +55,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     with USMarketsStatusSupport {
 
   // refresh the dashboard every minute
-  $interval(() => initDash(), 5.minute)
+  //$interval(() => initDash(), 5.minute)
 
   $scope.maxPlayers = AppConstants.MaxPlayers
 

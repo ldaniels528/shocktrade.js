@@ -82,7 +82,7 @@ class NewGameDialogController($scope: NewGameDialogControllerScope, $timeout: Ti
       $scope.form.userID = userID
 
       // create the new game
-      contestService.createNewGame(form.toRequest).toFuture onComplete {
+      contestService.createContest(form.toRequest).toFuture onComplete {
         case Success(response) =>
           $uibModalInstance.close(response.data)
           $timeout.cancel(promise)

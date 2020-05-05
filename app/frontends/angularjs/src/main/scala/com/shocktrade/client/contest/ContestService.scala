@@ -23,7 +23,7 @@ class ContestService($http: Http) extends Service with ContestAPI {
    * Creates a new game
    * @return the promise of the result of creating a new game
    */
-  def createNewGame(request: ContestCreationRequest): js.Promise[HttpResponse[ContestCreationResponse]] = $http.post(createNewGameURL, request)
+  def createContest(request: ContestCreationRequest): js.Promise[HttpResponse[ContestCreationResponse]] = $http.post(createContestURL, request)
 
   def deleteContest(contestID: String): js.Promise[HttpResponse[Ok]] = $http.delete(deleteContestURL(contestID))
 
@@ -54,6 +54,6 @@ class ContestService($http: Http) extends Service with ContestAPI {
 
   def findChatMessages(contestID: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = $http.get(findChatMessagesURL(contestID))
 
-  def putChatMessage(contestID: String, message: ChatMessage): js.Promise[HttpResponse[Ok]] = $http.post(putChatMessageURL(contestID), message)
+  def sendChatMessage(contestID: String, message: ChatMessage): js.Promise[HttpResponse[Ok]] = $http.post(sendChatMessageURL(contestID), message)
 
 }

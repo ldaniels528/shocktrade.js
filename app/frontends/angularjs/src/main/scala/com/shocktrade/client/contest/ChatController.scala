@@ -137,7 +137,7 @@ case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRo
         if (messageText.trim.nonEmpty) {
           // make the service calls
           val outcome = for {
-            _ <- contestService.putChatMessage(contestID, new ChatMessage(userID = userID, username = $scope.userProfile.flatMap(_.username), message = messageText))
+            _ <- contestService.sendChatMessage(contestID, new ChatMessage(userID = userID, username = $scope.userProfile.flatMap(_.username), message = messageText))
             messages <- contestService.findChatMessages(contestID)
           } yield messages
 

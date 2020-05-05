@@ -11,8 +11,15 @@ import scala.concurrent.{ExecutionContext, Future}
 case class GrantXP(portfolioID: String, xp: Int) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
-    ctx.grantXP(portfolioID, xp)
+    try ctx.grantXP(portfolioID, xp) catch {
+      case e: Exception =>
+        Future.failed(e)
+    }
   }
 
-  override def toString = s"${getClass.getSimpleName}(portfolioID: $portfolioID, xp: $xp)"
+  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+    "portfolioID" -> portfolioID,
+    "xp" -> xp
+  )
+
 }

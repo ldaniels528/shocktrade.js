@@ -64,11 +64,11 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
               case None => Future.failed(js.JavaScriptException(s"Portfolio for user $userID, contest $contestID"))
             }
           }
-          count <- vm.invoke(CreateOrder(portfolioID, form.toOrder))
-        } yield count
+          result <- vm.invoke(CreateOrder(portfolioID, form.toOrder))
+        } yield result
 
         outcome onComplete {
-          case Success(_) => response.send(Ok(1)); next()
+          case Success(result) => response.send(result); next()
           case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
@@ -99,7 +99,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   def cancelOrder(request: Request, response: Response, next: NextFunction): Unit = {
     val orderID = request.params("orderID")
     vm.invoke(CancelOrder(orderID)) onComplete {
-      case Success(result) => response.send(Ok(1)); next()
+      case Success(result) => response.send(result); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
@@ -162,8 +162,8 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   def purchasePerks(request: Request, response: Response, next: NextFunction): Unit = {
     val portfolioID = request.params("portfolioID")
     val perkCodes = request.bodyAs[js.Array[String]]
-    vm.invoke(new PurchasePerks(portfolioID, perkCodes)) onComplete {
-      case Success(_) => response.send(new Ok(1)); next()
+    vm.invoke(PurchasePerks(portfolioID, perkCodes)) onComplete {
+      case Success(result) => response.send(result); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

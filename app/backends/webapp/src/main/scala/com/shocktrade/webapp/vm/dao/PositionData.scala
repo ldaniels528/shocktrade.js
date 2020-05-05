@@ -1,6 +1,4 @@
-package com.shocktrade.webapp.routes.contest.dao
-
-import java.util.UUID
+package com.shocktrade.webapp.vm.dao
 
 import com.shocktrade.common.models.contest.PositionLike
 import io.scalajs.util.JsUnderOrHelper._
@@ -11,12 +9,11 @@ import scala.scalajs.js
  * Position Data
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PositionData(val positionID: js.UndefOr[String] = UUID.randomUUID().toString,
+class PositionData(val positionID: js.UndefOr[String],
                    val portfolioID: js.UndefOr[String],
                    val symbol: js.UndefOr[String],
                    val exchange: js.UndefOr[String],
                    val quantity: js.UndefOr[Double],
-                   val businessName: js.UndefOr[String] = js.undefined,
                    val processedTime: js.UndefOr[js.Date] = js.undefined) extends PositionLike
 
 /**
@@ -34,7 +31,7 @@ object PositionData {
     @inline
     def copy(positionID: js.UndefOr[String] = js.undefined,
              portfolioID: js.UndefOr[String] = js.undefined,
-             businessName: js.UndefOr[String],
+             businessName: js.UndefOr[String] = js.undefined,
              symbol: js.UndefOr[String] = js.undefined,
              exchange: js.UndefOr[String] = js.undefined,
              quantity: js.UndefOr[Double] = js.undefined,
@@ -42,7 +39,6 @@ object PositionData {
       new PositionData(
         positionID = positionID ?? position.positionID,
         portfolioID = portfolioID ?? position.portfolioID,
-        businessName = businessName ?? position.businessName,
         symbol = symbol ?? position.symbol,
         exchange = exchange ?? position.exchange,
         quantity = quantity ?? position.quantity,

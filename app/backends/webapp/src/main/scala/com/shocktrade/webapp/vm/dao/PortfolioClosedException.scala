@@ -1,8 +1,6 @@
 package com.shocktrade.webapp.vm.dao
 
-case class PortfolioClosedException(portfolioID: String) extends RuntimeException {
-  override def fillInStackTrace(): Throwable = {
-    scala.scalajs.runtime.StackTrace.captureState(this, s"Portfolio $portfolioID is closed")
-    this
-  }
-}
+import scala.scalajs.js
+
+case class PortfolioClosedException(portfolioID: String, closedTime: js.UndefOr[js.Date])
+  extends RuntimeException(s"Portfolio $portfolioID is closed ${closedTime.map(t => s"at $t").getOrElse("")}")

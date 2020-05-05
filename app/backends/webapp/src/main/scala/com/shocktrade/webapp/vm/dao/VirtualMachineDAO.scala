@@ -1,9 +1,11 @@
 package com.shocktrade.webapp.vm.dao
 
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
+import com.shocktrade.common.models.contest.{MessageRef, OrderRef, PortfolioRef}
+import com.shocktrade.common.models.user.UserRef
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData}
-import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData, PositionData}
+import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -15,14 +17,6 @@ import scala.scalajs.js
  */
 trait VirtualMachineDAO {
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //    Account Management
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  def createIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int]
-
-  def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Int]
-
   //////////////////////////////////////////////////////////////////
   //    Contest Functions
   //////////////////////////////////////////////////////////////////
@@ -31,11 +25,11 @@ trait VirtualMachineDAO {
 
   def createContest(request: ContestCreationRequest): Future[ContestCreationResponse]
 
-  def joinContest(contestID: String, userID: String): Future[String]
+  def joinContest(contestID: String, userID: String): Future[PortfolioRef]
 
   def quitContest(contestID: String, userID: String): Future[Double]
 
-  def sendChatMessage(contestID: String, userID: String, message: String): Future[Int]
+  def sendChatMessage(contestID: String, userID: String, message: String): Future[MessageRef]
 
   def startContest(contestID: String, userID: String): Future[Boolean]
 
@@ -63,11 +57,9 @@ trait VirtualMachineDAO {
 
   def closePortfolio(portfolioID: String): Future[Double]
 
-  def closePortfolios(contestID: String): Future[js.Dictionary[Double]]
-
   def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String]): Future[Int]
 
-  def createOrder(portfolioID: String, order: OrderData): Future[Int]
+  def createOrder(portfolioID: String, order: OrderData): Future[OrderRef]
 
   def creditPortfolio(portfolioID: String, amount: Double): Future[Double]
 
@@ -78,6 +70,22 @@ trait VirtualMachineDAO {
   def increasePosition(orderID: String, position: PositionData, cost: Double): Future[Int]
 
   def liquidatePortfolio(portfolioID: String): Future[Double]
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    User / Account Management
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  def createUserIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int]
+
+  def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[UserRef]
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    System Functions
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  def trackEvent(event: EventSourceData): Future[Int]
+
+  def updateEventLog(): Future[Int]
 
 }
 

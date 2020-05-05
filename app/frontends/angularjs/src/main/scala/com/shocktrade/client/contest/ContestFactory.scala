@@ -22,7 +22,7 @@ class ContestFactory($interval: Interval,
   private val contestCache: js.Dictionary[Contest] = js.Dictionary()
   private val portfolioCache: js.Dictionary[Portfolio] = js.Dictionary()
 
-  $interval(() => clear(), 15.seconds)
+  $interval(() => clear(), 5.seconds)
 
   /**
    * Clears the contest and portfolio caches
@@ -37,20 +37,7 @@ class ContestFactory($interval: Interval,
    * @param contestID the given contest ID
    * @return the [[Contest contest object graph]]
    */
-  def findContest(contestID: String): Future[Contest] = {
-    console.info(s"Retrieving contest graph for contest $contestID...")
-    contestCache.get(contestID) match {
-      case Some(contest) => Future.successful(contest)
-      case None =>
-        val outcome = buildContestGraph(contestID)
-        outcome onComplete {
-          case Success(contest) => contestCache(contestID) = contest
-          case Failure(e) => console.error(s"findContest: contestID => '$contestID' ${e.getMessage}")
-            e.printStackTrace()
-        }
-        outcome
-    }
-  }
+  def findContest(contestID: String): Future[Contest] = buildContestGraph(contestID)
 
   /**
    * Returns the contest and portfolio object graphs for the given contest ID and user ID
@@ -71,21 +58,7 @@ class ContestFactory($interval: Interval,
    * @param userID    the given user ID
    * @return the [[Portfolio portfolio object graph]]
    */
-  def findPortfolio(contestID: String, userID: String): Future[Portfolio] = {
-    console.info(s"Retrieving portfolio graph for contest $contestID, user $userID...")
-    val key = s"$contestID.$userID"
-    portfolioCache.get(key) match {
-      case Some(portfolio) => Future.successful(portfolio)
-      case None =>
-        val outcome = buildPortfolioGraph(contestID, userID)
-        outcome onComplete {
-          case Success(portfolio) => portfolioCache(key) = portfolio
-          case Failure(e) => console.error(s"findPortfolio: contestID => '$contestID' ${e.getMessage}")
-            e.printStackTrace()
-        }
-        outcome
-    }
-  }
+  def findPortfolio(contestID: String, userID: String): Future[Portfolio] = buildPortfolioGraph(contestID, userID)
 
   /**
    * Returns the portfolio object graph for the given contest ID and user ID
