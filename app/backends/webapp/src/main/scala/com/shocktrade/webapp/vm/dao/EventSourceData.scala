@@ -18,8 +18,13 @@ class EventSourceData(val command: js.UndefOr[String],
                       val orderID: js.UndefOr[String],
                       val symbol: js.UndefOr[String],
                       val exchange: js.UndefOr[String],
+                      val orderType: js.UndefOr[String],
+                      val priceType: js.UndefOr[String],
+                      val quantity: js.UndefOr[Double],
+                      val price: js.UndefOr[Double],
                       val response: js.UndefOr[String],
                       val responseTimeMillis: js.UndefOr[Double],
+                      val failed: js.UndefOr[Boolean],
                       val creationTime: js.UndefOr[js.Date]) extends js.Object
 
 /**
@@ -37,14 +42,19 @@ object EventSourceData {
             orderID: js.UndefOr[String] = js.undefined,
             symbol: js.UndefOr[String] = js.undefined,
             exchange: js.UndefOr[String] = js.undefined,
+            orderType: js.UndefOr[String] = js.undefined,
+            priceType: js.UndefOr[String] = js.undefined,
+            quantity: js.UndefOr[Double] = js.undefined,
+            price: js.UndefOr[Double] = js.undefined,
             response: js.UndefOr[String] = js.undefined,
             responseTimeMillis: js.UndefOr[Double] = js.undefined,
+            failed: js.UndefOr[Boolean] = js.undefined,
             creationTime: js.UndefOr[Date] = js.undefined): EventSourceData = {
     new EventSourceData(
       command = command, `type` = `type`,
       contestID = contestID, portfolioID = portfolioID, positionID = positionID, userID = userID, orderID = orderID,
-      symbol = symbol, exchange = exchange, response = response, responseTimeMillis = responseTimeMillis,
-      creationTime = creationTime
+      symbol = symbol, exchange = exchange, orderType = orderType, priceType = priceType, quantity = quantity, price = price,
+      response = response, responseTimeMillis = responseTimeMillis, failed = failed, creationTime = creationTime
     )
   }
 
@@ -59,8 +69,13 @@ object EventSourceData {
              orderID: js.UndefOr[String] = js.undefined,
              symbol: js.UndefOr[String] = js.undefined,
              exchange: js.UndefOr[String] = js.undefined,
+             orderType: js.UndefOr[String] = js.undefined,
+             priceType: js.UndefOr[String] = js.undefined,
+             quantity: js.UndefOr[Double] = js.undefined,
+             price: js.UndefOr[Double] = js.undefined,
              response: js.UndefOr[String] = js.undefined,
              responseTimeMillis: js.UndefOr[Double] = js.undefined,
+             failed: js.UndefOr[Boolean] = js.undefined,
              creationTime: js.UndefOr[Date] = js.undefined): EventSourceData = {
       new EventSourceData(
         command = event.command ?? command,
@@ -72,8 +87,13 @@ object EventSourceData {
         orderID = event.orderID ?? orderID,
         symbol = event.symbol ?? symbol,
         exchange = event.exchange ?? exchange,
+        orderType = event.orderType ?? orderType,
+        priceType = event.priceType ?? priceType,
+        quantity = event.quantity ?? quantity,
+        price = event.price ?? price,
         response = event.response ?? response,
         responseTimeMillis = event.responseTimeMillis ?? responseTimeMillis,
+        failed = event.failed ?? failed,
         creationTime = event.creationTime ?? creationTime
       )
     }

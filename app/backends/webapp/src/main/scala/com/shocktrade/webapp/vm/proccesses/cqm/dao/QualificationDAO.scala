@@ -16,9 +16,7 @@ trait QualificationDAO {
 
   def findExpiredOrders(): Future[js.Array[OrderExpiredData]]
 
-  def findLimitAndMarketOrders(limit: Int): Future[js.Array[QualifiedOrderData]]
-
-  def findMarketCloseOrders(limit: Int): Future[js.Array[QualifiedOrderData]]
+  def findQualifiedOrders(limit: Int): Future[js.Array[QualifiedOrderData]]
 
 }
 

@@ -10,7 +10,7 @@ CREATE TABLE contests (
      name VARCHAR(128) NOT NULL,
      hostUserID CHAR(36) NOT NULL,
      statusID INTEGER NOT NULL DEFAULT 2,
-     startingBalance DECIMAL(12,5) NOT NULL,
+     startingBalance DOUBLE NOT NULL,
      timeOffset BIGINT NOT NULL DEFAULT 0,
      friendsOnly TINYINT NOT NULL DEFAULT 0,
      invitationOnly TINYINT NOT NULL DEFAULT 0,
@@ -73,7 +73,7 @@ CREATE TABLE portfolios (
      portfolioID CHAR(36) PRIMARY KEY,
      userID CHAR(36) NOT NULL,
      contestID CHAR(36) NOT NULL,
-     funds DECIMAL(12,5) NOT NULL,
+     funds DOUBLE NOT NULL,
      joinTime DATETIME NOT NULL DEFAULT now(),
      closedTime DATETIME NULL
 );
@@ -90,7 +90,7 @@ CREATE TABLE orders (
      symbol VARCHAR(12) NOT NULL,
      exchange VARCHAR(12) NOT NULL,
      orderType VARCHAR(10) NOT NULL,
-     price DECIMAL(12,5) NULL,
+     price DOUBLE NULL,
      priceType VARCHAR(36) NOT NULL,
      quantity INTEGER NOT NULL,
      creationTime DATETIME NOT NULL DEFAULT now(),
@@ -141,7 +141,6 @@ SELECT
     P.portfolioID,
     U.userID,
     U.username,
-    U.level,
     IFNULL(P.funds + SUM(S.lastTrade * PS.quantity), P.funds) AS totalEquity,
     IFNULL((100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100, 0.0) AS gainLoss
 FROM contests C

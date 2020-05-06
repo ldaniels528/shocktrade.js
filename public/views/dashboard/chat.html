@@ -1,4 +1,4 @@
-<div ng-controller="ChatController" ng-init="initChat()">
+<div>
     <div class="chat_messages">
         <div ng-bind-html="getChatMessages()"></div>
     </div>
@@ -10,16 +10,14 @@
     </span>
     </div>
     <div class="block_full">
-		<textarea ng-model="chatMessage" class="chat_text_area"></textarea>
+		<textarea id="chatBox" ng-model="inputs.chatMessage" class="chat_text_area" showTail></textarea>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <button class="btn btn-default st_button" ng-click="sendChatMessage(chatMessage)">
+            <button class="btn btn-default st_button" ng-click="sendChatMessage(inputs.chatMessage)">
                 <i class="fa fa-paper-plane"></i> Send
             </button>
         </div>
-        <div class="col-md-6">
-            &nbsp;
-        </div>
+        <div class="col-md-6">&nbsp;</div>
     </div>
 </div>

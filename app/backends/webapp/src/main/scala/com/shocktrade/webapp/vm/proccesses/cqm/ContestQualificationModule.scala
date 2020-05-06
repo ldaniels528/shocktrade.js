@@ -25,7 +25,7 @@ class ContestQualificationModule()(implicit ec: ExecutionContext) {
   }
 
   def processLimitAndMarketOrders()(implicit cqmDAO: QualificationDAO): Future[js.Array[OpCode]] = {
-    cqmDAO.findLimitAndMarketOrders(limit = 250) map processOrders
+    cqmDAO.findQualifiedOrders(limit = 250) map processOrders
   }
 
   def processOrders(orders: js.Array[QualifiedOrderData]): js.Array[OpCode] = {

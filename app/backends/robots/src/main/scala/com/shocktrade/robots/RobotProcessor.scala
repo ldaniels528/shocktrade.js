@@ -54,7 +54,7 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
     val options = robotName match {
       case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = 10)
       case "gadget" => new ResearchOptions(priceMax = 5.00, changeMax = 0.0, spreadMin = 10.0, volumeMin = 1e+6, maxResults = 10)
-      case "teddy" => new ResearchOptions(priceMax = random.nextDouble(), changeMax = 0.0, spreadMin = random.nextInt(75).toDouble, maxResults = 10)
+      case "teddy" => new ResearchOptions(priceMax = random.nextDouble(), changeMax = 0.0, spreadMin = random.nextInt(75).toDouble, maxResults = 25)
       case _ => new ResearchOptions(priceMax = 25.00, changeMax = 0.0, spreadMin = 10.0, volumeMin = 1e+6, maxResults = 10)
     }
     researchProxy.research(options)

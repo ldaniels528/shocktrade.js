@@ -318,9 +318,14 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   override def trackEvent(event: EventSourceData): Future[Int] = {
     import event._
     conn.executeFuture(
-      """|INSERT INTO eventsource (command, type, response, responseTimeMillis, contestID, portfolioID, userID, orderID, symbol, exchange)
-         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-         |""".stripMargin, js.Array(command, `type`, response, responseTimeMillis, contestID, portfolioID, userID, orderID, symbol, exchange)
+      """|INSERT INTO eventsource (
+         |  command, type, response, responseTimeMillis, contestID, portfolioID, userID,
+         |  orderID, orderType, priceType, quantity, price, symbol, exchange, failed
+         |)
+         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         |""".stripMargin, js.Array(
+        command, `type`, response, responseTimeMillis, contestID, portfolioID, userID,
+        orderID, orderType, priceType, quantity, price, symbol, exchange, failed ?? false)
     ).map(_.affectedRows)
   }
 
@@ -350,8 +355,12 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   //////////////////////////////////////////////////////////////////
 
   private def closePositions(portfolioID: String): Future[Int] = {
-    conn.executeFuture("UPDATE positions SET quantity = 0 WHERE portfolioID = ?", js.Array(portfolioID))
-      .map(_.affectedRows) map checkCount(count => s"Portfolio $portfolioID could not be closed: count = $count")
+    val outcome = for {
+      _ <- conn.executeFuture("UPDATE positions SET quantity = 0 WHERE portfolioID = ?", js.Array(portfolioID)).map(_.affectedRows)
+      w <- conn.executeFuture("UPDATE portfolios SET closedTime = now() WHERE portfolioID = ?", js.Array(portfolioID)).map(_.affectedRows)
+    } yield w
+
+    outcome map checkCount(count => s"Could not update portfolio $portfolioID: count = $count")
   }
 
   private def completeOrders(portfolioID: String, message: String): Future[Int] = {
@@ -489,10 +498,10 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       conn.executeFuture(
         """|UPDATE positions
            |SET quantity = quantity - ?, processedTime = ?
-           |WHERE positionID = ?
-           |AND quantity >= ?
-           |""".stripMargin, js.Array(quantity, _processedTime, positionID, quantity))
-        .map(_.affectedRows) map checkCount(count => s"Failed to decrease position: count = $count")
+           |WHERE symbol = ?
+           |AND exchange = ?
+           |""".stripMargin, js.Array(quantity, _processedTime, symbol, exchange))
+        .map(_.affectedRows) map checkCount(count => s"Failed to decrease position: count = $count, positionID = ${positionID.orNull}")
     }
   }
 

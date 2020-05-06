@@ -11,7 +11,7 @@
             <div class="col-md-5 inline pull-left">
                 <div class="col-md-12 pull-left">
                     <span class="pull-left">Level</span>
-                    <span class="pull-right">{{ player.level || 1 }} &#8212; {{ levels[ player.level || 0 ].description }}</span>
+                    <span class="pull-right">{{ getLevel() || 1 }} &#8212; {{ levels[ getLevel() || 0 ].description }}</span>
                 </div>
                 <div class="col-md-12 pull-left">
                     <span class="pull-left">Experience</span>

@@ -158,7 +158,6 @@ object WebClientJsApp {
   }
 
   private def configureControllers(module: Module): Unit = {
-    module.controllerOf[ChatController]("ChatController")
     module.controllerOf[DashboardController]("DashboardController")
     module.controllerOf[DiscoverController]("DiscoverController")
     module.controllerOf[ExploreController]("ExploreController")
@@ -170,9 +169,7 @@ object WebClientJsApp {
     module.controllerOf[MyQuotesController]("MyQuotesController")
     module.controllerOf[NavigationController]("NavigationController")
     module.controllerOf[NewsController]("NewsController")
-    module.controllerOf[OrdersController]("OrdersController")
     module.controllerOf[PerksController]("PerksController")
-    module.controllerOf[PositionsController]("PositionsController")
     module.controllerOf[PostController]("PostController")
     module.controllerOf[ResearchController]("ResearchController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")

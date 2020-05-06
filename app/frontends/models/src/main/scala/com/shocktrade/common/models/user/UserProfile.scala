@@ -9,14 +9,10 @@ import scala.scalajs.js
 class UserProfile(var userID: js.UndefOr[String] = js.undefined,
                   var username: js.UndefOr[String] = js.undefined,
                   var email: js.UndefOr[String] = js.undefined,
-                  var level: js.UndefOr[Int] = js.undefined,
                   var equity: js.UndefOr[Double] = js.undefined,
-                  var funds: js.UndefOr[Double] = js.undefined,
                   var wallet: js.UndefOr[Double] = js.undefined,
                   var totalXP: js.UndefOr[Int] = js.undefined,
                   var awards: js.UndefOr[js.Array[String]] = js.undefined,
-                  var favoriteSymbols: js.UndefOr[js.Array[String]] = js.undefined,
-                  var recentSymbols: js.UndefOr[js.Array[String]] = js.undefined,
                   var followers: js.UndefOr[js.Array[String]] = js.undefined,
                   var lastLoginTime: js.UndefOr[js.Date] = js.undefined) extends UserProfileLike
 
@@ -31,6 +27,11 @@ object UserProfile {
    * @param profile the given [[UserProfile user profile]]
    */
   final implicit class UserProfileEnrichment(val profile: UserProfile) extends AnyVal {
+
+    def getLevel: js.UndefOr[Int] = for {
+      xp <- profile.totalXP
+      level = xp / 1000 + 1
+    } yield level
 
     @inline
     def nextLevelXP: js.UndefOr[Int] = for {

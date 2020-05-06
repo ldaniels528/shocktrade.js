@@ -1,4 +1,4 @@
-<div ng-controller="OrdersController" ng-init="initOrders()">
+<div>
     <div class="order_states col-md-12">
         <span class="col-md-4">
             <span ng-hide="getOrders().length">No orders found</span>
@@ -6,10 +6,10 @@
             <span ng-show="getOrders().length > 1">{{ getOrders().length }} orders found</span>
         </span>
         <span class="col-md-4">
-            <span class="clickable" ng-click="showOpenOrders = !showOpenOrders">
+            <span class="clickable" ng-click="hideShowOpenOrders()">
                 Open Orders <i ng-class="showOpenOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
             </span>
-            <span class="clickable" ng-click="showClosedOrders = !showClosedOrders">
+            <span class="clickable" ng-click="hideShowClosedOrders()">
                 Closed Orders <i ng-class="showClosedOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
             </span>
         </span>
@@ -21,20 +21,10 @@
     </div>
     <div class="col-md-12">
         <div class="col-md-2 bold left">Symbol</div>
-        <div class="col-md-2 bold left" ng-hide="isOrderSelected()">Terms</div>
-        <div class="col-md-2 bold right" ng-hide="isOrderSelected()">Your Price</div>
-        <div class="col-md-2 bold right" ng-hide="isOrderSelected()">Shares</div>
-        <div class="col-md-4 bold left" ng-hide="isOrderSelected()">Status</div>
-
-        <div class="col-md-7 bold" ng-show="isOrderSelected()">
-            <span ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.companyName }}</span>
-        </div>
-        <div class="col-md-2" ng-show="isOrderSelected()">
-            <span class="st_bkg_color clickable pull-right" ng-click="toggleSelectedOrder()">
-                <i class="fa fa-chevron-circle-left st_control"
-                   title="Return to results"></i> Back
-            </span>
-        </div>
+        <div class="col-md-2 bold left">Terms</div>
+        <div class="col-md-2 bold right">Your Price</div>
+        <div class="col-md-2 bold right">Shares</div>
+        <div class="col-md-4 bold left">Status</div>
     </div>
 
     <div class="ordersContainer">
@@ -53,15 +43,15 @@
                               ng-click="popupOrderReviewDialog(o.orderID)">{{ o.symbol }}</span>
                     </span>
                 </div>
-                <div ng-hide="isOrderSelected()" class="col-md-2 left">{{ o.orderType }} &#8212; {{ o.priceType }}</div>
-                <div ng-hide="isOrderSelected()" class="col-md-2 right">
+                <div class="col-md-2 left">{{ o.orderType }} &#8212; {{ o.priceType }}</div>
+                <div class="col-md-2 right">
                     <span ng-show="o.priceType == 'LIMIT'">$ {{ o.price | quoteNumber }}</span>
                     <span ng-hide="o.priceType == 'LIMIT'" class="positive">$ {{ o.lastTrade | quoteNumber }}</span>
                 </div>
-                <div ng-hide="isOrderSelected()" class="col-md-2 right">
-                    <div ng-hide="isOrderSelected()">{{ o.quantity | number }}</div>
+                <div class="col-md-2 right">
+                    <div>{{ o.quantity | number }}</div>
                 </div>
-                <div ng-hide="isOrderSelected()" class="col-md-4 left">
+                <div class="col-md-4 left">
                     <span ng-show="o.message" ng-class="{'positive':o.fulfilled, 'error':!o.fulfilled}">{{ o.message }}</span>
                     <span ng-show="!o.message && !o.closed" class="positive">Pending</span>
                     <span ng-show="!o.message && o.closed && !o.fulfilled">Closed</span>

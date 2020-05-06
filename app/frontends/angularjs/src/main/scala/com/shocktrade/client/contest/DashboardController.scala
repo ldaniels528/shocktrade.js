@@ -1,24 +1,29 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client.contest.ChatController._
 import com.shocktrade.client.contest.DashboardController._
+import com.shocktrade.client.contest.OrderReviewDialog.{OrderReviewDialogPopupSupport, OrderReviewDialogPopupSupportScope}
+import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
 import com.shocktrade.client.contest.PerksDialog._
+import com.shocktrade.client.contest.PositionReviewDialog.{PositionReviewDialogPopupSupport, PositionReviewDialogPopupSupportScope}
+import com.shocktrade.client.contest.PositionsController.PositionsControllerScope
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.client.dialogs.NewOrderDialog.NewOrderDialogResult
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PlayerProfileDialog}
 import com.shocktrade.client.discover.MarketStatusService
-import com.shocktrade.client.users.UserService
+import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope, UserService}
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
 import com.shocktrade.common.forms.NewOrderForm
-import com.shocktrade.common.models.contest.{Contest, ContestRanking, Portfolio}
+import com.shocktrade.common.models.contest.{ChatMessage, Contest, ContestRanking, Portfolio}
 import com.shocktrade.common.{AppConstants, Ok}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.{Window, console}
 import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Interval, Timeout, injected}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -28,6 +33,7 @@ import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
@@ -42,20 +48,21 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
                                @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
                                @injected("MarketStatusService") marketStatusService: MarketStatusService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
+                               @injected("OrderReviewDialog") orderReviewDialog: OrderReviewDialog,
                                @injected("PerksDialog") perksDialog: PerksDialog,
                                @injected("PlayerProfileDialog") playerProfileDialog: PlayerProfileDialog,
                                @injected("PortfolioService") portfolioService: PortfolioService,
+                               @injected("PositionReviewDialog") positionReviewDialog: PositionReviewDialog,
                                @injected("UserService") userService: UserService)
-  extends Controller
-    with AwardsSupport
-    with ContestCssSupport
-    with GlobalLoading
+  extends Controller with AwardsSupport with ChatController with ContestCssSupport with GlobalLoading
     with GlobalSelectedSymbol
+    with OrderReviewDialogPopupSupport
+    with OrdersController
+    with PersonalSymbolSupport
     with PlayerProfilePopupSupport
+    with PositionsController
+    with PositionReviewDialogPopupSupport
     with USMarketsStatusSupport {
-
-  // refresh the dashboard every minute
-  //$interval(() => initDash(), 5.minute)
 
   $scope.maxPlayers = AppConstants.MaxPlayers
 
@@ -74,30 +81,27 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.getPortfolioTabs = () => portfolioTabs.filter(tab => !tab.isAuthRequired || !$scope.contest.toOption.flatMap(_.status.toOption).contains("CLOSED"))
 
-  $scope.isParticipant = () => _userID.flatMap(isParticipant)
-
-  private def isParticipant(userID: String): js.UndefOr[Boolean] = {
-    for {
-      contest <- $scope.contest
-      rankings <- contest.rankings
-      participants = rankings.flatMap(_.userID.toOption)
-    } yield participants.contains(userID)
-  }
-
   /////////////////////////////////////////////////////////////////////
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
   $interval(() => $scope.clock = clock, 1.second)
 
+  // refresh the dashboard every 5 minutes
+  private def refreshDashboard(): Unit = initDash().map(_ onComplete { _ => $timeout(() => refreshDashboard(), 5.minute) })
+
+  $timeout(() => refreshDashboard(), 5.minutes)
+
   $scope.initDash = () => {
     console.info(s"${getClass.getSimpleName} initializing...")
     initDash()
   }
 
-  $scope.onUserProfileUpdated { (_, _) => initDash() }
+  $scope.onMessagesUpdated { (event, message) => initDash() }
 
-  private def initDash(): js.UndefOr[js.Promise[(Contest, Option[Portfolio])]] = {
+  $scope.onUserProfileUpdated { (event, userProfile) => initDash() }
+
+  private def initDash(): js.UndefOr[js.Promise[(Contest, UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])]] = {
     $scope.resetMarketStatus($routeParams.contestID)
     for (contestID <- $routeParams.contestID) yield refreshView(contestID, _userID)
   }
@@ -107,22 +111,26 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     new js.Date(js.Date.now() - timeOffset)
   }
 
-  private def refreshView(contestID: String, aUserID: js.UndefOr[String]): js.Promise[(Contest, Option[Portfolio])] = {
+  private def refreshView(contestID: String, aUserID: js.UndefOr[String]): js.Promise[(Contest, UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])] = {
     $timeout(() => $scope.isRefreshing = true, 0.millis)
     val outcome = (for {
       contest <- contestFactory.findContest(contestID)
+      messages <- contestService.findChatMessages(contestID)
       portfolio_? <- aUserID.toOption match {
         case Some(userID) => contestFactory.findOptionalPortfolio(contestID, userID)
         case None => Future.successful(None)
       }
-    } yield (contest, portfolio_?)).toJSPromise
+    } yield (contest, portfolio_?.orUndefined, messages)).toJSPromise
 
     outcome onComplete { _ => $timeout(() => $scope.isRefreshing = false, 500.millis) }
     outcome onComplete {
-      case Success((contest, portfolio_?)) =>
+      case Success((contest, portfolio_?, messages)) =>
         $scope.$apply { () =>
           $scope.contest = contest
-          $scope.portfolio = portfolio_?.orUndefined
+          $scope.chatMessages = messages.data
+          $scope.portfolio = portfolio_?
+          $scope.orders = portfolio_?.flatMap(_.orders)
+          $scope.positions = portfolio_?.flatMap(_.positions)
         }
       case Failure(e) => toaster.error("Error", e.displayMessage)
         console.error(s"error: ${e.getMessage} | ${JSON.stringify(e.asInstanceOf[js.Any])}")
@@ -259,6 +267,16 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.deleteContest = (aContestID: js.UndefOr[String]) => aContestID.map(deleteContest)
 
+  $scope.isParticipant = () => _userID.flatMap(isParticipant)
+
+  private def isParticipant(userID: String): js.UndefOr[Boolean] = {
+    for {
+      contest <- $scope.contest
+      rankings <- contest.rankings
+      participants = rankings.flatMap(_.userID.toOption)
+    } yield participants.contains(userID)
+  }
+
   $scope.joinContest = (aContestID: js.UndefOr[String]) => {
     for {contestID <- aContestID; userID <- _userID} yield joinContest(contestID, userID)
   }
@@ -348,16 +366,19 @@ object DashboardController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait DashboardControllerScope extends RootScope
-    with AwardsSupportScope
-    with ContestCssSupportScope
+  trait DashboardControllerScope extends RootScope with AwardsSupportScope with ChatControllerScope with ContestCssSupportScope
     with GlobalNavigation
     with GlobalSelectedSymbolScope
+    with OrderReviewDialogPopupSupportScope
+    with OrdersControllerScope
+    with PersonalSymbolSupportScope
     with PlayerProfilePopupSupportScope
+    with PositionReviewDialogPopupSupportScope
+    with PositionsControllerScope
     with USMarketsStatusSupportScope {
 
     // functions
-    var initDash: js.Function0[js.UndefOr[js.Promise[(Contest, Option[Portfolio])]]] = js.native
+    var initDash: js.Function0[js.UndefOr[js.Promise[(Contest, UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])]]] = js.native
     var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
     var getPlayerRankings: js.Function0[js.UndefOr[js.Array[ContestRanking]]] = js.native
     var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
@@ -366,6 +387,7 @@ object DashboardController {
     var isParticipant: js.Function0[js.UndefOr[Boolean]] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
     var playerRankingOnTop: js.Function2[js.UndefOr[String], js.UndefOr[js.Array[ContestRanking]], js.UndefOr[js.Array[ContestRanking]]] = js.native
+    var refreshDash: js.Function0[Unit] = js.native
     var toggleRankingsShown: js.Function0[Unit] = js.native
 
     // popup dialog functions

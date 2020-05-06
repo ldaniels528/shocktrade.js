@@ -89,14 +89,14 @@ object VirtualMachine {
                   recurse(codes)
 
                   // track this outcome
-                  trackEvent(request = code, requestedTime = startTime, response = unwrap(result), responseTimeMillis = elapsedTime)
+                  trackEvent(request = code, requestedTime = startTime, response = unwrap(result), responseTimeMillis = elapsedTime, failed = false)
 
                 case Failure(e) =>
                   val elapsedTime = js.Date.now() - startTime
                   promise.failure(e)
 
                   // track this outcome
-                  trackEvent(request = code, requestedTime = startTime, response = e.getMessage, responseTimeMillis = elapsedTime)
+                  trackEvent(request = code, requestedTime = startTime, response = e.getMessage, responseTimeMillis = elapsedTime, failed = true)
               }
             } catch {
               case e: Exception =>
@@ -115,7 +115,8 @@ object VirtualMachine {
   private def trackEvent(request: OpCode,
                          requestedTime: Double,
                          response: String,
-                         responseTimeMillis: Double)(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
+                         responseTimeMillis: Double,
+                         failed: Boolean)(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
     val requestProps = request.toJsObject
     val responseProps = if (response.startsWith("{") && response.endsWith("}")) JSON.parseAs[js.UndefOr[EventSourceIndex]](response) else js.undefined
     val outcome = ctx.trackEvent(EventSourceData(
@@ -128,6 +129,10 @@ object VirtualMachine {
       orderID = requestProps.orderID ?? responseProps.flatMap(_.orderID),
       symbol = requestProps.symbol ?? responseProps.flatMap(_.symbol),
       exchange = requestProps.exchange ?? responseProps.flatMap(_.exchange),
+      orderType = requestProps.orderType ?? responseProps.flatMap(_.orderType),
+      priceType = requestProps.priceType ?? responseProps.flatMap(_.priceType),
+      quantity = requestProps.quantity ?? responseProps.flatMap(_.quantity),
+      price = requestProps.price ?? responseProps.flatMap(_.price),
       response = response,
       responseTimeMillis = responseTimeMillis,
       creationTime = new js.Date(requestedTime)

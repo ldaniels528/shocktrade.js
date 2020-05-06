@@ -11,7 +11,7 @@ CREATE TABLE users (
     email VARCHAR(255) NULL,
     password TEXT NULL,
     totalXP INTEGER NOT NULL DEFAULT 0,
-    wallet DECIMAL(17,5) NOT NULL,
+    wallet DOUBLE NOT NULL,
     creationTime DATETIME NOT NULL DEFAULT now(),
     lastModifiedTime DATETIME NOT NULL DEFAULT now()
 );

@@ -11,7 +11,6 @@ import scala.scalajs.js
 class UserProfileData(val userID: js.UndefOr[String],
                       val username: js.UndefOr[String],
                       var email: js.UndefOr[String],
-                      val level: js.UndefOr[Int],
                       val equity: js.UndefOr[Double],
                       val wallet: js.UndefOr[Double],
                       val totalXP: js.UndefOr[Int],

@@ -12,9 +12,10 @@ import scala.scalajs.js
 class PositionData(val positionID: js.UndefOr[String],
                    val portfolioID: js.UndefOr[String],
                    val symbol: js.UndefOr[String],
+                   val marketValue: js.UndefOr[Double],
                    val exchange: js.UndefOr[String],
                    val quantity: js.UndefOr[Double],
-                   val processedTime: js.UndefOr[js.Date] = js.undefined) extends PositionLike
+                   val processedTime: js.UndefOr[js.Date]) extends PositionLike
 
 /**
  * Position Companion
@@ -31,8 +32,8 @@ object PositionData {
     @inline
     def copy(positionID: js.UndefOr[String] = js.undefined,
              portfolioID: js.UndefOr[String] = js.undefined,
-             businessName: js.UndefOr[String] = js.undefined,
              symbol: js.UndefOr[String] = js.undefined,
+             marketValue: js.UndefOr[Double] = js.undefined,
              exchange: js.UndefOr[String] = js.undefined,
              quantity: js.UndefOr[Double] = js.undefined,
              processedTime: js.UndefOr[js.Date] = js.undefined): PositionData = {
@@ -40,6 +41,7 @@ object PositionData {
         positionID = positionID ?? position.positionID,
         portfolioID = portfolioID ?? position.portfolioID,
         symbol = symbol ?? position.symbol,
+        marketValue = marketValue ?? position.marketValue,
         exchange = exchange ?? position.exchange,
         quantity = quantity ?? position.quantity,
         processedTime = processedTime ?? position.processedTime)

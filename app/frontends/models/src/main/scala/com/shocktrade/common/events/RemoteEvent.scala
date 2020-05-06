@@ -37,6 +37,10 @@ object RemoteEvent {
     data <- event.data.toOption
   } yield (action, data)
 
+  /////////////////////////////////////////////////////////////////////
+  //          Events
+  /////////////////////////////////////////////////////////////////////
+
   def createMessageEvent(message: ChatMessage): RemoteEvent = {
     RemoteEvent(action = ChatMessagesUpdated, data = JSON.stringify(message))
   }
@@ -48,12 +52,6 @@ object RemoteEvent {
   def createUserStatusUpdateEvent(userID: js.UndefOr[String], connected: js.UndefOr[Boolean]): RemoteEvent = {
     RemoteEvent(action = UserStatusUpdateEvent, data = JSON.stringify(new UserStatusUpdateEvent(userID, connected)))
   }
-
-  class DefaultEvent(val action: js.UndefOr[String], val data: js.UndefOr[String]) extends RemoteEvent
-
-  class StockUpdateEvent(val tickers: js.Array[Ticker]) extends js.Object
-
-  class UserStatusUpdateEvent(val userID: js.UndefOr[String], val connected: js.UndefOr[Boolean]) extends js.Object
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Events
@@ -85,5 +83,15 @@ object RemoteEvent {
   /////////////////////////////////////////////////////////////////////
 
   val StockUpdateEvent = "StockUpdateEvent"
+
+  /////////////////////////////////////////////////////////////////////
+  //          Events Classes
+  /////////////////////////////////////////////////////////////////////
+
+  class DefaultEvent(val action: js.UndefOr[String], val data: js.UndefOr[String]) extends RemoteEvent
+
+  class StockUpdateEvent(val tickers: js.Array[Ticker]) extends js.Object
+
+  class UserStatusUpdateEvent(val userID: js.UndefOr[String], val connected: js.UndefOr[Boolean]) extends js.Object
 
 }

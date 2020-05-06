@@ -24,7 +24,11 @@ case class CreateOrder(portfolioID: String, order: OrderData) extends OpCode {
     "portfolioID" -> portfolioID,
     "order" -> order,
     "symbol" -> order.symbol,
-    "exchange" -> order.exchange
+    "exchange" -> order.exchange,
+    "orderType" -> order.orderType,
+    "priceType" -> order.priceType,
+    "price" -> order.price,
+    "quantity" -> order.quantity
   )
 
 }

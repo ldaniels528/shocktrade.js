@@ -78,6 +78,8 @@ case class PlayerProfileDialogController($scope: PlayerProfileDialogScope, $uibM
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
+  $scope.getLevel = () => $scope.player.flatMap(_.getLevel)
+
   $scope.getNextLevelXP = () => $scope.player.flatMap(_.nextLevelXP)
 
   $scope.getStars = () => (1 to Math.max(1, $scope.player.flatMap(_.totalXP.map(_ / 1000)).orZero)).toJSArray
@@ -102,6 +104,7 @@ object PlayerProfileDialogController {
   trait PlayerProfileDialogScope extends Scope with AwardsSupportScope {
     // functions
     var initPlayerProfile: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
+    var getLevel: js.Function0[js.UndefOr[Int]] = js.native
     var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
     var getStars: js.Function0[js.Array[Int]] = js.native
     var getTotalXP: js.Function0[Int] = js.native

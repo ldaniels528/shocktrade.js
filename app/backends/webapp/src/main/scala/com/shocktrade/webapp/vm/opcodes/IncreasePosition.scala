@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.vm
 package opcodes
 
+import com.shocktrade.common.OrderConstants
 import com.shocktrade.webapp.vm.dao.PositionData
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -23,7 +24,9 @@ case class IncreasePosition(portfolioID: String, orderID: String, symbol: String
       portfolioID = portfolioID,
       symbol = symbol,
       exchange = exchange,
-      quantity = quantity
+      quantity = quantity,
+      marketValue = js.undefined,
+      processedTime = js.undefined
     )) catch {
       case e: Exception =>
         Future.failed(e)
@@ -33,6 +36,7 @@ case class IncreasePosition(portfolioID: String, orderID: String, symbol: String
   override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
     "portfolioID" -> portfolioID,
     "orderID" -> orderID,
+    "orderType" -> OrderConstants.BUY,
     "symbol" -> symbol,
     "exchange" -> exchange,
     "quantity" -> quantity,

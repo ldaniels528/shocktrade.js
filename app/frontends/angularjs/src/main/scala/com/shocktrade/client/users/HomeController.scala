@@ -50,6 +50,8 @@ case class HomeController($scope: HomeControllerScope, $cookies: Cookies, $timeo
     //if (!mySession.isAuthenticated) $scope.switchToDiscover()
   }
 
+  $scope.getLevel = () => $scope.userProfile.flatMap(_.getLevel)
+
   $scope.getNextLevelXP = () => $scope.userProfile.flatMap(_.nextLevelXP)
 
   $scope.getStars = () => (1 to Math.max(1, $scope.userProfile.flatMap(_.totalXP.map(_ / 1000)).orZero)).toJSArray
@@ -76,6 +78,7 @@ object HomeController {
 
     // functions
     var initHome: js.Function0[Unit] = js.native
+    var getLevel: js.Function0[js.UndefOr[Int]] = js.native
     var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
     var getStars: js.Function0[js.Array[Int]] = js.native
     var getTotalXP: js.Function0[Int] = js.native

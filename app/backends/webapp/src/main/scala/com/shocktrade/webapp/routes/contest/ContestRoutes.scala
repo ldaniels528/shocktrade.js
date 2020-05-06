@@ -141,7 +141,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
           // HTTP/200 OK
           case Success(result) =>
             response.send(result)
-            WebSocketHandler.emit(RemoteEvent.createMessageEvent(chatMessage))
+            //WebSocketHandler.emit(RemoteEvent.createMessageEvent(chatMessage))
             next()
           // HTTP/500 ERROR
           case Failure(e) =>

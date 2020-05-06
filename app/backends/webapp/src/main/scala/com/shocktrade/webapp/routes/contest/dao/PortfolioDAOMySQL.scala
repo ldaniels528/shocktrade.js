@@ -58,7 +58,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |    P.userID, P.funds,
          |    IFNULL(SUM(S.lastTrade * PS.quantity),0) equity,
          |    IFNULL(MAX(S.tradeDateTime), NOW()) AS asOfDate,
-         |    (SELECT SUM(S.lastTrade * O.quantity)
+         |    (SELECT SUM(IFNULL(O.price, S.lastTrade) * O.quantity)
          |      FROM orders O
          |      INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
          |      LEFT JOIN stocks S ON S.symbol = O.symbol

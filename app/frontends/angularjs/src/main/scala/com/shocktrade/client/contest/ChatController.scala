@@ -1,22 +1,21 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.Filters.toDuration
-import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
 import com.shocktrade.client.contest.DashboardController._
-import com.shocktrade.client.users.UserService
-import com.shocktrade.client.{GameStateService, GlobalLoading}
+import com.shocktrade.client.{GameStateService, RootScope}
 import com.shocktrade.common.models.contest.ChatMessage
-import com.shocktrade.common.models.user.UserProfile
-import io.scalajs.dom.html.browser.console
+import io.scalajs.dom.html.HTMLElement
+import io.scalajs.dom.html.browser.{Window, console}
+import io.scalajs.jquery.JQuery.$
 import io.scalajs.npm.angularjs.AngularJsHelper._
-import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
-import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
+import io.scalajs.npm.angularjs.{Controller, Interval, Timeout}
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -26,71 +25,55 @@ import scala.util.{Failure, Success}
  * Chat Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRouteParams,
-                          $anchorScroll: AnchorScroll, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                          @injected("ContestService") contestService: ContestService,
-                          @injected("GameStateService") gameStateService: GameStateService,
-                          @injected("UserService") userService: UserService)
-  extends Controller with GlobalLoading {
+trait ChatController {
+  self: Controller =>
 
-  implicit val cookies: Cookies = $cookies
-
-  private val colorMap = js.Dictionary[String]()
   private var lastUpdateTime = 0d
   private var lastMessageCount = -1
   private var cachedHtml = ""
 
-  $scope.chatMessage = ""
+  def $scope: ChatControllerScope
+
+  def $interval: Interval
+
+  def $routeParams: DashboardRouteParams
+
+  def $timeout: Timeout
+
+  def $window: Window
+
+  def contestService: ContestService
+
+  def gameStateService: GameStateService
+
+  def toaster: Toaster
+
+  $scope.inputs = new ChatInputs(chatMessage = "")
   $scope.chatMessages = js.Array()
-  $scope.userProfile = js.undefined
-
-  /////////////////////////////////////////////////////////////////
-  //    Initialization Functions
-  /////////////////////////////////////////////////////////////////
-
-  $scope.initChat = () => $routeParams.contestID map initChat
-
-  $scope.onMessagesUpdated { (_, _) => $scope.initChat() }
-
-  $scope.onUserProfileUpdated { (_, _) => $scope.initChat() }
-
-  private def initChat(contestID: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
-    // attempt to load the user profile
-    gameStateService.getUserID map { userID =>
-      val outcome0 = userService.findUserByID(userID)
-      outcome0 onComplete {
-        case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
-        case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
-      }
-      outcome0
-    }
-
-    // attempt to load the chat messages
-    val outcome1 = contestService.findChatMessages(contestID)
-    outcome1 onComplete {
-      case Success(messages) => $scope.$apply(() => $scope.chatMessages = messages.data)
-      case Failure(e) => console.error(s"Failed to retrieve chat messages: ${e.displayMessage}")
-    }
-    outcome1
-  }
 
   /////////////////////////////////////////////////////////////////
   //    Scope Methods
   /////////////////////////////////////////////////////////////////
 
-  $scope.addSmiley = (aEmoticon: js.UndefOr[Emoticon]) => aEmoticon.foreach(icon => $scope.chatMessage += " " + icon.symbol)
+  $scope.addSmiley = (aEmoticon: js.UndefOr[Emoticon]) => aEmoticon.foreach(icon => $scope.inputs.chatMessage += " " + icon.symbol)
+
+  $scope.clearMessageArea = () => $scope.inputs.chatMessage = ""
 
   $scope.getChatMessages = () => getChatMessages
 
   $scope.getEmoticons = () => Emoticons.reverse
 
-  $scope.sendChatMessage = (aMessageText: js.UndefOr[String]) => {
-    val outcome = aMessageText map sendChatMessage
-    outcome.foreach(_ onComplete { _ => $anchorScroll() })
-    outcome
+  $scope.gotoBottom = () => {
+    val chatBox = $("#chatBox")(0).asInstanceOf[HTMLTextAreaElement]
+    if (chatBox != null) {
+      console.log("chatBox => " + chatBox)
+      console.log(s"chatBox: scrollTop => ${chatBox.scrollTop}, scrollHeight => ${chatBox.scrollHeight}")
+      chatBox.scrollTop = chatBox.scrollHeight
+      console.log("AFTER: scrollTop => " + chatBox.scrollTop)
+    }
   }
 
-  private def colorOf(name: String): String = colorMap.getOrElseUpdate(name, Colors((1 + colorMap.size) % Colors.length))
+  $scope.sendChatMessage = (aMessageText: js.UndefOr[String]) => aMessageText map sendChatMessage
 
   private def getChatMessages: String = {
     val chatMessages = $scope.chatMessages
@@ -107,16 +90,16 @@ case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRo
           Emoticons.foreach { emo => text = text.replaceAllLiterally(emo.symbol, s"""<img src="/images/smilies/${emo.uri}">""") }
         }
 
+        // build the message HTML
         val senderName = msg.username.orNull
         s"""|$html
-            |<img src="/api/user/${msg.userID}/icon" class="chat_icon">
-            |<span class="bold" style="color: ${colorOf(senderName)}">$senderName</span>&nbsp;
-            |[<span class="st_bkg_color">${toDuration(msg.creationTime)}</span>]&nbsp;$text<br>
+            |<img src="/api/user/${msg.userID}/icon" class="chat_icon" title="$senderName">
+            |<span class="st_bkg_color">[${toDuration(msg.creationTime)}]</span> $text<br>
             |""".stripMargin
       }
 
       //console.log(f"Generated HTML in ${js.Date.now() - startTime}%.1f msec(s)")
-      cachedHtml = html + """<span id="end_of_message"></span>"""
+      cachedHtml = html
       lastUpdateTime = js.Date.now()
       cachedHtml
     }
@@ -136,23 +119,28 @@ case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRo
       case Some((userID, contestID)) =>
         if (messageText.trim.nonEmpty) {
           // make the service calls
-          val outcome = for {
-            _ <- contestService.sendChatMessage(contestID, new ChatMessage(userID = userID, username = $scope.userProfile.flatMap(_.username), message = messageText))
+          val outcome = (for {
+            _ <- contestService.sendChatMessage(contestID, new ChatMessage(
+              userID = userID,
+              username = $scope.userProfile.flatMap(_.username),
+              message = messageText
+            ))
             messages <- contestService.findChatMessages(contestID)
-          } yield messages
+          } yield messages).toJSPromise
 
           // transmit the message
           outcome onComplete {
             case Success(messages) =>
+              $timeout(() => $scope.gotoBottom(), 1.millis)
               $scope.$apply { () =>
-                $scope.chatMessage = ""
+                $scope.clearMessageArea()
                 $scope.chatMessages = messages.data
               }
             case Failure(e) =>
               toaster.error("Failed to send message")
               console.error(s"Failed to send message: ${e.displayMessage}")
           }
-          outcome.toJSPromise
+          outcome
         }
         else js.Promise.reject("No message text")
 
@@ -169,7 +157,6 @@ case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRo
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object ChatController {
-  private val Colors = js.Array("#0088ff", "#ff00ff", "#008888", "#2200ff")
   private val Emoticons = js.Array(
     new Emoticon(symbol = ">:-(", uri = "icon_evil.gif", tooltip = "Enraged"),
     new Emoticon(symbol = ":-@", uri = "icon_mrgreen.gif", tooltip = "Big Grin"),
@@ -191,26 +178,33 @@ object ChatController {
     new Emoticon(symbol = "(?)", uri = "icon_question.gif", tooltip = "Question"),
     new Emoticon(symbol = "=>", uri = "icon_arrow.gif", tooltip = "Arrow"))
 
+  /**
+   * Chat Controller Scope
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  @js.native
+  trait ChatControllerScope extends RootScope {
+    // variables
+    var inputs: ChatInputs = js.native
+    var chatMessages: js.Array[ChatMessage] = js.native
+
+    // functions
+    var addSmiley: js.Function1[js.UndefOr[Emoticon], Unit] = js.native
+    var clearMessageArea: js.Function0[Unit] = js.native
+    var getEmoticons: js.Function0[js.Array[Emoticon]] = js.native
+    var getChatMessages: js.Function0[String] = js.native
+    var gotoBottom: js.Function0[Unit] = js.native
+    var sendChatMessage: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[js.Array[ChatMessage]]]]] = js.native
+  }
+
   class Emoticon(val symbol: String, val uri: String, val tooltip: String) extends js.Object
 
-}
+  class ChatInputs(var chatMessage: String = "") extends js.Object
 
-/**
- * Chat Controller Scope
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait ChatControllerScope extends Scope {
-  // variables
-  var chatMessage: String = js.native
-  var chatMessages: js.Array[ChatMessage] = js.native
-  var userProfile: js.UndefOr[UserProfile] = js.native
-
-  // functions
-  var initChat: js.Function0[js.UndefOr[js.Promise[HttpResponse[js.Array[ChatMessage]]]]] = js.native
-  var addSmiley: js.Function1[js.UndefOr[Emoticon], Unit] = js.native
-  var getEmoticons: js.Function0[js.Array[Emoticon]] = js.native
-  var getChatMessages: js.Function0[String] = js.native
-  var sendChatMessage: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[js.Array[ChatMessage]]]]] = js.native
+  @js.native
+  trait HTMLTextAreaElement extends HTMLElement {
+    var scrollTop: Double = js.native
+    var scrollHeight: Double = js.native
+  }
 
 }
