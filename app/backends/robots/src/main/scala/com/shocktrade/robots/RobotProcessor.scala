@@ -1,9 +1,8 @@
 package com.shocktrade.robots
 
-import com.shocktrade.common.Ok
 import com.shocktrade.common.OrderConstants._
 import com.shocktrade.common.forms.{NewOrderForm, ResearchOptions}
-import com.shocktrade.common.models.contest.{Portfolio, Position}
+import com.shocktrade.common.models.contest.{OrderRef, Portfolio, Position}
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.common.models.user.UserProfile
 import com.shocktrade.remote.proxies.{PortfolioProxy, ResearchProxy, UserProxy}
@@ -119,7 +118,7 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
     } yield position.toSellOrder(quantity)
   }
 
-  private def saveOrders(reports: js.Array[RobotOrders]): Future[js.Array[Ok]] = {
+  private def saveOrders(reports: js.Array[RobotOrders]): Future[js.Array[OrderRef]] = {
     Future.sequence(
       for {
         RobotOrders(contestID, userID, portfolioID, orders) <- reports.toSeq

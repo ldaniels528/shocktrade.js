@@ -1,7 +1,8 @@
 package com.shocktrade.webapp.vm.dao
 
+import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
-import com.shocktrade.common.models.contest.{MessageRef, OrderRef, PortfolioRef}
+import com.shocktrade.common.models.contest.{MessageRef, OrderOutcome, OrderRef, PortfolioRef, PurchasePerksResponse}
 import com.shocktrade.common.models.user.UserRef
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData}
@@ -33,7 +34,7 @@ trait VirtualMachineDAO {
 
   def startContest(contestID: String, userID: String): Future[Boolean]
 
-  def updateContest(contest: ContestData): Future[Int]
+  def updateContest(contest: ContestData): Future[Ok]
 
   //////////////////////////////////////////////////////////////////
   //    Player Functions
@@ -43,21 +44,17 @@ trait VirtualMachineDAO {
 
   def debitWallet(portfolioID: String, amount: Double): Future[Double]
 
-  def grantAwards(portfolioID: String, awardCode: js.Array[String]): Future[Int]
-
-  def grantXP(portfolioID: String, xp: Int): Future[Int]
-
-  def purchasePerks(portfolioID: String, purchasePerkCodes: js.Array[String]): Future[Int]
+  def purchasePerks(portfolioID: String, purchasePerkCodes: js.Array[String]): Future[PurchasePerksResponse]
 
   //////////////////////////////////////////////////////////////////
   //    Portfolio Functions
   //////////////////////////////////////////////////////////////////
 
-  def cancelOrder(orderID: String): Future[Int]
+  def cancelOrder(orderID: String): Future[OrderOutcome]
 
   def closePortfolio(portfolioID: String): Future[Double]
 
-  def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String]): Future[Int]
+  def completeOrder(orderID: String, fulfilled: Boolean, negotiatedPrice: js.UndefOr[Double], message: js.UndefOr[String]): Future[OrderOutcome]
 
   def createOrder(portfolioID: String, order: OrderData): Future[OrderRef]
 
@@ -65,9 +62,9 @@ trait VirtualMachineDAO {
 
   def debitPortfolio(portfolioID: String, amount: Double): Future[Double]
 
-  def decreasePosition(orderID: String, position: PositionData, proceeds: Double): Future[Int]
+  def decreasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]
 
-  def increasePosition(orderID: String, position: PositionData, cost: Double): Future[Int]
+  def increasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]
 
   def liquidatePortfolio(portfolioID: String): Future[Double]
 
@@ -75,7 +72,7 @@ trait VirtualMachineDAO {
   //    User / Account Management
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  def createUserIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int]
+  def createUserIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Ok]
 
   def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[UserRef]
 
@@ -83,9 +80,9 @@ trait VirtualMachineDAO {
   //    System Functions
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  def trackEvent(event: EventSourceData): Future[Int]
+  def trackEvent(event: EventSourceData): Future[Ok]
 
-  def updateEventLog(): Future[Int]
+  def updateEventLog(): Future[Ok]
 
 }
 

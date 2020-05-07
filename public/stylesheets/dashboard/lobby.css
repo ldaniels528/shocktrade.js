@@ -2,6 +2,17 @@ select.font {
   font-family: 'FontAwesome', 'Second Font name'
 }
 
+.xp {
+    color: #00aabb;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+.XP {
+    color: #00aabb;
+    font-weight: bold;
+}
+
 div.rank_cell {
 	background-color: #e0e0e0;
     border: 1px solid #c0c0c0;

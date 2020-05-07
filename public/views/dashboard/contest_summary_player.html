@@ -24,7 +24,7 @@
         </span>
 
         <span class="col-md-4">
-            Experience Points Earned: <span class="pull-right profitable">{{ userProfile.totalXP || 0.00 | number:0 }}</span>
+            Experience Points Earned: <span class="pull-right XP">+{{ portfolio.totalXP || 0.00 | number:0 }}xp</span>
         </span>
     </div>
 
@@ -40,7 +40,7 @@
         </span>
 
         <span class="col-md-4">
-            Awards Earned: <span class="pull-right profitable">{{ userProfile.awards.length || 0 | number:0 }}</span>
+            Awards Earned: <span class="pull-right XP">{{ userProfile.awards.length || 0 | number:0 }}</span>
         </span>
     </div>
 </div>

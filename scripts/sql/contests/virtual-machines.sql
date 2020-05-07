@@ -19,9 +19,12 @@ CREATE TABLE eventsource (
     orderType VARCHAR(20),
     priceType VARCHAR(20),
     quantity DOUBLE,
-    price DOUBLE,
+    negotiatedPrice DOUBLE,
+    xp DOUBLE,
     response TEXT,
     responseTimeMillis INTEGER,
     failed TINYINT NOT NULL DEFAULT 0,
     creationTime DATETIME NOT NULL DEFAULT now()
 );
+
+CREATE INDEX eventsource_xp ON eventsource (contestID, portfolioID, userID );

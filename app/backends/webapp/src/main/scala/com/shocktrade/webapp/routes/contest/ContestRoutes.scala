@@ -4,7 +4,6 @@ package contest
 import java.util.UUID
 
 import com.shocktrade.common.api.ContestAPI
-import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchOptions, ValidationErrors}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
 import com.shocktrade.webapp.routes
@@ -162,13 +161,13 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   }
 
   def updateUserIcons(request: Request, response: Response, next: NextFunction): Unit = {
-    uploadUserIcons onComplete {
+    uploadUserIcons() onComplete {
       case Success(values) => response.send(s"${values.length} user icons loaded"); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
-  private def uploadUserIcons: Future[Seq[Int]] = {
+  private def uploadUserIcons(): Future[Seq[Int]] = {
     import routes.dao._
     Future.sequence {
       Seq(

@@ -1,7 +1,7 @@
 USE shocktrade;
 
 -- ------------------------------------------------------------
--- Users
+-- Users table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS users;
@@ -18,7 +18,23 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX users_xpk_name ON users (username);
 
 -- ------------------------------------------------------------
--- User Awards
+-- Robots table
+-- ------------------------------------------------------------
+
+DROP TABLE IF EXISTS robots;
+CREATE TABLE robots (
+    robotID INTEGER AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(36),
+    strategy VARCHAR(20) NOT NULL,
+    lastActivity TEXT NULL,
+    lastActiveTime DATETIME NOT NULL DEFAULT now(),
+    isActive TINYINT NOT NULL DEFAULT 1
+);
+
+CREATE UNIQUE INDEX robots_xpk ON robots (username);
+
+-- ------------------------------------------------------------
+-- User Awards table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS user_awards;
@@ -31,7 +47,7 @@ CREATE TABLE user_awards (
 CREATE UNIQUE INDEX user_awards_xp ON user_awards (userID, awardCode);
 
 -- ------------------------------------------------------------
--- User Icons
+-- User Icons table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS user_icons;
@@ -43,7 +59,7 @@ CREATE TABLE user_icons (
 );
 
 -- ------------------------------------------------------------
--- User Sessions
+-- User Sessions table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS user_sessions;
@@ -56,7 +72,7 @@ CREATE TABLE user_sessions (
 );
 
 -- ------------------------------------------------------------
--- Favorite & Recent Symbols
+-- Favorite & Recent Symbols tables
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS favorite_symbols;

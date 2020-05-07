@@ -2,6 +2,7 @@ package com.shocktrade.webapp.vm.dao
 
 import java.util.UUID
 
+import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
 import com.shocktrade.common.models.Award
 import com.shocktrade.common.models.contest._
@@ -9,7 +10,7 @@ import com.shocktrade.common.models.user.UserRef
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData, UserProfileData}
 import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData, PortfolioData}
-import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.{AwardsRecommendation, Proceeds, _}
+import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.{AwardsRecommendation, PortfolioEquity, _}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 import io.scalajs.util.JsUnderOrHelper._
 
@@ -29,13 +30,12 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   //    Account Management
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  override def createUserIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int] = {
+  override def createUserIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Ok] = {
     import icon._
     conn.executeFuture(
       """|REPLACE INTO user_icons (userID, name, mime, image)
          |VALUES (?, ?, ?, ?)
-         |""".stripMargin,
-      js.Array(userID, name, mime, image)).map(_.affectedRows)
+         |""".stripMargin, js.Array(userID, name, mime, image)).map(r => Ok(r.affectedRows))
   }
 
   override def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[UserRef] = {
@@ -44,10 +44,9 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     conn.executeFuture(
       """|INSERT INTO users (userID, username, email, password, wallet)
          |VALUES (?, ?, ?, ?, ?)
-         |""".stripMargin,
-      js.Array(newUserID, username, email, password, wallet)).map(_.affectedRows) map {
+         |""".stripMargin, js.Array(newUserID, username, email, password, wallet)).map(_.affectedRows) map {
       case count if count > 0 => UserRef(newUserID, username)
-      case count => throw js.JavaScriptException(s"User account not created (count = $count)")
+      case count => throw UpdateException(s"User account not created", count)
     }
   }
 
@@ -57,13 +56,11 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   override def closeContest(contestID: String): Future[js.Dictionary[Double]] = {
     for {
-      //_ <- conn.beginTransactionFuture()
       _ <- stopContest(contestID)
       portfolioIDs <- findPortfolioIDsByContest(contestID)
       summaries <- Future.sequence(portfolioIDs.toList.map { pid =>
         closePortfolio(pid).map(wealth => pid -> wealth)
       })
-      //_ <- conn.commitFuture()
     } yield js.Dictionary(summaries: _*)
   }
 
@@ -83,8 +80,8 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
           contestID <- insertContest(request.contestID getOrElse newID, userID, name, startingBalance, duration)(request)
           portfolioID <- insertPortfolio(contestID, userID, startingBalance)
           _ <- debitWallet(portfolioID, startingBalance)
-          _ <- sendChatMessage(contestID, userID, message = s"Welcome to $name!")
-        } yield new ContestCreationResponse(contestID, portfolioID)
+          messageRef <- sendChatMessage(contestID, userID, message = s"Welcome to $name!")
+        } yield new ContestCreationResponse(contestID, portfolioID, messageRef.messageID)
       case None =>
         Future.failed(js.JavaScriptException("Required parameters are missing"))
     }
@@ -110,10 +107,9 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     val messageID = newID
     conn.executeFuture(
       """|INSERT INTO messages (messageID, contestID, userID, message) VALUES (?, ?, ?, ?)
-         |""".stripMargin,
-      js.Array(messageID, contestID, userID, message)).map(_.affectedRows) map {
+         |""".stripMargin, js.Array(messageID, contestID, userID, message)).map(_.affectedRows) map {
       case count if count > 0 => MessageRef(messageID)
-      case count => throw js.JavaScriptException(s"Chat message not created (count = $count)")
+      case count => throw UpdateException("Chat message not created", count)
     }
   }
 
@@ -123,13 +119,13 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
           |INNER JOIN contest_statuses CS ON CS.status = 'ACTIVE'
           |SET startTime = now(), statusID = CS.statusID
           |WHERE contestID = ? AND hostUserID = ? AND statusID <> CS.statusID
-          |""".stripMargin,
-      js.Array(contestID, userID)) map (_.affectedRows > 0)
+          |""".stripMargin, js.Array(contestID, userID)) map (_.affectedRows > 0)
   }
 
-  override def updateContest(contest: ContestData): Future[Int] = {
+  override def updateContest(contest: ContestData): Future[Ok] = {
     import contest._
-    conn.executeFuture("UPDATE contests SET name = ? WHERE contestID = ?", js.Array(name, contestID)).map(_.affectedRows)
+    conn.executeFuture("UPDATE contests SET name = ? WHERE contestID = ?",
+      js.Array(name, contestID)).map(r => Ok(r.affectedRows))
   }
 
   //////////////////////////////////////////////////////////////////
@@ -159,64 +155,48 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     } yield wallet - amount
   }
 
-  override def grantAwards(portfolioID: String, awardCodes: js.Array[String]): Future[Int] = {
-    Future.sequence(awardCodes.toSeq map { awardCode =>
-      conn.executeFuture(
-        """|REPLACE INTO user_awards (userAwardID, userID, awardCode)
-           |SELECT uuid(), userID, ? FROM portfolios WHERE portfolioID = ?
-           |""".stripMargin, js.Array(awardCode, portfolioID))
-        .map(_.affectedRows) map checkCount(count => s"Portfolio $portfolioID could not grant award [${awardCodes.mkString(",")}]: count = $count")
-    }) map (_.sum)
-  }
-
-  override def grantXP(portfolioID: String, xp: Int): Future[Int] = {
-    conn.executeFuture(
-      """|UPDATE users U
-         |INNER JOIN portfolios P ON P.userID = U.userID
-         |SET U.totalXP = U.totalXP + ?
-         |WHERE P.portfolioID = ?
-         |""".stripMargin, js.Array(xp, portfolioID))
-      .map(_.affectedRows) map checkCount(count => s"Total XP could not be updated: count = $count")
-  }
-
-  override def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): Future[Int] = {
+  override def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): Future[PurchasePerksResponse] = {
     val perks = Perk.availablePerks
     val perkMapping = js.Dictionary(perks.map(p => p.code -> p): _ *)
     val perksCost = (perkCodes flatMap perkMapping.get).map(_.cost).sum
 
     for {
-      _ <- debitPortfolio(portfolioID, perksCost)
-      count <- insertPerks(portfolioID, perkCodes)
-    } yield count
+      funds <- debitPortfolio(portfolioID, perksCost)
+      w <- insertPerks(portfolioID, perkCodes)
+    } yield new PurchasePerksResponse(funds, count = w)
   }
 
   //////////////////////////////////////////////////////////////////
   //    Portfolio Functions
   //////////////////////////////////////////////////////////////////
 
-  override def cancelOrder(orderID: String): Future[Int] = {
+  override def cancelOrder(orderID: String): Future[OrderOutcome] = {
     completeOrder(orderID, fulfilled = false, message = "Canceled by user")
   }
 
   override def closePortfolio(portfolioID: String): Future[Double] = {
     for {
-      _ <- completeOrders(portfolioID, message = "Portfolio is closed.")
+      _ <- foreCloseOrders(portfolioID)
       funds <- liquidatePortfolio(portfolioID)
       rankings <- findPortfolioRankings(portfolioID).map(ContestRanking.computeRankings(_))
       recommendation = determineAwards(portfolioID, rankings)
-      _ <- updateIf(recommendation.awardedXP > 0)(() => grantXP(portfolioID, recommendation.awardedXP))
-      _ <- updateIf(recommendation.awardCodes.nonEmpty)(() => grantAwards(portfolioID, recommendation.awardCodes))
+      _ <- updateIf(recommendation.awardedXP > 0) { () => grantXP(portfolioID, recommendation.awardedXP) }
+      _ <- updateIf(recommendation.awardCodes.nonEmpty) { () => grantAwards(portfolioID, recommendation.awardCodes) }
     } yield funds
   }
 
-  override def completeOrder(orderID: String, fulfilled: Boolean, message: js.UndefOr[String] = js.undefined): Future[Int] = {
+  override def completeOrder(orderID: String,
+                             fulfilled: Boolean,
+                             negotiatedPrice: js.UndefOr[Double] = js.undefined,
+                             message: js.UndefOr[String] = js.undefined): Future[OrderOutcome] = {
     val closed = true
     conn.executeFuture(
       """|UPDATE orders
-         |SET closed = ?, fulfilled = ?, processedTime = ?, message = ?
+         |SET closed = ?, fulfilled = ?, processedTime = now(), negotiatedPrice = ?, message = ?
          |WHERE orderID = ?
-         |""".stripMargin, js.Array(closed, fulfilled, new js.Date(), message.orNull, orderID))
-      .map(_.affectedRows) map checkCount(count => s"Order $orderID could not be closed: count = $count")
+         |""".stripMargin, js.Array(closed, fulfilled, negotiatedPrice, message.orNull, orderID))
+      .map(_.affectedRows).map(checkCount(count => s"Order $orderID could not be closed: count = $count"))
+      .map(w => new OrderOutcome(fulfilled = fulfilled, w = w))
   }
 
   override def createOrder(portfolioID: String, order: OrderData): Future[OrderRef] = {
@@ -233,7 +213,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
     outcome map {
       case count if count > 0 => OrderRef(newOrderID)
-      case count => throw js.JavaScriptException(s"Order $newOrderID could not be inserted: count = $count")
+      case count => throw UpdateException(s"Order $newOrderID could not be inserted", count)
     }
   }
 
@@ -260,15 +240,16 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     } yield funds - amount
   }
 
-  override def decreasePosition(orderID: String, position: PositionData, proceeds: Double): Future[Int] = {
-    val portfolioID = position.portfolioID_!
+  override def decreasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome] = {
     val outcome = for {
       _ <- ensurePortfolioIsOpen(portfolioID)
-      _ <- creditPortfolio(portfolioID, proceeds)
-      w <- updatePosition(position, isBuying = false)
-      _ <- completeOrder(orderID, fulfilled = true)
-      _ <- grantXP(portfolioID, xp = 10)
-    } yield w
+      metrics <- findPositionMetrics(portfolioID, symbol, exchange, quantity, priceType)
+      _ <- creditPortfolio(portfolioID, amount = metrics.marketValue.orZero - metrics.commission.orZero)
+      w <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = false)
+      _ <- completeOrder(orderID, negotiatedPrice = metrics.lastTrade, fulfilled = true)
+      xp = 5 + Math.min(10.0, 1e+5 * metrics.gainLoss.orZero)
+      _ <- grantXP(portfolioID, xp = xp.toInt)
+    } yield new OrderOutcome(negotiatedPrice = metrics.lastTrade, fulfilled = true, xp = xp, w = w)
 
     outcome recoverWith {
       case PortfolioClosedException(portfolioID, closedTime) =>
@@ -276,18 +257,18 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       case PortfolioNotFoundException(portfolioID) =>
         completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID was not found")
       case e: Exception =>
-        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID ${e.getMessage}")
+        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID: ${e.getMessage}")
     }
   }
 
-  override def increasePosition(orderID: String, position: PositionData, cost: Double): Future[Int] = {
-    val portfolioID = position.portfolioID_!
+  override def increasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome] = {
     val outcome = for {
       _ <- ensurePortfolioIsOpen(portfolioID)
-      _ <- debitPortfolio(portfolioID, cost)
-      w <- updatePosition(position, isBuying = true)
-      _ <- completeOrder(orderID, fulfilled = true)
-    } yield w
+      mv <- computeMarketValue(symbol, exchange, quantity, priceType)
+      _ <- debitPortfolio(portfolioID, amount = mv.marketValue + mv.commission)
+      w <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = true)
+      _ <- completeOrder(orderID, negotiatedPrice = mv.lastTrade, fulfilled = true)
+    } yield new OrderOutcome(negotiatedPrice = mv.lastTrade, fulfilled = true, w = w)
 
     outcome recoverWith {
       case InsufficientFundsException(actual, expected) =>
@@ -297,7 +278,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       case PortfolioNotFoundException(portfolioID) =>
         completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID was not found")
       case e: Exception =>
-        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID ${e.getMessage}")
+        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID: ${e.getMessage}")
     }
   }
 
@@ -315,21 +296,21 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   //    System Functions
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  override def trackEvent(event: EventSourceData): Future[Int] = {
+  override def trackEvent(event: EventSourceData): Future[Ok] = {
     import event._
     conn.executeFuture(
       """|INSERT INTO eventsource (
          |  command, type, response, responseTimeMillis, contestID, portfolioID, userID,
-         |  orderID, orderType, priceType, quantity, price, symbol, exchange, failed
+         |  orderID, orderType, priceType, negotiatedPrice, quantity, symbol, exchange, xp, failed
          |)
-         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          |""".stripMargin, js.Array(
         command, `type`, response, responseTimeMillis, contestID, portfolioID, userID,
-        orderID, orderType, priceType, quantity, price, symbol, exchange, failed ?? false)
-    ).map(_.affectedRows)
+        orderID, orderType, priceType, negotiatedPrice, quantity, symbol, exchange, xp, failed)
+    ).map(_.affectedRows) map (Ok(_))
   }
 
-  override def updateEventLog(): Future[Int] = {
+  override def updateEventLog(): Future[Ok] = {
     for {
       // is contestID or userID null?
       w0 <- conn.executeFuture(
@@ -347,12 +328,17 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
            |WHERE E.portfolioID IS NULL
            |AND (E.contestID IS NOT NULL AND E.userID IS NOT NULL)
            |""".stripMargin).map(_.affectedRows)
-    } yield w0 + w1
+    } yield Ok(w0 + w1)
   }
 
   //////////////////////////////////////////////////////////////////
   //    Utility Functions
   //////////////////////////////////////////////////////////////////
+
+  private def checkCount(message: Int => String): Int => Int = {
+    case count if count < 1 => throw UpdateException(message(count), count)
+    case count => count
+  }
 
   private def closePositions(portfolioID: String): Future[Int] = {
     val outcome = for {
@@ -360,21 +346,23 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       w <- conn.executeFuture("UPDATE portfolios SET closedTime = now() WHERE portfolioID = ?", js.Array(portfolioID)).map(_.affectedRows)
     } yield w
 
-    outcome map checkCount(count => s"Could not update portfolio $portfolioID: count = $count")
+    outcome map checkCount(_ => s"Could not update portfolio $portfolioID")
   }
 
-  private def completeOrders(portfolioID: String, message: String): Future[Int] = {
-    val (closed, fulfilled) = (false, false)
-    conn.executeFuture(
-      """|UPDATE orders
-         |SET closed = ?, fulfilled = ?, processedTime = ?, message = ?
-         |WHERE portfolioID = ?
-         |""".stripMargin, js.Array(closed, fulfilled, new js.Date(), message, portfolioID))
-      .map(_.affectedRows)
+  private def computeMarketValue(symbol: String, exchange: String, quantity: Double, priceType: String): Future[MarketValue] = {
+    conn.queryFuture[MarketValue](
+      """|SELECT S.lastTrade, S.lastTrade * ? AS marketValue, OPT.commission
+         |FROM stocks S
+         |INNER JOIN order_price_types OPT ON OPT.name = ?
+         |WHERE S.symbol = ? AND S.exchange = ?
+         |""".stripMargin, js.Array(quantity, priceType, symbol, exchange)).map(_._1.headOption) map {
+      case Some(proceeds) => proceeds
+      case None => throw TickerNotFoundException(symbol, exchange)
+    }
   }
 
-  private def computePortfolioEquity(portfolioID: String): Future[Proceeds] = {
-    conn.queryFuture[Proceeds](
+  private def computePortfolioEquity(portfolioID: String): Future[PortfolioEquity] = {
+    conn.queryFuture[PortfolioEquity](
       """|SELECT P.funds AS cash, SUM(S.lastTrade) AS equity
          |FROM positions PS
          |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
@@ -382,7 +370,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |WHERE PS.portfolioID = ?
          |""".stripMargin, js.Array(portfolioID)).map(_._1.headOption) map {
       case Some(proceeds) => proceeds
-      case None => new Proceeds(cash = 0.0, equity = 0.0)
+      case None => new PortfolioEquity(cash = 0.0, equity = 0.0)
     }
   }
 
@@ -399,10 +387,10 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   private def ensurePortfolioIsOpen(portfolioID: String): Future[Boolean] = {
     conn.queryFuture[PortfolioData]("SELECT closedTime FROM portfolios WHERE portfolioID = ?", js.Array(portfolioID))
-      .map(_._1).map(_.headOption) flatMap {
-      case Some(portfolio) if portfolio.closedTime.flat.nonEmpty => Future.failed(PortfolioClosedException(portfolioID, portfolio.closedTime))
-      case Some(_) => Future.successful(true)
-      case None => Future.failed(PortfolioNotFoundException(portfolioID))
+      .map(_._1).map(_.headOption) map {
+      case Some(portfolio) if portfolio.closedTime.flat.nonEmpty => throw PortfolioClosedException(portfolioID, portfolio.closedTime)
+      case Some(_) => true
+      case None => throw PortfolioNotFoundException(portfolioID)
     }
   }
 
@@ -427,9 +415,69 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
+  private def findOwnedQuantity(portfolioID: String, symbol: String, exchange: String): Future[OwnedQuantity] = {
+    conn.queryFuture[OwnedQuantity](
+      """|SELECT quantity
+         |FROM positions
+         |WHERE portfolioID = ? AND symbol = ? AND exchange = ?
+         |""".stripMargin, js.Array(portfolioID, symbol, exchange)).map(_._1.headOption) map {
+      case Some(result) => result
+      case None => throw PositionNotFoundException(portfolioID, symbol, exchange)
+    }
+  }
+
   private def findPortfolioRankings(portfolioID: String): Future[js.Array[ContestRanking]] = {
     conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE portfolioID = ?", js.Array(portfolioID))
       .map { case (rows, _) => rows }
+  }
+
+  private def findPositionMetrics(portfolioID: String, symbol: String, exchange: String, quantity: Double, priceType: String): Future[PositionMetrics] = {
+    conn.queryFuture[PositionMetrics](
+      """|SELECT
+         |  S.lastTrade, OPT.commission,
+         |  S.lastTrade * ? AS marketValue,
+         |  AVG(O.negotiatedPrice) AS pricePaid,
+         |  S.lastTrade - AVG(O.negotiatedPrice) AS gainLoss
+         |FROM orders O
+         |INNER JOIN order_price_types OPT ON OPT.name = ?
+         |LEFT JOIN stocks S ON S.symbol = O.symbol AND S.exchange = O.exchange
+         |WHERE O.portfolioID = ? AND O.symbol = ? AND O.exchange = ?
+         |AND O.orderType = 'BUY' AND O.fulfilled = 1
+         |GROUP BY O.symbol, O.exchange
+         |""".stripMargin, js.Array(quantity, priceType, portfolioID, symbol, exchange)).map(_._1.headOption) map {
+      case Some(metrics) => metrics
+      case None => throw PositionNotFoundException(portfolioID, symbol, exchange)
+    }
+  }
+
+  private def foreCloseOrders(portfolioID: String): Future[Int] = {
+    val (message, closed, fulfilled) = ("Portfolio is closed.", true, false)
+    conn.executeFuture(
+      """|UPDATE orders
+         |SET closed = ?, fulfilled = ?, processedTime = now(), message = ?
+         |WHERE portfolioID = ?
+         |""".stripMargin, js.Array(closed, fulfilled, message, portfolioID))
+      .map(_.affectedRows)
+  }
+
+  private def grantAwards(portfolioID: String, awardCodes: js.Array[String]): Future[Int] = {
+    Future.sequence(awardCodes.toSeq map { awardCode =>
+      conn.executeFuture(
+        """|REPLACE INTO user_awards (userAwardID, userID, awardCode)
+           |SELECT uuid(), userID, ? FROM portfolios WHERE portfolioID = ?
+           |""".stripMargin, js.Array(awardCode, portfolioID))
+        .map(_.affectedRows) map checkCount(_ => s"Portfolio $portfolioID could not grant award [${awardCodes.mkString(",")}]")
+    }) map (_.sum)
+  }
+
+  private def grantXP(portfolioID: String, xp: Int): Future[Int] = {
+    conn.executeFuture(
+      """|UPDATE users U
+         |INNER JOIN portfolios P ON P.userID = U.userID
+         |SET U.totalXP = U.totalXP + ?, P.totalXP = P.totalXP + ?
+         |WHERE P.portfolioID = ?
+         |""".stripMargin, js.Array(xp, xp, portfolioID))
+      .map(_.affectedRows) map checkCount(_ => "Total XP could not be updated")
   }
 
   private def insertContest(contestID: String, userID: String, name: String, startingBalance: Double, duration: Int)(request: ContestCreationRequest): Future[String] = {
@@ -446,7 +494,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
         new js.Date(js.Date.now() + duration * 1.day.toMillis), request.friendsOnly ?? false, request.invitationOnly ?? false,
         request.levelCap ?? 0, request.perksAllowed ?? true, request.robotsAllowed ?? true)).map(_.affectedRows) map {
       case count if count > 0 => contestID
-      case count => throw js.JavaScriptException(s"Contest not created (count = $count)")
+      case count => throw UpdateException(s"Contest not created", count)
     }
   }
 
@@ -466,6 +514,8 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
+  private def newID: String = UUID.randomUUID().toString
+
   private def stopContest(contestID: String): Future[Int] = {
     conn.executeFuture(
       """|UPDATE contests C
@@ -482,26 +532,30 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     if (condition) task() else Future.successful(1)
   }
 
-  private def updatePosition(position: PositionData, isBuying: Boolean): Future[Int] = {
-    import position._
-    val _processedTime = processedTime ?? new js.Date()
+  private def updatePosition(portfolioID: String, symbol: String, exchange: String, quantity: Double, isBuying: Boolean): Future[Int] = {
     if (isBuying) {
+      val positionID = newID
       conn.executeFuture(
-        """|INSERT INTO positions (positionID, portfolioID, symbol, exchange, quantity, processedTime)
-           |VALUES (?, ?, ?, ?, ?, ?)
-           |ON DUPLICATE KEY UPDATE quantity = quantity + ?, processedTime = ?
+        """|INSERT INTO positions (positionID, portfolioID, symbol, exchange, quantity) VALUES (?, ?, ?, ?, ?)
+           |ON DUPLICATE KEY UPDATE quantity = quantity + ?, processedTime = now()
            |""".stripMargin, js.Array(
-          /* insert */ positionID ?? newID, portfolioID, symbol, exchange, quantity, _processedTime,
-          /* update */ quantity, _processedTime
+          /* insert */ positionID, portfolioID, symbol, exchange, quantity,
+          /* update */ quantity
         )).map(_.affectedRows) map checkCount(count => s"Failed to increase position: count = $count")
     } else {
-      conn.executeFuture(
-        """|UPDATE positions
-           |SET quantity = quantity - ?, processedTime = ?
-           |WHERE symbol = ?
-           |AND exchange = ?
-           |""".stripMargin, js.Array(quantity, _processedTime, symbol, exchange))
-        .map(_.affectedRows) map checkCount(count => s"Failed to decrease position: count = $count, positionID = ${positionID.orNull}")
+      val outcome = for {
+        w <- conn.executeFuture(
+          """|UPDATE positions
+             |SET quantity = quantity - ?, processedTime = now()
+             |WHERE symbol = ? AND exchange = ? AND quantity >= ?
+             |""".stripMargin, js.Array(quantity, symbol, exchange, quantity)).map(_.affectedRows)
+        ownedQty <- if (w == 0) findOwnedQuantity(portfolioID, symbol, exchange) else Future.successful(new OwnedQuantity(quantity))
+      } yield (w, ownedQty)
+
+      outcome map {
+        case (count, _) if count > 0 => count
+        case (_, ownedQty) => throw InsufficientQuantityException(expected = quantity, actual = ownedQty.quantity)
+      }
     }
   }
 
@@ -519,6 +573,16 @@ object VirtualMachineDAOMySQL {
                              val portfolioID: String,
                              val startingBalance: Double) extends js.Object
 
-  class Proceeds(val cash: Double, val equity: Double) extends js.Object
+  class MarketValue(val lastTrade: Double, val marketValue: Double, val commission: Double) extends js.Object
+
+  class OwnedQuantity(val quantity: Double) extends js.Object
+
+  class PortfolioEquity(val cash: Double, val equity: Double) extends js.Object
+
+  class PositionMetrics(val lastTrade: js.UndefOr[Double],
+                        val marketValue: js.UndefOr[Double],
+                        val pricePaid: js.UndefOr[Double],
+                        val gainLoss: js.UndefOr[Double],
+                        val commission: js.UndefOr[Double]) extends js.Object
 
 }

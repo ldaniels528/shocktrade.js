@@ -1,6 +1,5 @@
 package com.shocktrade.remote.proxies
 
-import com.shocktrade.common.Ok
 import com.shocktrade.common.api.PortfolioAPI
 import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
 import com.shocktrade.common.models.contest._
@@ -61,9 +60,9 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
   //          Orders
   ///////////////////////////////////////////////////////////////
 
-  def cancelOrder(orderID: String): Future[Portfolio] = delete(cancelOrderURL(orderID))
+  def cancelOrder(orderID: String): Future[OrderOutcome] = delete(cancelOrderURL(orderID))
 
-  def createOrder(contestID: String, userID: String, order: NewOrderForm): Future[Ok] = post(createOrderURL(contestID, userID), data = order)
+  def createOrder(contestID: String, userID: String, order: NewOrderForm): Future[OrderRef] = post(createOrderURL(contestID, userID), data = order)
 
   def findOrderByID(orderID: String): Future[Order] = get(findOrderByIDURL(orderID))
 
@@ -94,8 +93,8 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
    * Attempts to purchase the given perk codes
    * @param portfolioID the given portfolio ID
    * @param perkCodes   the given perk codes to purchase
-   * @return the promise of a [[Portfolio]]
+   * @return the promise of a [[PurchasePerksResponse]]
    */
-  def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): Future[Portfolio] = post(purchasePerksURL(portfolioID), perkCodes)
+  def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): Future[PurchasePerksResponse] = post(purchasePerksURL(portfolioID), perkCodes)
 
 }

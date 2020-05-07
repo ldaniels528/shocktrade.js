@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.routes.contest
 
-import com.shocktrade.common.Ok
 import com.shocktrade.common.api.PortfolioAPI
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.webapp.routes._
@@ -50,6 +49,17 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   //      API Methods
   //////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Cancels an order by portfolio and order IDs
+   */
+  def cancelOrder(request: Request, response: Response, next: NextFunction): Unit = {
+    val orderID = request.params("orderID")
+    vm.invoke(CancelOrder(orderID)) onComplete {
+      case Success(result) => response.send(result); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
+    }
+  }
+
   def createOrder(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("contestID"), request.params("userID"))
     val form = request.bodyAs[NewOrderForm]
@@ -89,17 +99,6 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
     val portfolioID = request.params("portfolioID")
     portfolioDAO.findHeldSecurities(portfolioID) onComplete {
       case Success(tickers) => response.send(tickers); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  /**
-   * Cancels an order by portfolio and order IDs
-   */
-  def cancelOrder(request: Request, response: Response, next: NextFunction): Unit = {
-    val orderID = request.params("orderID")
-    vm.invoke(CancelOrder(orderID)) onComplete {
-      case Success(result) => response.send(result); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

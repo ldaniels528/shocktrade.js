@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.vm.proccesses.cqm
 
-import com.shocktrade.common.Commissions
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.webapp.vm.opcodes._
 import com.shocktrade.webapp.vm.proccesses.cqm.dao._
@@ -36,17 +35,13 @@ class ContestQualificationModule()(implicit ec: ExecutionContext) {
       orderID <- order.orderID.toList
       symbol <- order.symbol.toList
       exchange <- order.exchange.toList
-      lastTrade <- order.lastTrade.toList
       quantity <- order.quantity.toList
       orderType <- order.orderType.toList
       priceType <- order.priceType.toList
-    } yield {
-      val commission = Commissions.getCommission(priceType)
-      orderType match {
-        case "BUY" => IncreasePosition(portfolioID, orderID, symbol, exchange, quantity, cost = lastTrade * quantity + commission)
-        case "SELL" => DecreasePosition(portfolioID, orderID, symbol, exchange, quantity, proceeds = lastTrade * quantity - commission)
-        case unknown => OpCodeError(s"Invalid order type '$unknown'")
-      }
+    } yield orderType match {
+      case "BUY" => IncreasePosition(portfolioID, orderID, priceType, symbol, exchange, quantity)
+      case "SELL" => DecreasePosition(portfolioID, orderID, priceType, symbol, exchange, quantity)
+      case unknown => OpCodeError(s"Invalid order type '$unknown'")
     }
   }
 

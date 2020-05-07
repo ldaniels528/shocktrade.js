@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.vm
 
+import com.shocktrade.common.Ok
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.webapp.vm.VirtualMachine.{OpCodeCallback, VmProcess}
 import com.shocktrade.webapp.vm.dao._
@@ -116,7 +117,7 @@ object VirtualMachine {
                          requestedTime: Double,
                          response: String,
                          responseTimeMillis: Double,
-                         failed: Boolean)(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Int] = {
+                         failed: Boolean)(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Ok] = {
     val requestProps = request.toJsObject
     val responseProps = if (response.startsWith("{") && response.endsWith("}")) JSON.parseAs[js.UndefOr[EventSourceIndex]](response) else js.undefined
     val outcome = ctx.trackEvent(EventSourceData(
@@ -132,10 +133,12 @@ object VirtualMachine {
       orderType = requestProps.orderType ?? responseProps.flatMap(_.orderType),
       priceType = requestProps.priceType ?? responseProps.flatMap(_.priceType),
       quantity = requestProps.quantity ?? responseProps.flatMap(_.quantity),
-      price = requestProps.price ?? responseProps.flatMap(_.price),
+      negotiatedPrice = requestProps.negotiatedPrice ?? responseProps.flatMap(_.negotiatedPrice),
+      xp = requestProps.xp ?? responseProps.flatMap(_.xp),
       response = response,
       responseTimeMillis = responseTimeMillis,
-      creationTime = new js.Date(requestedTime)
+      creationTime = new js.Date(requestedTime),
+      failed = failed
     ))
     outcome onComplete {
       case Success(_) =>

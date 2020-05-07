@@ -6,6 +6,7 @@ import com.shocktrade.webapp.vm.proccesses.cqm.ContestQualificationModule
 import com.shocktrade.webapp.vm.proccesses.cqm.dao.QualificationDAO
 import io.scalajs.nodejs._
 import io.scalajs.nodejs.timers.Interval
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -116,8 +117,9 @@ trait VirtualMachineSupport {
   private def updateEventLog()(implicit  ctx: VirtualMachineContext, ec: ExecutionContext): Unit = {
     val startTime = System.currentTimeMillis()
     ctx.updateEventLog() onComplete {
-      case Success(count) =>
-        if(count > 0) {
+      case Success(result) =>
+        val count = result.updateCount.orZero
+        if (count > 0) {
           val elapsedTime = System.currentTimeMillis() - startTime
           logger.info(s"Indexed $count events in $elapsedTime msec")
         }

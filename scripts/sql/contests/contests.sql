@@ -38,7 +38,7 @@ INSERT INTO contest_statuses (status) VALUES ('ACTIVE');
 INSERT INTO contest_statuses (status) VALUES ('CLOSED');
 
 -- ------------------------------------------------------------
--- Chat tables
+-- Chat table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS messages;
@@ -51,7 +51,7 @@ CREATE TABLE messages (
 );
 
 -- ------------------------------------------------------------
--- Perks
+-- Perks table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS perks;
@@ -65,7 +65,7 @@ CREATE TABLE perks (
 CREATE UNIQUE INDEX perk_xp_code ON perks (portfolioID, perkCode);
 
 -- ------------------------------------------------------------
--- Portfolio tables
+-- Portfolio table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS portfolios;
@@ -74,13 +74,14 @@ CREATE TABLE portfolios (
      userID CHAR(36) NOT NULL,
      contestID CHAR(36) NOT NULL,
      funds DOUBLE NOT NULL,
+     totalXP INTEGER NOT NULL DEFAULT 0,
      joinTime DATETIME NOT NULL DEFAULT now(),
      closedTime DATETIME NULL
 );
 CREATE UNIQUE INDEX portfolios_xpk ON portfolios (contestID, userID);
 
 -- ------------------------------------------------------------
--- Orders
+-- Orders table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS orders;
@@ -95,6 +96,7 @@ CREATE TABLE orders (
      quantity INTEGER NOT NULL,
      creationTime DATETIME NOT NULL DEFAULT now(),
      expirationTime DATETIME NULL,
+     negotiatedPrice DOUBLE NULL,
      processedTime DATETIME NULL,
      closed TINYINT NOT NULL DEFAULT 0,
      fulfilled TINYINT NOT NULL DEFAULT 0,
@@ -114,7 +116,7 @@ INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 
 INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'MARKET', 4.99);
 
 -- ------------------------------------------------------------
--- Positions
+-- Positions table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS positions;
@@ -139,6 +141,7 @@ SELECT
     CS.status,
     DATEDIFF(C.expirationTime, C.startTime) AS duration,
     P.portfolioID,
+    P.totalXP,
     U.userID,
     U.username,
     IFNULL(P.funds + SUM(S.lastTrade * PS.quantity), P.funds) AS totalEquity,
@@ -152,19 +155,4 @@ LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
 GROUP BY C.contestID, C.name, P.portfolioID, U.userID, U.username
 ORDER BY totalEquity DESC;
 
--- ------------------------------------------------------------
--- Robots table
--- ------------------------------------------------------------
-
-DROP TABLE IF EXISTS robots;
-CREATE TABLE robots (
-    robotID INTEGER AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(36),
-    strategy VARCHAR(20) NOT NULL,
-    lastActivity TEXT NULL,
-    lastActiveTime DATETIME NOT NULL DEFAULT now(),
-    isActive TINYINT NOT NULL DEFAULT 1
-);
-
-CREATE UNIQUE INDEX robots_xpk ON robots (username);
 

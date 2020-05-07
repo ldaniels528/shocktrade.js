@@ -56,7 +56,9 @@ trait EventSourceIndex extends js.Object {
 
   def quantity: js.UndefOr[Double]
 
-  def price: js.UndefOr[Double]
+  def negotiatedPrice: js.UndefOr[Double]
+
+  def xp: js.UndefOr[Double]
 
 }
 
