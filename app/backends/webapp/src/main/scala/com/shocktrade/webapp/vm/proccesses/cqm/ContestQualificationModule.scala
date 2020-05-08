@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.vm.proccesses.cqm
 
-import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.common.LoggerFactory
+import com.shocktrade.webapp.vm.VirtualMachineContext
 import com.shocktrade.webapp.vm.opcodes._
 import com.shocktrade.webapp.vm.proccesses.cqm.dao._
 
@@ -13,18 +14,21 @@ import scala.scalajs.js
  */
 class ContestQualificationModule()(implicit ec: ExecutionContext) {
   private val logger = LoggerFactory.getLogger(getClass)
-  private implicit val clock: TradingClock = new TradingClock()
 
-  def run()(implicit cqmDAO: QualificationDAO): Future[js.Array[OpCode]] = {
+  def run()(implicit cqmDAO: QualificationDAO, ctx: VirtualMachineContext): Future[js.Array[OpCode]] = {
     for {
       ops0 <- processLimitAndMarketOrders()
       ops1 <- processOrderCloseEvents()
       ops2 <- processContestClosedEvents()
-    } yield ops0 ++ ops1 ++ ops2
+      opCodes = ops0 ++ ops1 ++ ops2
+    } yield opCodes
   }
 
   def processLimitAndMarketOrders()(implicit cqmDAO: QualificationDAO): Future[js.Array[OpCode]] = {
-    cqmDAO.findQualifiedOrders(limit = 250) map processOrders
+    for {
+      orders <- cqmDAO.findQualifiedOrders(limit = 250)
+      opCodes = processOrders(orders)
+    } yield opCodes
   }
 
   def processOrders(orders: js.Array[QualifiedOrderData]): js.Array[OpCode] = {

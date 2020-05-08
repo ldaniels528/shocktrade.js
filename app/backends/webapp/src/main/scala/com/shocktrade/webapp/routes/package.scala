@@ -6,6 +6,7 @@ import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.routes.discover.dao._
 import com.shocktrade.webapp.routes.research.dao.ResearchDAO
 import com.shocktrade.webapp.routes.social.dao.PostDAO
+import com.shocktrade.webapp.vm.proccesses.cqm.dao.QualificationDAO
 import io.scalajs.npm.express.{Request, Response}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -23,6 +24,7 @@ package object routes {
 
     implicit val autoCompleteDAO: AutoCompleteDAO = AutoCompleteDAO()
     implicit val contestDAO: ContestDAO = ContestDAO()
+    implicit val cqmDAO: QualificationDAO = QualificationDAO()
     implicit val exploreDAO: ExploreDAO = ExploreDAO()
     implicit val globalSearchDAO: GlobalSearchDAO = GlobalSearchDAO()
     implicit val newsDAO: RSSFeedDAO = RSSFeedDAO()

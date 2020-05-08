@@ -1,6 +1,6 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope, GameLevel}
+import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope}
 import com.shocktrade.client.dialogs.PlayerProfileDialogController._
 import com.shocktrade.client.users.{OnlineStatusService, UserService}
 import com.shocktrade.common.models.user.UserProfile
@@ -9,7 +9,6 @@ import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -47,8 +46,6 @@ case class PlayerProfileDialogController($scope: PlayerProfileDialogScope, $uibM
                                          @injected("UserService") userService: UserService,
                                          @injected("userID") userID: () => String) extends Controller with AwardsSupport {
 
-  $scope.levels = GameLevel.Levels
-
   ///////////////////////////////////////////////////////////////////////////
   //          Initialization
   ///////////////////////////////////////////////////////////////////////////
@@ -80,11 +77,13 @@ case class PlayerProfileDialogController($scope: PlayerProfileDialogScope, $uibM
 
   $scope.getLevel = () => $scope.player.flatMap(_.getLevel)
 
+  $scope.getLevelDescription = () => $scope.player.flatMap(_.getLevelDescription)
+
   $scope.getNextLevelXP = () => $scope.player.flatMap(_.nextLevelXP)
 
-  $scope.getStars = () => (1 to Math.max(1, $scope.player.flatMap(_.totalXP.map(_ / 1000)).orZero)).toJSArray
+  $scope.getStars = () => $scope.player.flatMap(_.getStars)
 
-  $scope.getTotalXP = () => $scope.player.flatMap(_.totalXP).getOrElse(0)
+  $scope.getTotalXP = () => $scope.player.flatMap(_.totalXP)
 
   $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(onlineStatusService.getOnlineStatus).map(_.connected)
 
@@ -105,14 +104,14 @@ object PlayerProfileDialogController {
     // functions
     var initPlayerProfile: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
     var getLevel: js.Function0[js.UndefOr[Int]] = js.native
+    var getLevelDescription: js.Function0[js.UndefOr[String]] = js.native
     var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
-    var getStars: js.Function0[js.Array[Int]] = js.native
-    var getTotalXP: js.Function0[Int] = js.native
+    var getStars: js.Function0[js.UndefOr[js.Array[Int]]] = js.native
+    var getTotalXP: js.Function0[js.UndefOr[Int]] = js.native
     var isOnline: js.Function1[js.UndefOr[String], js.UndefOr[Boolean]] = js.native
     var okay: js.Function0[Unit] = js.native
 
     // variables
-    var levels: js.Array[GameLevel] = js.native
     var player: js.UndefOr[UserProfile] = js.native
 
   }

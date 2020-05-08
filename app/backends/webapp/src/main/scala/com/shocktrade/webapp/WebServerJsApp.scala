@@ -12,7 +12,6 @@ import com.shocktrade.webapp.routes.social.{PostAttachmentRoutes, PostRoutes, So
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
 import com.shocktrade.webapp.vm.proccesses.cqm.ContestQualificationModule
-import com.shocktrade.webapp.vm.proccesses.cqm.dao.QualificationDAO
 import io.scalajs.nodejs._
 import io.scalajs.npm.bodyparser._
 import io.scalajs.npm.express.fileupload.{ExpressFileUpload, FileUploadOptions}
@@ -99,7 +98,6 @@ object WebServerJsApp {
     import routes.dao._
 
     logger.info("Setting up Virtual Machine routes...")
-    implicit val cqmDAO: QualificationDAO = QualificationDAO()
     implicit val vmDAO: VirtualMachineDAO = VirtualMachineDAO()
     implicit val cqm: ContestQualificationModule = new ContestQualificationModule()
     implicit val vm: VirtualMachine = new VirtualMachine()

@@ -137,21 +137,19 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   override def debitWallet(portfolioID: String, amount: Double): Future[Double] = {
     for {
       // lookup the user's wallet by portfolio ID
-      user_? <- conn.queryFuture[UserProfileData](
+      (userID, wallet) <- conn.queryFuture[UserProfileData](
         "SELECT U.userID, wallet FROM users U INNER JOIN portfolios P ON P.userID = U.userID WHERE portfolioID = ?",
-        js.Array(portfolioID)).map(_._1).map(_.headOption)
-
-      // get the user's wallet
-      result = for {userID <- user_?.flatMap(_.userID.toOption); wallet <- user_?.flatMap(_.wallet.toOption)} yield (userID, wallet)
-      (userID, wallet) = result match {
-        case Some((_, wallet)) if wallet < amount => throw InsufficientFundsException(wallet, amount)
-        case Some((userID, wallet)) => (userID, wallet)
-        case None => throw PortfolioNotFoundException(portfolioID)
+        js.Array(portfolioID)).map(_._1.headOption) map { user_? =>
+        (for {user <- user_?; userID <- user.userID.toOption; wallet <- user.wallet.toOption} yield (userID, wallet)) match {
+          case Some((_, wallet)) if wallet < amount => throw InsufficientFundsException(wallet, amount)
+          case Some((userID, wallet)) => (userID, wallet)
+          case None => throw PortfolioNotFoundException(portfolioID)
+        }
       }
 
       // perform the update
       _ <- conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ?", js.Array(amount, userID))
-        .map(_.affectedRows) map checkCount(_ => f"Portfolio $portfolioID could not be credit wallet with $amount%.2f")
+        .map(_.affectedRows) map checkCount(_ => f"Could not be credit wallet with $amount%.2f")
     } yield wallet - amount
   }
 
@@ -221,22 +219,17 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   override def debitPortfolio(portfolioID: String, amount: Double): Future[Double] = {
     for {
-      // lookup the portfolio
-      portfolio_? <- conn.queryFuture[PortfolioData](
-        "SELECT funds FROM portfolios WHERE portfolioID = ?", js.Array(portfolioID))
-        .map(_._1).map(_.headOption)
-
       // get the portfolio's funds
-      funds = portfolio_?.flatMap(_.funds.toOption) match {
+      funds <- conn.queryFuture[PortfolioData]("SELECT funds FROM portfolios WHERE portfolioID = ?",
+        js.Array(portfolioID)).map(_._1.headOption).map(_.flatMap(_.funds.toOption) match {
         case Some(funds) if funds < amount => throw InsufficientFundsException(funds, amount)
         case Some(funds) => funds
         case None => throw PortfolioNotFoundException(portfolioID)
-      }
+      })
 
       // perform the update
-      _ <- conn.executeFuture(
-        """|UPDATE portfolios SET funds = funds - ? WHERE portfolioID = ? AND funds >= ?
-           |""".stripMargin, js.Array(amount, portfolioID, amount)).map(_.affectedRows)
+      _ <- conn.executeFuture("UPDATE portfolios SET funds = funds - ? WHERE portfolioID = ?",
+        js.Array(amount, portfolioID)).map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID))
     } yield funds - amount
   }
 
@@ -340,6 +333,11 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     case count => count
   }
 
+  private def checkUpdate(f: Int => Throwable): Int => Int = {
+    case count if count < 1 => throw f(count)
+    case count => count
+  }
+
   private def closePositions(portfolioID: String): Future[Int] = {
     val outcome = for {
       _ <- conn.executeFuture("UPDATE positions SET quantity = 0 WHERE portfolioID = ?", js.Array(portfolioID)).map(_.affectedRows)
@@ -378,10 +376,12 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     var items: List[(String, Int)] = Nil
     val myRanking = rankings.find(_.portfolioID.contains(portfolioID))
     items = Award.CHKDFLAG -> 5 :: items
-    items = (myRanking collect { case ranking if ranking.rankNum.orZero == 1 => Award.GLDTRPHY -> 25 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 25.0 => Award.PAYDIRT -> 25 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 50.0 => Award.MADMONEY -> 50 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.orZero >= 100.0 => Award.CRYSTBAL -> 100 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.rankNum.contains(1) => Award.GLDTRPHY -> 100 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.rankNum.contains(2) => Award.SLVRTRPHY -> 50 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.rankNum.contains(3) => Award.BRNZTRPHY -> 25 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 25.0) => Award.PAYDIRT -> 25 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 50.0) => Award.MADMONEY -> 50 }).toList ::: items
+    items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 100.0) => Award.CRYSTBAL -> 100 }).toList ::: items
     new AwardsRecommendation(awardCodes = items.map(_._1).toJSArray, awardedXP = items.map(_._2).sum)
   }
 

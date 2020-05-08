@@ -9,7 +9,6 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -52,11 +51,13 @@ case class HomeController($scope: HomeControllerScope, $cookies: Cookies, $timeo
 
   $scope.getLevel = () => $scope.userProfile.flatMap(_.getLevel)
 
+  $scope.getLevelDescription = () => $scope.userProfile.flatMap(_.getLevelDescription)
+
   $scope.getNextLevelXP = () => $scope.userProfile.flatMap(_.nextLevelXP)
 
-  $scope.getStars = () => (1 to Math.max(1, $scope.userProfile.flatMap(_.totalXP.map(_ / 1000)).orZero)).toJSArray
+  $scope.getStars = () => $scope.userProfile.flatMap(_.getStars)
 
-  $scope.getTotalXP = () => $scope.userProfile.flatMap(_.totalXP).getOrElse(0)
+  $scope.getTotalXP = () => $scope.userProfile.flatMap(_.totalXP)
 
 }
 
@@ -79,9 +80,10 @@ object HomeController {
     // functions
     var initHome: js.Function0[Unit] = js.native
     var getLevel: js.Function0[js.UndefOr[Int]] = js.native
+    var getLevelDescription: js.Function0[js.UndefOr[String]] = js.native
     var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
-    var getStars: js.Function0[js.Array[Int]] = js.native
-    var getTotalXP: js.Function0[Int] = js.native
+    var getStars: js.Function0[js.UndefOr[js.Array[Int]]] = js.native
+    var getTotalXP: js.Function0[js.UndefOr[Int]] = js.native
   }
 
 }

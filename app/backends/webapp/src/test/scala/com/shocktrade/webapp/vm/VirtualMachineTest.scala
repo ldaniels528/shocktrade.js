@@ -21,19 +21,18 @@ class VirtualMachineTest() extends AsyncFunSpec {
     it("should orchestrate the contest life-cycle") {
       implicit val vmDAO: VirtualMachineDAO = VirtualMachineDAO()
       implicit val cqmDAO: QualificationDAO = QualificationDAO()
+      implicit val vm: VirtualMachine = new VirtualMachine()
 
       val cqm = new ContestQualificationModule()
-      val vm = new VirtualMachine()
+
       val outcome = for {
-        opCodes <- cqm.run()
-        _ = vm.enqueue(opCodes: _*)
-        results <- vm.invokeAll()
+        results <- cqm.run()
       } yield results
 
       outcome.map { results =>
-        results foreach { case VmProcess(code, result, runTime) =>
-          info(s"[${runTime.toMillis} ms] $code => ${result.orNull}")
-        }
+        //results foreach { case VmProcess(code, result, runTime) =>
+        //  info(s"[${runTime.toMillis} ms] $code => ${result.orNull}")
+        //}
         assert(results == results)
       }
     }

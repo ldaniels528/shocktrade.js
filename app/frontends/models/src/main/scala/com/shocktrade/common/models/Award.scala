@@ -33,6 +33,8 @@ object Award {
   val CRYSTBAL = "CRYSTBAL"
   val CHKDFLAG = "CHKDFLAG"
   val GLDTRPHY = "GLDTRPHY"
+  val SLVRTRPHY = "SLVRTRPHY"
+  val BRNZTRPHY = "BRNZTRPHY"
 
   /**
    * Represents the collection of contest awards
@@ -122,8 +124,18 @@ object Award {
     new Award(
       name = "Gold Trophy",
       code = GLDTRPHY,
-      icon = "/images/awards/gold_trophy.png",
-      description = "Came in first place! (out of 10 players)"
+      icon = "/images/awards/gold-trophy.png",
+      description = "Came in first place! (out of 10 players)"),
+    new Award(
+      name = "Silver Trophy",
+      code = SLVRTRPHY,
+      icon = "/images/awards/silver-trophy.png",
+      description = "Came in second place! (out of 10 players)"),
+    new Award(
+      name = "Bronze Trophy",
+      code = BRNZTRPHY,
+      icon = "/images/awards/bronze-trophy.png",
+      description = "Came in third place! (out of 10 players)"
     ))
 
 }

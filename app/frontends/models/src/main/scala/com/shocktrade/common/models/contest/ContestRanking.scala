@@ -91,7 +91,7 @@ object ContestRanking {
     case class Accumulator(rankings: List[ContestRanking] = Nil, lastRanking: Option[ContestRanking] = None, index: Int = 1)
 
     // sort the rankings and add the position (e.g. "1st")
-    val results = rankings.sortBy(-_.totalEquity.orZero).foldLeft[Accumulator](Accumulator()) {
+    val results = rankings.sortBy(r => (-r.totalEquity.orZero, -r.totalEquity.orZero)).foldLeft[Accumulator](Accumulator()) {
       case (acc@Accumulator(rankings, lastRanking, index), ranking) =>
         val newIndex = if (lastRanking.exists(_.totalEquity.exists(_ > ranking.totalEquity.orZero))) index + 1 else index
         val newRanking = ranking.copy(rank = newIndex.nth, rankNum = newIndex)

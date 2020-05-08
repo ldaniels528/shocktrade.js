@@ -9,6 +9,7 @@ import io.scalajs.JSON
 import io.scalajs.nodejs.setImmediate
 import io.scalajs.util.JsUnderOrHelper._
 
+import scala.scalajs.js.JSConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
@@ -38,8 +39,8 @@ class VirtualMachine() {
    * @param ec      the implicit [[ExecutionContext]]
    * @return the cumulative invocation result
    */
-  def invokeAll()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[List[VmProcess]] = {
-    if(pipeline.isEmpty) Future.successful(Nil)
+  def invokeAll()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[js.Array[VmProcess]] = {
+    if(pipeline.isEmpty) Future.successful(js.Array())
     else {
       // copy the opCodes into our processing array
       val opCodes = new Array[OpCode](pipeline.size)
@@ -73,8 +74,8 @@ class VirtualMachine() {
 object VirtualMachine {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  def waterfall(opCodes: Seq[OpCode])(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[List[VmProcess]] = {
-    val promise = Promise[List[VmProcess]]()
+  def waterfall(opCodes: Seq[OpCode])(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[js.Array[VmProcess]] = {
+    val promise = Promise[js.Array[VmProcess]]()
     var results: List[VmProcess] = Nil
 
     def recurse(codes: List[OpCode]): Unit = {
@@ -105,7 +106,7 @@ object VirtualMachine {
                   logger.error(s"OpCode failed: ${e.getMessage}")
                 }
             }
-          case Nil => promise.success(results.reverse)
+          case Nil => promise.success(results.reverse.toJSArray)
         }
     }
 

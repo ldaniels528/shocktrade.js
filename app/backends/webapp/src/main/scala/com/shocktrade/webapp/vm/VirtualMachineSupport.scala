@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.vm
 
+import com.shocktrade.common.Ok
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.webapp.vm.VirtualMachine.VmProcess
 import com.shocktrade.webapp.vm.proccesses.cqm.ContestQualificationModule
@@ -21,7 +22,6 @@ import scala.util.{Failure, Success}
 trait VirtualMachineSupport {
   private val logger = LoggerFactory.getLogger(getClass)
   private var isAlive: Boolean = false
-  private var lifeCycleHandle: Option[Interval] = None
   private var updateEventHandle: Option[Interval] = None
 
   /**
@@ -42,14 +42,12 @@ trait VirtualMachineSupport {
     if (!isAlive) {
       isAlive = true
 
-      // queue the CQM life-cycle updates
-      lifeCycleHandle = Option(setInterval(() => updateContestLifeCycles(), 30.seconds))
-
       // keep the event log up-to-date
       updateEventHandle = Option(setInterval(() => updateEventLog(), 1.minutes))
 
-      // start the virtual CPU
-      continuouslyConsumeOpCodes()
+      // start the virtual CPU and CQM
+      startCPU()
+      startCQM()
     }
   }
 
@@ -58,8 +56,6 @@ trait VirtualMachineSupport {
    */
   def stopMachine(): Unit = {
     isAlive = false
-    lifeCycleHandle.foreach(_.clear())
-    lifeCycleHandle = None
     updateEventHandle.foreach(_.clear())
     updateEventHandle = None
   }
@@ -68,55 +64,39 @@ trait VirtualMachineSupport {
   //      Processing Methods
   //////////////////////////////////////////////////////////////////////////////////////
 
-  private def continuouslyConsumeOpCodes()(implicit ec: ExecutionContext, cqm: ContestQualificationModule, cqmDAO: QualificationDAO, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
-    Future(drainPipeline()) onComplete { _ => if (isAlive) setTimeout(() => continuouslyConsumeOpCodes(), 5.millis) }
-  }
-
-  private def drainPipeline()(implicit ec: ExecutionContext, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
-    try {
-      val startTime = js.Date.now()
-      vm.invokeAll() onComplete {
-        case Success(results) =>
-          val elapsedTime = js.Date.now() - startTime
-          val count = results.length
-          if (count > 0) logger.info(f"$count opCodes executed in $elapsedTime msec [${elapsedTime / count}%.1f ops/msec]")
-          results foreach { case VmProcess(code, result, runTime) =>
-            logger.info(s"[${runTime.toMillis} ms] $code => ${VirtualMachine.unwrap(result)}")
-          }
-        case Failure(e) =>
-          val elapsedTime = js.Date.now() - startTime
-          logger.error(s"drainPipeline| ${e.getMessage} [$elapsedTime msec]")
-      }
-    } catch {
-      case e: Exception =>
-        logger.error(s"Unexpected error during Pipeline processing: ${e.getMessage}")
+  private def consumeOpCodes()(implicit ec: ExecutionContext, vm: VirtualMachine, ctx: VirtualMachineContext): Future[js.Array[VmProcess]] = {
+    val startTime = js.Date.now()
+    val outcome = vm.invokeAll()
+    outcome onComplete {
+      case Success(results) =>
+        val elapsedTime = js.Date.now() - startTime
+        val count = results.length
+        if (count > 0) logger.info(f"$count opCodes executed in $elapsedTime msec [${elapsedTime / count}%.1f ops/msec]")
+        results foreach { case VmProcess(code, result, runTime) =>
+          logger.info(s"[${runTime.toMillis} ms] $code => ${VirtualMachine.unwrap(result)}")
+        }
+      case Failure(e) =>
+        val elapsedTime = js.Date.now() - startTime
+        logger.error(s"consumeOpCodes| ${e.getMessage} [$elapsedTime msec]")
     }
+    outcome
   }
 
-  private def updateContestLifeCycles()(implicit ec: ExecutionContext, cqm: ContestQualificationModule, cqmDAO: QualificationDAO, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
-    try {
-      val startTime = js.Date.now()
-      cqm.run() onComplete {
-        case Success(opCodes) =>
-          val elapsedTime = js.Date.now() - startTime
-          val count = opCodes.length
-          if (count > 0) {
-            vm.enqueue(opCodes: _*)
-            logger.info(s"$count opCodes scheduled in $elapsedTime msec")
-          }
-        case Failure(e) =>
-          logger.error(s"updateContestLifeCycles| ${e.getMessage}")
-      }
-    } catch {
-      case e: Exception =>
-        logger.error(s"Unexpected error during Contest Life-cycle: ${e.getMessage}")
-        e.printStackTrace()
-    }
+  private def startCPU()(implicit ec: ExecutionContext, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
+    consumeOpCodes() onComplete { _ => if (isAlive) setTimeout(() => startCPU(), 0.millis) }
   }
 
-  private def updateEventLog()(implicit  ctx: VirtualMachineContext, ec: ExecutionContext): Unit = {
+  private def startCQM()(implicit ec: ExecutionContext, cqm: ContestQualificationModule, cqmDAO: QualificationDAO, vm: VirtualMachine, ctx: VirtualMachineContext): Unit = {
+    (for {
+      opCodes <- cqm.run()
+      responses <- Future.sequence(opCodes.toSeq.map(vm.invoke(_)))
+    } yield responses) onComplete { _ => if (isAlive) setTimeout(() => startCQM(), 5.seconds) }
+  }
+
+  private def updateEventLog()(implicit ec: ExecutionContext, ctx: VirtualMachineContext): Future[Ok] = {
     val startTime = System.currentTimeMillis()
-    ctx.updateEventLog() onComplete {
+    val outcome = ctx.updateEventLog()
+    outcome onComplete {
       case Success(result) =>
         val count = result.updateCount.orZero
         if (count > 0) {
@@ -127,6 +107,7 @@ trait VirtualMachineSupport {
         val elapsedTime = System.currentTimeMillis() - startTime
         logger.info(s"Failed updating events after $elapsedTime msec: ${e.getMessage}")
     }
+    outcome
   }
 
 }

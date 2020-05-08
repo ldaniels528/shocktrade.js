@@ -19,8 +19,8 @@ class ContestQualificationModuleTest extends AnyFunSpec {
 
     it("should close expired contests") {
       val contests = js.Array(
-        new ContestExpiredData(contestID = "contest000", userID = "user000", portfolioID = "portfolio000", funds = 2865.0),
-        new ContestExpiredData(contestID = "contest000", userID = "user001", portfolioID = "portfolio001", funds = 5379.0)
+        new ContestExpiredData(contestID = "contest000", expirationTime = js.undefined),
+        new ContestExpiredData(contestID = "contest001", expirationTime = js.undefined)
       )
       val opCodes = oqm.processContestClosedEvents(contests)
       show(opCodes)

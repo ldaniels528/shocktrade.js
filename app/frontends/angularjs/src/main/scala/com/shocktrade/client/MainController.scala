@@ -2,10 +2,10 @@ package com.shocktrade.client
 
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.users.{OnlineStatusService, SignInDialog, UserService}
 import com.shocktrade.common.SecuritiesHelper._
+import com.shocktrade.common.models.contest.GameLevel
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.JSON
