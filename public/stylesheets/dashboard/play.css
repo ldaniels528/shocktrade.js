@@ -310,13 +310,6 @@ div.rankings_container {
 	padding: 2px 2px 2px 2px;
 }
 
-div.gamesQuickSearchContainer {
-	clear: both;
-	overflow: auto;	
-	width: auto;
-	height: 285px;
-}
-
 .gs_left {
 	text-align: left;
 }
@@ -327,27 +320,6 @@ div.gamesQuickSearchContainer {
 
 .gs_icon {
 	width: 20px;
-}
-
-div.mySymbolsContainer {
-	clear: both;
-	overflow: auto;	
-	width: auto;
-	height: 180px;
-}
-
-div.friendsContainer {
-	clear: both;
-	overflow: auto;	
-	width: auto;
-	height: 200px;
-}
-
-div.leaderboardContainer {
-	clear: both;
-	overflow: auto;	
-	width: auto;
-	height: 190px;
 }
 
 .block_full {

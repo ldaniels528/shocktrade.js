@@ -65,7 +65,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |      WHERE O.orderType = 'BUY'
          |      AND O.closed = 0
          |      AND O.portfolioID = P.portfolioID
-         |      AND P.userID = ?) AS totalBuyOrders,
+         |      AND P.contestID = ? AND P.userID = ?) AS totalBuyOrders,
          |    (SELECT SUM(S.lastTrade * O.quantity)
          |      FROM orders O
          |      INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
@@ -73,7 +73,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |      WHERE O.orderType = 'SELL'
          |      AND O.closed = 0
          |      AND O.portfolioID = P.portfolioID
-         |      AND P.userID = ?) AS totalSellOrders
+         |      AND P.contestID = ? AND P.userID = ?) AS totalSellOrders
          |FROM portfolios P
          |INNER JOIN contests C ON C.contestID = P.contestID
          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
@@ -81,7 +81,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |WHERE C.contestID = ? AND P.userID = ?
          |GROUP BY P.userID, P.funds
          |""".stripMargin,
-      js.Array(userID, userID, contestID, userID)).map(_._1.headOption)
+      js.Array(contestID, userID, contestID, userID, contestID, userID)).map(_._1.headOption)
   }
 
   override def findPortfolioByID(portfolioID: String): Future[Option[PortfolioData]] = {

@@ -48,4 +48,10 @@ trait UserAPI extends BaseAPI {
 
   def setIsOfflineURL(userID: String) = s"$baseURL/api/online/$userID"
 
+  ///////////////////////////////////////////////////////////////
+  //          Administrative Routes
+  ///////////////////////////////////////////////////////////////
+
+  def getUpdateUserIconsURL: String = s"$baseURL/api/users/icon/update"
+
 }

@@ -10,7 +10,7 @@ import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserDAO, UserIconData}
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
-import com.shocktrade.webapp.vm.opcodes.{CreateUserIcon, CreateUserAccount}
+import com.shocktrade.webapp.vm.opcodes.{CreateUserAccount, CreateUserIcon}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
@@ -47,6 +47,13 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
   app.get(getOnlineStatusUpdatesURL(":since"), (request: Request, response: Response, next: NextFunction) => getOnlineStatusUpdates(request, response, next))
   app.put(setIsOnlineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOnline(request, response, next))
   app.delete(setIsOfflineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOffline(request, response, next))
+
+  // administrative routes
+  app.get(getUpdateUserIconsURL, (request: Request, response: Response, next: NextFunction) => updateUserIcons(request, response, next))
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //      API Methods
+  //////////////////////////////////////////////////////////////////////////////////////
 
   def createAccount(request: Request, response: Response, next: NextFunction): Unit = {
     val form = request.bodyAs[SignUpForm]
@@ -110,7 +117,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
       icon_? <- userDAO.findUserIcon(userID)
       (mime, image) <- icon_? match {
         case Some(icon) => Future.successful((icon.mime, icon.image))
-        case None => Fs.readFileFuture("./public/images/avatars/avatar100.png").map(image => ("image/png": js.UndefOr[String], image))
+        case None => Fs.readFileFuture("./public/images/avatars/avatar101.png").map(image => ("image/png": js.UndefOr[String], image))
       }
     } yield (mime, image)
 
@@ -209,6 +216,13 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
     next()
   }
 
+  def updateUserIcons(request: Request, response: Response, next: NextFunction): Unit = {
+    UserRoutes.uploadUserIcons() onComplete {
+      case Success(values) => response.send(s"${values.length} user icons loaded"); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
+    }
+  }
+
 }
 
 /**
@@ -232,6 +246,33 @@ object UserRoutes {
       Some(user) <- userDAO.findUserByName(name)
       _ <- vm.invoke(CreateUserIcon(new UserIconData(userID = user.userID, name = name, mime = mime, image = data)))
     } yield 1
+  }
+
+  private def uploadUserIcons()(implicit userDAO: UserDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine): Future[Seq[Int]] = {
+    Future.sequence {
+      Seq(
+        ("ldaniels", "./public/images/avatars/gears.jpg"),
+        ("natech", "./public/images/avatars/dcu.png"),
+        ("gunst4rhero", "./public/images/avatars/gunstar-heroes.jpg"),
+        ("gadget", "./public/images/avatars/sickday.jpg"),
+        ("daisy", "./public/images/avatars/daisy.jpg"),
+        ("teddy", "./public/images/avatars/teddy.jpg"),
+        ("joey", "./public/images/avatars/joey.jpg"),
+        ("dizorganizer", "./public/images/avatars/bkjk.jpg"),
+        ("naughtymonkey", "./public/images/avatars/naughtymonkey.jpg"),
+        ("seralovett", "./public/images/avatars/hearts.jpg"),
+        ("fugitive528", "./public/images/avatars/fugitive528.jpg"),
+        ("dannywoo", "./public/images/avatars/dannywoo.jpg")) map { case (name, path) if Fs.existsSync(path) =>
+        val outcome = writeImage(name = name, path = path)
+        outcome onComplete {
+          case Success(value) => println(s"$name ~> $path: count = $value")
+          case Failure(e) =>
+            println(s"Failed to set icon for user '$name':")
+            e.printStackTrace()
+        }
+        outcome
+      }
+    }
   }
 
 }

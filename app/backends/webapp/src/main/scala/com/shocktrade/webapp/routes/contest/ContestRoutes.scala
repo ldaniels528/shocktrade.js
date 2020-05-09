@@ -6,17 +6,13 @@ import java.util.UUID
 import com.shocktrade.common.api.ContestAPI
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchOptions, ValidationErrors}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
-import com.shocktrade.webapp.routes
-import com.shocktrade.webapp.routes.account.UserRoutes
 import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
 import com.shocktrade.webapp.vm.opcodes.{CreateContest, JoinContest, QuitContest, SendChatMessage}
-import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js.JSConverters._
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 /**
@@ -41,9 +37,6 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   // collections of contests
   app.get(contestSearchURL(), (request: Request, response: Response, next: NextFunction) => contestSearch(request, response, next))
   app.get(findContestRankingsURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestRankings(request, response, next))
-
-  // administrative routes
-  app.get(getUpdateUserIconsURL, (request: Request, response: Response, next: NextFunction) => updateUserIcons(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -110,7 +103,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   def findContestRankings(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("id")
     contestDAO.findRankings(contestID).map(ContestRanking.computeRankings(_)) onComplete {
-      case Success(rankings) => response.setContentType("application/json"); response.send(rankings.toJSArray); next()
+      case Success(rankings) => response.setContentType("application/json"); response.send(rankings); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
@@ -157,40 +150,6 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     vm.invoke(QuitContest(contestID, userID)) onComplete {
       case Success(result) => response.send(result); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  def updateUserIcons(request: Request, response: Response, next: NextFunction): Unit = {
-    uploadUserIcons() onComplete {
-      case Success(values) => response.send(s"${values.length} user icons loaded"); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  private def uploadUserIcons(): Future[Seq[Int]] = {
-    import routes.dao._
-    Future.sequence {
-      Seq(
-        ("ldaniels", "./public/images/avatars/gears.jpg"),
-        ("natech", "./public/images/avatars/dcu.png"),
-        ("gunst4rhero", "./public/images/avatars/gunstar-heroes.jpg"),
-        ("gadget", "./public/images/avatars/sickday.jpg"),
-        ("daisy", "./public/images/avatars/daisy.jpg"),
-        ("teddy", "./public/images/avatars/teddy.jpg"),
-        ("joey", "./public/images/avatars/joey.jpg"),
-        ("dizorganizer", "./public/images/avatars/bkjk.jpg"),
-        ("naughtymonkey", "./public/images/avatars/naughtymonkey.jpg"),
-        ("seralovett", "./public/images/avatars/hearts.jpg"),
-        ("fugitive528", "./public/images/avatars/fugitive528.jpg")) map { case (name, path) if Fs.existsSync(path) =>
-        val outcome = UserRoutes.writeImage(name = name, path = path)
-        outcome onComplete {
-          case Success(value) => println(s"$name ~> $path: count = $value")
-          case Failure(e) =>
-            println(s"Failed to set icon for user '$name':")
-            e.printStackTrace()
-        }
-        outcome
-      }
     }
   }
 

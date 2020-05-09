@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.account.dao
 
-import com.shocktrade.common.models.user.UserProfileLike
+import com.shocktrade.common.models.user.{PlayerStatistics, UserProfileLike}
 
 import scala.scalajs.js
 
@@ -14,4 +14,9 @@ class UserProfileData(val userID: js.UndefOr[String],
                       val equity: js.UndefOr[Double],
                       val wallet: js.UndefOr[Double],
                       val totalXP: js.UndefOr[Int],
-                      val lastLoginTime: js.UndefOr[js.Date]) extends UserProfileLike
+                      val gamesCompleted: js.UndefOr[Int],
+                      val gamesCreated: js.UndefOr[Int],
+                      val gamesDeleted: js.UndefOr[Int],
+                      val gamesJoined: js.UndefOr[Int],
+                      val gamesWithdrawn: js.UndefOr[Int],
+                      val lastLoginTime: js.UndefOr[js.Date]) extends UserProfileLike with PlayerStatistics

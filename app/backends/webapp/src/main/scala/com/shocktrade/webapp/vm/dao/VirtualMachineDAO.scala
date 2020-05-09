@@ -2,11 +2,12 @@ package com.shocktrade.webapp.vm.dao
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse}
-import com.shocktrade.common.models.contest.{MessageRef, OrderOutcome, OrderRef, PortfolioRef, PurchasePerksResponse}
+import com.shocktrade.common.models.contest._
 import com.shocktrade.common.models.user.UserRef
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData}
 import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData}
+import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.PortfolioEquity
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,13 +23,13 @@ trait VirtualMachineDAO {
   //    Contest Functions
   //////////////////////////////////////////////////////////////////
 
-  def closeContest(contestID: String): Future[js.Dictionary[Double]]
+  def closeContest(contestID: String): Future[js.Array[ClosePortfolioResponse]]
 
   def createContest(request: ContestCreationRequest): Future[ContestCreationResponse]
 
   def joinContest(contestID: String, userID: String): Future[PortfolioRef]
 
-  def quitContest(contestID: String, userID: String): Future[Double]
+  def quitContest(contestID: String, userID: String): Future[PortfolioEquity]
 
   def sendChatMessage(contestID: String, userID: String, message: String): Future[MessageRef]
 
@@ -52,7 +53,7 @@ trait VirtualMachineDAO {
 
   def cancelOrder(orderID: String): Future[OrderOutcome]
 
-  def closePortfolio(portfolioID: String): Future[Double]
+  def closePortfolio(portfolioID: String): Future[ClosePortfolioResponse]
 
   def completeOrder(orderID: String, fulfilled: Boolean, negotiatedPrice: js.UndefOr[Double], message: js.UndefOr[String]): Future[OrderOutcome]
 
@@ -66,7 +67,7 @@ trait VirtualMachineDAO {
 
   def increasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]
 
-  def liquidatePortfolio(portfolioID: String): Future[Double]
+  def liquidatePortfolio(portfolioID: String): Future[PortfolioEquity]
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    User / Account Management

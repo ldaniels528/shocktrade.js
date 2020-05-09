@@ -1,6 +1,6 @@
 package com.shocktrade.common
 
 object AppConstants {
-  val MaxPlayers: Int = 11
+  val MaxPlayers: Int = 10
 
 }

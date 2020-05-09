@@ -5,9 +5,6 @@
             <div class="rankings_container">
                 <div ng-include src="'/views/dashboard/player_card_join.html'" ng-show="userProfile.userID && !isParticipant()" ></div>
                 <div ng-repeat="player in getPlayerRankings()" ng-include src="'/views/dashboard/player_card.html'"></div>
-                <!--
-                <div ng-repeat="player in playerRankingOnTop(userProfile.userID, contest.rankings)" ng-include src="'/views/dashboard/player_card.html'"></div>
-                -->
             </div>
         </div>
 

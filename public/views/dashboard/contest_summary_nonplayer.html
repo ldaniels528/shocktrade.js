@@ -1,44 +1,34 @@
 <div>
     <div class="row">
-        <span class="col-md-3">Players:</span>
-        <span class="col-md-3">
-            <span class="ds_heading">{{ contest.rankings.length || 1 }} / {{ maxPlayers }}</span>
+        <span class="col-md-4">
+            Cash Available:
+            <span class="pull-right fundsAvailable">{{ portfolio.balance.funds || 0.00 | number:2 }}</span>
+        </span>
+        <span class="col-md-4">
+            Pending BUY Orders:
+            <span class="pull-right" ng-class="portfolio.balance.totalBuyOrders > portfolio.balance.funds ? 'profitable' : 'unprofitable'">
+                {{ portfolio.balance.totalBuyOrders || 0.00 | number:2 }}
+            </span>
         </span>
 
-        <span class="col-md-3">
-            <span class="ds_premium"><i ng-class="'fa fa-toggle-' + (contest.continuousTrading ? 'on' : 'off')"></i> Continuous Trading</span>
-        </span>
-        <span class="col-md-3">
-            <span class="ds_heading"><i ng-class="'fa fa-toggle-' + (contest.startTime ? 'on' : 'off')"></i> Started</span>
+        <span class="col-md-4">
+            Experience Points Earned: <span class="pull-right XP">+{{ portfolio.totalXP || 0.00 | number:0 }}xp</span>
         </span>
     </div>
 
     <div class="row">
-        <span class="col-md-3">Buy-in:</span>
-        <span class="col-md-3">
-            <span class="ds_heading">$ {{ contest.startingBalance || 0 | number:0 }}</span>
+        <span class="col-md-4">
+            Total Equity:
+            <span class="pull-right fundsAvailable">{{ portfolio.balance.equity || 0.00 | number:2 }}</span>
         </span>
 
-        <span class="col-md-3">
-            <span class="ds_premium"><i ng-class="'fa fa-toggle-' + (contest.friendsOnly ? 'on' : 'off')"></i> Friends-Only</span>
-        </span>
-        <span class="col-md-3">
-            <span class="ds_heading"><i ng-class="'fa fa-toggle-' + (contest.perksAllowed ? 'on' : 'off')"></i> Perks Allowed</span>
-        </span>
-    </div>
-
-    <div class="row">
-        <span class="col-md-3">Level Cap:</span>
-        <span class="col-md-3">
-            <span class="ds_heading" ng-show="contest.levelCap">Level {{ contest.levelCap }}</span>
-            <span class="ds_heading" ng-hide="contest.levelCap">None</span>
+        <span class="col-md-4">
+            Pending SELL Orders:
+            <span class="pull-right fundsAvailable">{{ portfolio.balance.totalSellOrders || 0.00 | number:2 }}</span>
         </span>
 
-        <span class="col-md-3">
-            <span class="ds_premium"><i ng-class="'fa fa-toggle-' + (contest.invitationOnly ? 'on' : 'off')"></i> Invitation-Only</span>
-        </span>
-        <span class="col-md-3">
-            <span class="ds_heading"><i ng-class="'fa fa-toggle-' + (contest.robotsAllowed ? 'on' : 'off')"></i> Robots Allowed</span>
+        <span class="col-md-4">
+            Awards Earned: <span class="pull-right XP">{{ userProfile.awards.length || 0 | number:0 }}</span>
         </span>
     </div>
 </div>

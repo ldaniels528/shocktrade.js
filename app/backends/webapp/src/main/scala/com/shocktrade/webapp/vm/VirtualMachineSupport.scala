@@ -11,7 +11,6 @@ import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -98,7 +97,7 @@ trait VirtualMachineSupport {
     val outcome = ctx.updateEventLog()
     outcome onComplete {
       case Success(result) =>
-        val count = result.updateCount.orZero
+        val count = result.w.orZero
         if (count > 0) {
           val elapsedTime = System.currentTimeMillis() - startTime
           logger.info(s"Indexed $count events in $elapsedTime msec")

@@ -4,9 +4,9 @@ import scala.scalajs.js
 
 /**
  * Represents a successful update operation
- * @param updateCount the given update count
+ * @param w the given update count
  */
-class Ok(val updateCount: js.UndefOr[Int] = js.undefined) extends js.Object
+class Ok(val w: js.UndefOr[Int] = js.undefined) extends js.Object
 
 /**
  * Ok Companion
@@ -20,6 +20,6 @@ object Ok {
    */
   def apply(updateCount: js.UndefOr[Int] = js.undefined): Ok = new Ok(updateCount)
 
-  def unapply(ok: Ok): Option[Int] = ok.updateCount.toOption
+  def unapply(ok: Ok): Option[Int] = ok.w.toOption
 
 }

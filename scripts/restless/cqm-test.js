@@ -5,17 +5,31 @@ print "looking up users..."
 [teddy] findUserByName teddy
 [daisy] findUserByName daisy
 [joey] findUserByName joey
+[naughtymonkey] findUserByName naughtymonkey
+[natech] findUserByName natech
+[gunst4rhero] findUserByName gunst4rhero
+[seralovett] findUserByName seralovett
+[dizorganizer] findUserByName dizorganizer
+[dannywoo] findUserByName dannywoo
+[ldaniels] findUserByName ldaniels
 
 // create a new game
 print "creating a new game..."
-[contest] createContest { "name": "Man's World 3", "userID": "$$fugitive528.userID", "startingBalance": 25000, "duration": 3 }
+[contest] createContest { "name": "The Outer Limits 2", "userID": "$$fugitive528.userID", "startingBalance": 25000, "duration": 3 }
 
 // join the other players to the contest
 print "joining users to game..."
 [join_gadget] joinContest $$contest.contestID $$gadget.userID
 [join_teddy] joinContest $$contest.contestID $$teddy.userID
 [join_daisy] joinContest $$contest.contestID $$daisy.userID
-[joey_daisy] joinContest $$contest.contestID $$joey.userID
+[join_joey] joinContest $$contest.contestID $$joey.userID
+[join_naughtymonkey] joinContest $$contest.contestID $$naughtymonkey.userID
+[join_natech] joinContest $$contest.contestID $$natech.userID
+[join_gunst4rhero] joinContest $$contest.contestID $$gunst4rhero.userID
+[join_seralovett] joinContest $$contest.contestID $$seralovett.userID
+[join_dizorganizer] joinContest $$contest.contestID $$dizorganizer.userID
+[join_dannywoo] joinContest $$contest.contestID $$dannywoo.userID
+[join_ldaniels] joinContest $$contest.contestID $$ldaniels.userID
 
 // buy some securities
 print "buying some securities..."

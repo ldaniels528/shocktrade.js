@@ -315,7 +315,6 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
       case Failure(e) =>
         toaster.error(title = "Error!", body = "Failed to join contest")
-        console.error("An error occurred while joining the contest")
         $timeout(() => $scope.isJoining = false, 0.5.seconds)
     }
     outcome

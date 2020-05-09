@@ -5,6 +5,7 @@ import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Date
+import scala.scalajs.js.JSConverters._
 
 /**
  * Contest Portfolio Ranking
@@ -87,7 +88,7 @@ object ContestRanking {
     )
   }
 
-  def computeRankings(rankings: Seq[ContestRanking]): List[ContestRanking] = {
+  def computeRankings(rankings: Seq[ContestRanking]): js.Array[ContestRanking] = {
     case class Accumulator(rankings: List[ContestRanking] = Nil, lastRanking: Option[ContestRanking] = None, index: Int = 1)
 
     // sort the rankings and add the position (e.g. "1st")
@@ -97,7 +98,7 @@ object ContestRanking {
         val newRanking = ranking.copy(rank = newIndex.nth, rankNum = newIndex)
         acc.copy(rankings = newRanking :: rankings, lastRanking = Some(ranking), index = newIndex)
     }
-    results.rankings
+    results.rankings.toJSArray
   }
 
   /**

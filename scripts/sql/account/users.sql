@@ -12,6 +12,11 @@ CREATE TABLE users (
     password TEXT NULL,
     totalXP INTEGER NOT NULL DEFAULT 0,
     wallet DOUBLE NOT NULL,
+    gamesCompleted INT NOT NULL DEFAULT 0,
+    gamesCreated INT NOT NULL DEFAULT 0,
+    gamesDeleted INT NOT NULL DEFAULT 0,
+    gamesJoined INT NOT NULL DEFAULT 0,
+    gamesWithdrawn INT NOT NULL DEFAULT 0,
     creationTime DATETIME NOT NULL DEFAULT now(),
     lastModifiedTime DATETIME NOT NULL DEFAULT now()
 );

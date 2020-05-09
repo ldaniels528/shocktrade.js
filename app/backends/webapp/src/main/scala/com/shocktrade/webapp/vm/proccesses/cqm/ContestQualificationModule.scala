@@ -1,7 +1,5 @@
 package com.shocktrade.webapp.vm.proccesses.cqm
 
-import com.shocktrade.server.common.LoggerFactory
-import com.shocktrade.webapp.vm.VirtualMachineContext
 import com.shocktrade.webapp.vm.opcodes._
 import com.shocktrade.webapp.vm.proccesses.cqm.dao._
 
@@ -13,9 +11,8 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class ContestQualificationModule()(implicit ec: ExecutionContext) {
-  private val logger = LoggerFactory.getLogger(getClass)
 
-  def run()(implicit cqmDAO: QualificationDAO, ctx: VirtualMachineContext): Future[js.Array[OpCode]] = {
+  def run()(implicit cqmDAO: QualificationDAO): Future[js.Array[OpCode]] = {
     for {
       ops0 <- processLimitAndMarketOrders()
       ops1 <- processOrderCloseEvents()
@@ -32,7 +29,6 @@ class ContestQualificationModule()(implicit ec: ExecutionContext) {
   }
 
   def processOrders(orders: js.Array[QualifiedOrderData]): js.Array[OpCode] = {
-    if (orders.nonEmpty) logger.info(s"processing ${orders.size} qualified order event(s)")
     for {
       order <- orders
       portfolioID <- order.portfolioID.toList
@@ -54,7 +50,6 @@ class ContestQualificationModule()(implicit ec: ExecutionContext) {
   }
 
   def processOrderCloseEvents(orders: js.Array[OrderExpiredData]): js.Array[OpCode] = {
-    if (orders.nonEmpty) logger.info(s"processing ${orders.size} order close event(s)")
     for {
       order <- orders
       orderID <- order.orderID.toList
@@ -66,7 +61,6 @@ class ContestQualificationModule()(implicit ec: ExecutionContext) {
   }
 
   def processContestClosedEvents(contests: js.Array[ContestExpiredData]): js.Array[OpCode] = {
-    if (contests.nonEmpty) logger.info(s"processing ${contests.size} contest close event(s)")
     for {
       contest <- contests
       contestID <- contest.contestID.toList
