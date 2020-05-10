@@ -77,18 +77,18 @@ object RobotsJsApp {
    * @param app the given [[Application]]
    */
   private def setupRobots(app: Application): Unit = {
-    logger.info("Setting up robots...")
+    logger.info("Setting up robot portfolios...")
     implicit val robotDAO: RobotDAO = RobotDAO()
     implicit val robotProcessor: RobotProcessor = new RobotProcessor()
 
     // setup intermittent processing
-    robotDAO.findRobots map { robots =>
-      logger.info(s"Setting up ${robots.size} robots...")
+    robotDAO.findRobotPortfolios map { robots =>
+      logger.info(s"Setting up ${robots.size} robot portfolios...")
       for {
         robot <- robots
         robotName <- robot.username.toList
       } {
-        setTimeout(() => robotProcessor.run(robotName), 1.milli)
+        setTimeout(() => robotProcessor.run(robotName), 0.millis)
         setInterval(() => robotProcessor.run(robotName), 5.minutes)
       }
     }

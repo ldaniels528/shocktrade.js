@@ -6,12 +6,13 @@ import com.shocktrade.client.dialogs.NewGameDialogController.NewGameDialogResult
 import com.shocktrade.client.dialogs.{NewGameDialog, PlayerProfileDialog}
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client._
+import com.shocktrade.client.contest.models.Contest
 import com.shocktrade.common.AppConstants
 import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration}
 import com.shocktrade.common.forms.ContestSearchOptions.ContestStatus
 import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchOptions}
 import com.shocktrade.common.models.contest.ContestSearchResult._
-import com.shocktrade.common.models.contest.{Contest, ContestRanking, ContestSearchResult}
+import com.shocktrade.common.models.contest.{ContestRanking, ContestSearchResult}
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._

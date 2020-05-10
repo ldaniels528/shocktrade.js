@@ -1,11 +1,11 @@
 package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.contest.PortfolioService
+import com.shocktrade.client.contest.models.Portfolio
 import com.shocktrade.client.dialogs.NewOrderDialog._
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope}
 import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
-import com.shocktrade.common.models.contest.Portfolio
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
 import com.shocktrade.common.models.user.UserProfile
 import com.shocktrade.common.{Commissions, Ok}

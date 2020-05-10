@@ -1,8 +1,9 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.contest.PerksDialog._
+import com.shocktrade.client.contest.models.Portfolio
 import com.shocktrade.common.forms.PerksResponse
-import com.shocktrade.common.models.contest.{Perk, Portfolio}
+import com.shocktrade.common.models.contest.Perk
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._

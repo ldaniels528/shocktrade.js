@@ -1,11 +1,13 @@
 package com.shocktrade.client.contest
 
+import scala.scalajs.js.JSConverters._
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.PerksController.PerksControllerScope
+import com.shocktrade.client.contest.models.Portfolio
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GameStateService, RootScope}
 import com.shocktrade.common.forms.PerksResponse
-import com.shocktrade.common.models.contest.{Perk, Portfolio}
+import com.shocktrade.common.models.contest.Perk
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
@@ -47,16 +49,16 @@ case class PerksController($scope: PerksControllerScope, $routeParams: Dashboard
     } yield initPerks(contestID, userID)
   }
 
-  private def initPerks(contestID: String, userID: String): js.Promise[HttpResponse[Portfolio]] = {
+  private def initPerks(contestID: String, userID: String): js.Promise[Portfolio] = {
     console.info(s"Loading portfolio for contest $contestID user $userID...")
-    val outcome = portfolioService.findPortfolioByUser(contestID, userID)
+    val outcome = portfolioService.findPortfolioByUser(contestID, userID).map(_.data) recover { case e => new Portfolio() }
     outcome onComplete {
       case Success(portfolio) =>
-        $scope.$apply { () => $scope.portfolio = portfolio.data }
+        $scope.$apply { () => $scope.portfolio = portfolio }
       case Failure(e) =>
         toaster.error(e.displayMessage)
     }
-    outcome
+    outcome.toJSPromise
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -123,7 +125,7 @@ object PerksController {
     var portfolio: js.UndefOr[Portfolio] = js.native
 
     // functions
-    var initPerks: js.Function0[js.UndefOr[js.Promise[HttpResponse[Portfolio]]]] = js.native
+    var initPerks: js.Function0[js.UndefOr[js.Promise[Portfolio]]] = js.native
     var countOwnedPerks: js.Function0[Int] = js.native
     var isPerksSelected: js.Function0[Boolean] = js.native
     var getPerkNameClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native

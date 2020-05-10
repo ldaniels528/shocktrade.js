@@ -1,5 +1,6 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.contest.models.{Order, Portfolio}
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.PortfolioAPI
 import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}

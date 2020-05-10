@@ -3,7 +3,7 @@
         <div ng-show="isRankingsShown()" class="col-md-3">
             <div ng-include src="'/views/dashboard/contest_rankings_button_panel.html'"></div>
             <div class="rankings_container">
-                <div ng-include src="'/views/dashboard/player_card_join.html'" ng-show="userProfile.userID && !isParticipant()" ></div>
+                <div ng-include src="'/views/dashboard/player_card_join.html'" ng-show="userProfile.userID && !isParticipant()"></div>
                 <div ng-repeat="player in getPlayerRankings()" ng-include src="'/views/dashboard/player_card.html'"></div>
             </div>
         </div>

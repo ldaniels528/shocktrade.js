@@ -18,11 +18,11 @@ trait RobotDAO {
 
   def findPendingOrderTickers(robotUsername: String, portfolioID: String): Future[js.Array[Ticker]]
 
-  def findRobot(username: String): Future[js.Array[RobotData]]
+  def findRobot(username: String): Future[js.Array[RobotPortfolioData]]
 
-  def findRobots: Future[js.Array[RobotData]]
+  def findRobotPortfolios: Future[js.Array[RobotPortfolioData]]
 
-  def findRobots(isActive: Boolean): Future[js.Array[RobotData]]
+  def findRobots(isActive: Boolean): Future[js.Array[RobotPortfolioData]]
 
   def setRobotActivity(username: String, activity: String): Future[Int]
 

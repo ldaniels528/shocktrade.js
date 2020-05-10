@@ -51,7 +51,7 @@ class RobotRoutes(app: Application)(implicit ec: ExecutionContext, robotDAO: Rob
   }
 
   def findRobots(request: Request, response: Response, next: NextFunction): Unit = {
-    robotDAO.findRobots onComplete {
+    robotDAO.findRobotPortfolios onComplete {
       case Success(robots) => response.send(robots); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }

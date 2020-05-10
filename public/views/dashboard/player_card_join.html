@@ -12,19 +12,15 @@
             </div>
             <div>
                 <span class="positive">$ {{ contest.startingBalance | number: 2 }}</span>
-                <span class="positive">
-                    <changearrow value="{{ 0.00 }}"></changearrow> {{ 0.00 | number:2 }}%
-                </span>
             </div>
         </div>
     </div>
     <div class="pull-right" style="display: inline" ng-show="contest.status != 'CLOSED'">
-        <button ng-click="joinContest(contest.contestID)"
-                class="btn btn-default st_button pull-right"
-                style="margin: 3px 3px 3px 3px">
-            <i ng-hide="isJoining" class="fa fa-user"></i>
-            <img ng-show="isJoining" src="/images/status/loading16.gif"> Join
-        </button>
+        <span ng-click="joinContest(contest.contestID)" class="clickable"
+              title="Join this game"
+              style="margin-right: 6px; color: #ee7700; font-weight: bold">
+            <i ng-hide="isJoining" class="fa-2x fa fa-user-plus"></i> <img ng-show="isJoining" src="/images/status/loading16.gif">
+        </span>
     </div>
     <br style="clear: both">
 </div>

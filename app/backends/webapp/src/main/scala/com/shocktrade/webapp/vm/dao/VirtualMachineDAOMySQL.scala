@@ -440,17 +440,18 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   private def findPortfolioStatus(contestID: String, userID: String): Future[PortfolioStatus] = {
     conn.queryFuture[PortfolioStatus](
       """|SELECT
-         |  C.contestID, U.userID, U.wallet, C.startingBalance, GS.playerCount, GS.isParticipant
+         |  C.contestID, U.userID, U.wallet, C.startingBalance,
+         |  IFNULL(GS.playerCount, 0) AS playerCount,
+         |  IFNULL(GS.isParticipant, 0) AS isParticipant
          |FROM contests C
          |INNER JOIN users U ON U.userID = ?
-         |INNER JOIN (
+         |LEFT JOIN (
          |  SELECT contestID, COUNT(*) AS playerCount, SUM(CASE WHEN userID = ? THEN 1 ELSE 0 END) AS isParticipant
          |  FROM portfolios
-         |  GROUP BY contestID
-         |  LIMIT 1
+         |  WHERE contestID = ?
          |) AS GS ON GS.contestID = C.contestID
          |WHERE C.contestID = ?
-         |""".stripMargin, js.Array(userID, userID, contestID)).map(_._1.headOption) map {
+         |""".stripMargin, js.Array(userID, userID, contestID, contestID)).map(_._1.headOption) map {
       case Some(gameStatus) => gameStatus
       case None => throw ContestPortfolioNotFoundException(contestID, userID)
     }

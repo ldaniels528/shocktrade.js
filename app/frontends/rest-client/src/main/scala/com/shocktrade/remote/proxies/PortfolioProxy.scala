@@ -22,31 +22,31 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
   /**
    * Retrieves a portfolio by ID
    * @param portfolioID the given portfolio ID
-   * @return the promise of a [[Portfolio portfolio]]
+   * @return the promise of a [[PortfolioLike portfolio]]
    */
-  def findPortfolioByID(portfolioID: String): Future[Portfolio] = get(findPortfolioByIDURL(portfolioID))
+  def findPortfolioByID(portfolioID: String): Future[PortfolioLike] = get(findPortfolioByIDURL(portfolioID))
 
   /**
    * Retrieves a portfolio by a contest ID and user ID
    * @param contestID the given contest ID
    * @param userID the given user ID
-   * @return the promise of a [[Portfolio portfolio]]
+   * @return the promise of a [[PortfolioLike portfolio]]
    */
-  def findPortfolioByUser(contestID: String, userID: String): Future[Portfolio] = get(findPortfolioByUserURL(contestID, userID))
+  def findPortfolioByUser(contestID: String, userID: String): Future[PortfolioLike] = get(findPortfolioByUserURL(contestID, userID))
 
   /**
    * Retrieves a collection of portfolios by a contest ID
    * @param contestID the given contest ID
-   * @return the promise of an array of [[Portfolio portfolios]]
+   * @return the promise of an array of [[PortfolioLike portfolios]]
    */
-  def findPortfoliosByContest(contestID: String): Future[js.Array[Portfolio]] = get(findPortfoliosByContestURL(contestID))
+  def findPortfoliosByContest(contestID: String): Future[js.Array[PortfolioLike]] = get(findPortfoliosByContestURL(contestID))
 
   /**
    * Retrieves a collection of portfolios by a player ID
    * @param userID the given player ID
-   * @return the promise of an array of [[Portfolio portfolios]]
+   * @return the promise of an array of [[PortfolioLike portfolios]]
    */
-  def findPortfoliosByUser(userID: String): Future[js.Array[Portfolio]] = get(findPortfoliosByUserURL(userID))
+  def findPortfoliosByUser(userID: String): Future[js.Array[PortfolioLike]] = get(findPortfoliosByUserURL(userID))
 
   ///////////////////////////////////////////////////////////////
   //          Miscellaneous
@@ -54,7 +54,7 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
 
   def findPortfolioBalance(contestID: String, userID: String): Future[PortfolioBalance] = get(findPortfolioBalanceURL(contestID, userID))
 
-  def findChart(contestID: String, userID: String, chart: String): Future[Portfolio] = get(findChartURL(contestID, userID, chart))
+  def findChart(contestID: String, userID: String, chart: String): Future[PortfolioLike] = get(findChartURL(contestID, userID, chart))
 
   ///////////////////////////////////////////////////////////////
   //          Orders
@@ -64,9 +64,9 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
 
   def createOrder(contestID: String, userID: String, order: NewOrderForm): Future[OrderRef] = post(createOrderURL(contestID, userID), data = order)
 
-  def findOrderByID(orderID: String): Future[Order] = get(findOrderByIDURL(orderID))
+  def findOrderByID(orderID: String): Future[OrderLike] = get(findOrderByIDURL(orderID))
 
-  def findOrders(contestID: String, userID: String): Future[js.Array[Order]] = get(findOrdersURL(contestID, userID))
+  def findOrders(contestID: String, userID: String): Future[js.Array[OrderLike]] = get(findOrdersURL(contestID, userID))
 
   ///////////////////////////////////////////////////////////////
   //          Positions

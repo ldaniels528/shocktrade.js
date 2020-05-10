@@ -1,5 +1,7 @@
 package com.shocktrade.webapp.routes.contest.dao
 
+import com.shocktrade.common.models.contest.ContestLike
+
 import scala.scalajs.js
 
 /**
@@ -20,4 +22,4 @@ class ContestData(val contestID: js.UndefOr[String],
                   val invitationOnly: js.UndefOr[Boolean],
                   val levelCap: js.UndefOr[String],
                   val perksAllowed: js.UndefOr[Boolean],
-                  val robotsAllowed: js.UndefOr[Boolean]) extends js.Object
+                  val robotsAllowed: js.UndefOr[Boolean]) extends ContestLike

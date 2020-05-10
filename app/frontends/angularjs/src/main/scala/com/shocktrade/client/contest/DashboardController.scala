@@ -8,6 +8,7 @@ import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
 import com.shocktrade.client.contest.PerksDialog._
 import com.shocktrade.client.contest.PositionReviewDialog.{PositionReviewDialogPopupSupport, PositionReviewDialogPopupSupportScope}
 import com.shocktrade.client.contest.PositionsController.PositionsControllerScope
+import com.shocktrade.client.contest.models.{Contest, Portfolio}
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.client.dialogs.NewOrderDialog.NewOrderDialogResult
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PlayerProfileDialog}
@@ -15,7 +16,7 @@ import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope, UserService}
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
 import com.shocktrade.common.forms.NewOrderForm
-import com.shocktrade.common.models.contest.{ChatMessage, Contest, ContestRanking, Portfolio}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
 import com.shocktrade.common.{AppConstants, Ok}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.{Window, console}
@@ -117,7 +118,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
       contest <- contestFactory.findContest(contestID)
       messages <- contestService.findChatMessages(contestID)
       portfolio_? <- aUserID.toOption match {
-        case Some(userID) => contestFactory.findOptionalPortfolio(contestID, userID)
+        case Some(userID) => portfolioService.findPortfolioByUser(contestID, userID).map(v => Option(v.data)) recover { case e => None }
         case None => Future.successful(None)
       }
     } yield (contest, portfolio_?.orUndefined, messages)).toJSPromise

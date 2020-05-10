@@ -1,4 +1,6 @@
-package com.shocktrade.common.models.contest
+package com.shocktrade.client.contest.models
+
+import com.shocktrade.common.models.contest.{PortfolioBalance, PortfolioLike, Position}
 
 import scala.scalajs.js
 
@@ -17,4 +19,5 @@ class Portfolio(val portfolioID: js.UndefOr[String] = js.undefined,
                 val perks: js.UndefOr[js.Array[String]] = js.undefined,
                 val orders: js.UndefOr[js.Array[Order]] = js.undefined,
                 val positions: js.UndefOr[js.Array[Position]] = js.undefined,
-                val closedTime: js.UndefOr[js.Date] = js.undefined) extends js.Object
+                val joinTime: js.UndefOr[js.Date] = js.undefined,
+                val closedTime: js.UndefOr[js.Date] = js.undefined) extends PortfolioLike

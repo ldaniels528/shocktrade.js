@@ -59,8 +59,6 @@ object PositionView {
         processedTime = processedTime ?? position.processedTime)
     }
 
-    def portfolioID_! : String = position.portfolioID.getOrElse(throw js.JavaScriptException("portfolioID missing in position"))
-
   }
 
 }

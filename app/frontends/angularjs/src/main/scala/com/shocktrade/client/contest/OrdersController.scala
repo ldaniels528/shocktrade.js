@@ -1,7 +1,7 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
-import com.shocktrade.common.models.contest.Order
+import com.shocktrade.client.contest.models.Order
 import io.scalajs.npm.angularjs.{Controller, Scope}
 import io.scalajs.util.JsUnderOrHelper._
 

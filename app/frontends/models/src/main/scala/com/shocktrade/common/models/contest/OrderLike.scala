@@ -25,6 +25,8 @@ trait OrderLike extends js.Object {
 
   def quantity: js.UndefOr[Double]
 
+  def closed: js.UndefOr[Int]
+
   def creationTime: js.UndefOr[js.Date]
 
   def expirationTime: js.UndefOr[js.Date]
@@ -71,6 +73,9 @@ object OrderLike {
 
     @inline
     def isMarketAtCloseOrder: Boolean = order.priceType.contains("MARKET_AT_CLOSE")
+
+    @inline
+    def orderID_! : String = order.orderID.getOrElse(throw js.JavaScriptException("order ID is required"))
 
   }
 

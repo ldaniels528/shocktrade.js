@@ -2,7 +2,7 @@ package com.shocktrade.robots
 
 import com.shocktrade.common.OrderConstants._
 import com.shocktrade.common.forms.{NewOrderForm, ResearchOptions}
-import com.shocktrade.common.models.contest.{OrderRef, Portfolio, Position}
+import com.shocktrade.common.models.contest.{OrderRef, PortfolioLike, Position}
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.common.models.user.UserProfile
 import com.shocktrade.remote.proxies.{PortfolioProxy, ResearchProxy, UserProxy}
@@ -11,7 +11,6 @@ import com.shocktrade.server.common.LoggerFactory
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Random, Success}
@@ -51,10 +50,12 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
 
   def findSecurities(robotName: String): Future[js.Array[ResearchQuote]] = {
     val options = robotName match {
-      case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = 10)
-      case "gadget" => new ResearchOptions(priceMax = 5.00, changeMax = 0.0, spreadMin = 10.0, volumeMin = 1e+6, maxResults = 10)
-      case "teddy" => new ResearchOptions(priceMax = random.nextDouble(), changeMax = 0.0, spreadMin = random.nextInt(75).toDouble, maxResults = 25)
-      case _ => new ResearchOptions(priceMax = 25.00, changeMax = 0.0, spreadMin = 10.0, volumeMin = 1e+6, maxResults = 10)
+      case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = 25)
+      case "gadget" => new ResearchOptions(priceMax = 5.00, maxResults = 25)
+      case "joey" => new ResearchOptions(priceMin = 5.00, priceMax = 25.00, spreadMin = 25.0, maxResults = 25)
+      case "teddy" => new ResearchOptions(priceMin = 1.00, priceMax = 5.00, spreadMin = 50.0, maxResults = 25)
+      case "naughtymonkey" => new ResearchOptions(priceMin = 1.00, priceMax = 25.00, spreadMin = 25.0, maxResults = 25)
+      case _ => new ResearchOptions(priceMax = random.nextDouble(), changeMax = 0.0, spreadMin = random.nextInt(75).toDouble, maxResults = 25)
     }
     researchProxy.research(options)
   }
@@ -93,7 +94,7 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
     } yield (buyOrders ::: sellOrders).toJSArray
   }
 
-  private def produceBuyOrders(portfolio: Portfolio, stocks: Seq[ResearchQuote], costTarget: Double): List[NewOrderForm] = {
+  private def produceBuyOrders(portfolio: PortfolioLike, stocks: Seq[ResearchQuote], costTarget: Double): List[NewOrderForm] = {
     case class Accumulator(orders: List[NewOrderForm] = Nil, budget: Double)
     val candidateOrders = for {
       stock <- stocks
@@ -150,21 +151,27 @@ object RobotProcessor {
     }
   }
 
-  final implicit class ContestSearchResultEnriched(val ref: Portfolio) extends AnyVal {
-    def contestID_! : String = ref.contestID.getOrElse(throw js.JavaScriptException("Contest ID is required"))
-    def userID_! : String = ref.userID.getOrElse(throw js.JavaScriptException("User ID is required"))
-  }
-
+  /**
+   * User Profile Enriched
+   * @param ref the host [[UserProfile]]
+   */
   final implicit class UserProfileEnriched(val ref: UserProfile) extends AnyVal {
     def userID_! : String = ref.userID.getOrElse(throw js.JavaScriptException("User ID is required"))
   }
 
-  final implicit class NewOrderFormMagic(val form: NewOrderForm) extends AnyVal {
+  /**
+   * New Order Form Enriched
+   * @param form the host [[NewOrderForm]]
+   */
+  final implicit class NewOrderFormEnriched(val form: NewOrderForm) extends AnyVal {
     def totalCost: js.UndefOr[Double] = for (price <- form.limitPrice; qty <- form.quantity) yield price * qty
   }
 
-  final implicit class ResearchQuoteMagic(val quote: ResearchQuote) extends AnyVal {
-
+  /**
+   * Research Quote Enriched
+   * @param quote the host [[ResearchQuote]]
+   */
+  final implicit class ResearchQuoteEnriched(val quote: ResearchQuote) extends AnyVal {
     def toBuyOrder(quantity: Double): NewOrderForm = NewOrderForm(
       symbol = quote.symbol,
       exchange = quote.exchange,
@@ -173,11 +180,13 @@ object RobotProcessor {
       priceType = Limit,
       quantity = quantity,
       limitPrice = quote.lastTrade)
-
   }
 
-  final implicit class PositionMagic(val position: Position) extends AnyVal {
-
+  /**
+   * Position Enriched
+   * @param position the host [[Position]]
+   */
+  final implicit class PositionEnriched(val position: Position) extends AnyVal {
     def toSellOrder(quantity: Double): NewOrderForm = NewOrderForm(
       symbol = position.symbol,
       exchange = position.exchange,
@@ -186,7 +195,6 @@ object RobotProcessor {
       priceType = Limit,
       quantity = quantity,
       limitPrice = position.lastTrade)
-
   }
 
 }

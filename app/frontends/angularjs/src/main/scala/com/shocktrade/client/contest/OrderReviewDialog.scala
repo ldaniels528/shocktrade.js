@@ -2,9 +2,9 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.GameStateService
 import com.shocktrade.client.contest.OrderReviewDialog._
+import com.shocktrade.client.contest.models.Order
 import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope}
 import com.shocktrade.common.Ok
-import com.shocktrade.common.models.contest.Order
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._

@@ -44,8 +44,8 @@ class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionConte
          |""".stripMargin, js.Array(username, portfolioID)) map (_._1)
   }
 
-  override def findRobot(username: String): Future[js.Array[RobotData]] = {
-    conn.queryFuture[RobotData](
+  override def findRobot(username: String): Future[js.Array[RobotPortfolioData]] = {
+    conn.queryFuture[RobotPortfolioData](
       """|SELECT C.name AS contestName, U.userID, P.contestID, P.portfolioID, P.funds, R.*
          |FROM robots R
          |INNER JOIN users U ON R.username = U.username
@@ -55,8 +55,8 @@ class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionConte
          |""".stripMargin, js.Array(username)) map (_._1)
   }
 
-  override def findRobots: Future[js.Array[RobotData]] = {
-    conn.queryFuture[RobotData](
+  override def findRobotPortfolios: Future[js.Array[RobotPortfolioData]] = {
+    conn.queryFuture[RobotPortfolioData](
       """|SELECT C.name AS contestName, U.userID, P.contestID, P.portfolioID, P.funds, R.*
          |FROM robots R
          |INNER JOIN users U ON R.username = U.username
@@ -65,8 +65,8 @@ class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionConte
          |""".stripMargin) map (_._1)
   }
 
-  override def findRobots(isActive: Boolean): Future[js.Array[RobotData]] = {
-    conn.queryFuture[RobotData](
+  override def findRobots(isActive: Boolean): Future[js.Array[RobotPortfolioData]] = {
+    conn.queryFuture[RobotPortfolioData](
       """|SELECT C.name AS contestName, U.userID, P.contestID, P.portfolioID, P.funds, R.*
          |FROM robots R
          |INNER JOIN users U ON R.username = U.username

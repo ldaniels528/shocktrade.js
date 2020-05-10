@@ -1,7 +1,8 @@
 package com.shocktrade.client
 
+import com.shocktrade.client.contest.models.{Contest, Portfolio}
 import com.shocktrade.common.events.RemoteEvent._
-import com.shocktrade.common.models.contest.{ChatMessage, Contest, Portfolio}
+import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console

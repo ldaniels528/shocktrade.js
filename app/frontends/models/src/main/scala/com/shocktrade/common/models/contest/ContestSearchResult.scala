@@ -1,5 +1,7 @@
 package com.shocktrade.common.models.contest
 
+import com.shocktrade.common.AppConstants
+
 import scala.scalajs.js
 
 /**
@@ -48,7 +50,7 @@ class ContestSearchResult(val contestID: js.UndefOr[String],
                           // UI-related fields
                           var isExpanded: js.UndefOr[Boolean],
                           var isLoading: js.UndefOr[Boolean],
-                          var rankings: js.UndefOr[js.Array[ContestRanking]]) extends js.Object
+                          var rankings: js.UndefOr[js.Array[ContestRanking]]) extends ContestLike
 
 /**
  * ContestSearchResult Companion
@@ -65,24 +67,14 @@ object ContestSearchResult {
     import io.scalajs.util.JsUnderOrHelper._
 
     ///////////////////////////////////////////////////////////////////////
-    //  Contest Statuses
-    ///////////////////////////////////////////////////////////////////////
-
-    def isActive: Boolean = result.status.contains("ACTIVE")
-
-    def isClosed: Boolean = result.status.contains("CLOSED")
-
-    def isQQueued: Boolean = result.status.contains("QUEUED")
-
-    ///////////////////////////////////////////////////////////////////////
     //  Contest Conditions
     ///////////////////////////////////////////////////////////////////////
 
     def isEmpty: Boolean = result.playerCount.contains(0)
 
-    def isFull: Boolean = result.playerCount.exists(_ >= 24)
+    def isFull: Boolean = result.playerCount.exists(_ >= AppConstants.MaxPlayers)
 
-    def isAlmostFull: Boolean = result.playerCount.exists(_ < 24)
+    def isAlmostFull: Boolean = result.playerCount.exists(_ < AppConstants.MaxPlayers)
 
   }
 

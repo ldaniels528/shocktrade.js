@@ -1,6 +1,7 @@
-package com.shocktrade.common.models.contest
+package com.shocktrade.client.contest.models
 
 import com.shocktrade.common.AppConstants
+import com.shocktrade.common.models.contest.{ContestLike, ContestRanking}
 
 import scala.scalajs.js
 
@@ -24,28 +25,19 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
               var invitationOnly: js.UndefOr[Boolean] = js.undefined,
               var levelCap: js.UndefOr[Int] = js.undefined,
               var perksAllowed: js.UndefOr[Boolean] = js.undefined,
-              var robotsAllowed: js.UndefOr[Boolean] = js.undefined) extends js.Object
+              var robotsAllowed: js.UndefOr[Boolean] = js.undefined) extends ContestLike
 
 /**
  * Contest Companion
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object Contest {
-  // status constants
-  val StatusActive = "ACTIVE"
-  val StatusClosed = "CLOSED"
 
   /**
    * Contest Enrichment
    * @param contest the given [[Contest]]
    */
   implicit class ContestEnrichment(val contest: Contest) extends AnyVal {
-
-    @inline
-    def isActive: Boolean = contest.status.contains(StatusActive)
-
-    @inline
-    def isClosed: Boolean = contest.status.contains(StatusClosed)
 
     @inline
     def isEmpty: Boolean = contest.portfolios.exists(_.isEmpty)
