@@ -1,10 +1,9 @@
 package com.shocktrade.webapp.vm
 package opcodes
 
-import com.shocktrade.webapp.vm.dao.ClosePortfolioResponse
+import com.shocktrade.common.Ok
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js
 
 /**
  * Close Contest OpCode
@@ -12,7 +11,7 @@ import scala.scalajs.js
  */
 case class CloseContest(contestID: String) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[js.Array[ClosePortfolioResponse]] = {
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Ok] = {
     try ctx.closeContest(contestID) catch {
       case e: Exception => Future.failed(e)
     }

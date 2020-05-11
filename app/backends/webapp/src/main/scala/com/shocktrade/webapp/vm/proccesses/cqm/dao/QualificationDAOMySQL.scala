@@ -15,8 +15,9 @@ class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execut
 
   override def findExpiredContests(): Future[js.Array[ContestExpiredData]] = {
     conn.queryFuture[ContestExpiredData](
-      """|SELECT C.contestID, C.expirationTime
+      """|SELECT C.contestID, P.portfolioID, C.expirationTime
          |FROM contests C
+         |INNER JOIN portfolios P ON P.contestID = C.contestID
          |WHERE C.closedTime IS NULL
          |AND C.expirationTime <= now()
          |""".stripMargin).map(_._1)

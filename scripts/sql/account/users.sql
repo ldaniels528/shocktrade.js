@@ -17,6 +17,9 @@ CREATE TABLE users (
     gamesDeleted INT NOT NULL DEFAULT 0,
     gamesJoined INT NOT NULL DEFAULT 0,
     gamesWithdrawn INT NOT NULL DEFAULT 0,
+    trophiesGold INT NOT NULL DEFAULT 0,
+    trophiesSilver INT NOT NULL DEFAULT 0,
+    trophiesBronze INT NOT NULL DEFAULT 0,
     creationTime DATETIME NOT NULL DEFAULT now(),
     lastModifiedTime DATETIME NOT NULL DEFAULT now()
 );

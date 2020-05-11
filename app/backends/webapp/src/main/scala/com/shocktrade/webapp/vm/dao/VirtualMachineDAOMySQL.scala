@@ -52,13 +52,16 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   //    Contest Functions
   //////////////////////////////////////////////////////////////////
 
-  override def closeContest(contestID: String): Future[js.Array[ClosePortfolioResponse]] = {
-    for {
-      w <- stopContest(contestID)
-      rankings <- findContestRankings(contestID)
-      portfolioIDs = rankings.flatMap(_.portfolioID.toOption)
-      summaries <- Future.sequence(portfolioIDs.toList.map(closePortfolio(_, rankings)))
-    } yield summaries.toJSArray
+  override def closeContest(contestID: String): Future[Ok] = {
+    conn.executeFuture(
+      """|UPDATE contests C
+         |INNER JOIN contest_statuses CS ON CS.status = 'CLOSED'
+         |SET
+         |   C.closedTime = now(),
+         |   C.statusID = CS.statusID
+         |WHERE C.contestID = ?
+         |""".stripMargin, js.Array(contestID))
+      .map(_.affectedRows) map checkCount(_ => "Contest could not be closed") map (Ok(_))
   }
 
   override def createContest(request: ContestCreationRequest): Future[ContestCreationResponse] = {
@@ -76,9 +79,9 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
         for {
           contestID <- insertContest(request.contestID getOrElse newID, userID, name, startingBalance, duration)(request)
           portfolioID <- insertPortfolio(contestID, userID, startingBalance)
-          wallet <- debitWallet(portfolioID, startingBalance)
+          proceeds <- debitWallet(portfolioID, startingBalance)
           messageRef <- sendChatMessage(contestID, userID, message = s"Welcome to $name!")
-          w <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesCreated = +1))
+          w0 <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesCreated = +1))
         } yield new ContestCreationResponse(contestID, portfolioID, messageRef.messageID)
       case None =>
         Future.failed(js.JavaScriptException("Required parameters are missing"))
@@ -88,24 +91,23 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   override def joinContest(contestID: String, userID: String): Future[PortfolioRef] = {
     for {
       // verify whether the user can actually join this contest
-      gs <- findPortfolioStatus(contestID, userID) map {
-        case gs if gs.playerCount >= AppConstants.MaxPlayers => throw MaxPlayersReachedException(gs)
-        case gs if gs.isParticipant != 0 => throw PlayerAlreadyJoinedException(gs)
-        case gs if gs.startingBalance > gs.wallet => throw InsufficientFundsException(actual = gs.wallet, expected = gs.startingBalance)
-        case gs => gs
+      ps <- findPortfolioStatus(contestID, userID) map {
+        case ps if ps.playerCount >= AppConstants.MaxPlayers => throw MaxPlayersReachedException(ps)
+        case ps if ps.isParticipant != 0 => throw PlayerAlreadyJoinedException(ps)
+        case ps if ps.startingBalance > ps.wallet => throw InsufficientFundsException(actual = ps.wallet, expected = ps.startingBalance)
+        case ps => ps
       }
-      portfolioID <- insertPortfolio(contestID = contestID, userID = userID, funds = gs.startingBalance)
-      wallet <- debitWallet(portfolioID, gs.startingBalance)
-      w <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesJoined = +1))
+      portfolioID <- insertPortfolio(contestID = contestID, userID = userID, funds = ps.startingBalance)
+      proceeds <- debitWallet(portfolioID, ps.startingBalance)
+      w0 <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesJoined = +1))
     } yield new PortfolioRef(portfolioID)
   }
 
   override def quitContest(contestID: String, userID: String): Future[PortfolioEquity] = {
     for {
       cp <- findContestAndPortfolioID(contestID, userID)
-      proceeds <- liquidatePortfolio(cp.portfolioID)
-      wallet <- creditWallet(cp.portfolioID, proceeds.equity + proceeds.cash)
-      w <- updatePlayerStatistics(cp.portfolioID)(PlayerStatistics(gamesWithdrawn = +1))
+      proceeds <- closeAndTransferFunds(cp.portfolioID)
+      w1 <- updatePlayerStatistics(cp.portfolioID)(PlayerStatistics(gamesWithdrawn = +1))
     } yield proceeds
   }
 
@@ -138,13 +140,25 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   //    Player Functions
   //////////////////////////////////////////////////////////////////
 
-  override def creditWallet(portfolioID: String, amount: Double): Future[Double] = debitWallet(portfolioID, -amount)
+  override def creditWallet(portfolioID: String, amount: Double): Future[Ok] = {
+    conn.executeFuture(
+      """|UPDATE users U
+         |INNER JOIN portfolios P ON P.userID = U.userID
+         |SET U.wallet = U.wallet + ?
+         |WHERE P.portfolioID = ?
+         |""".stripMargin, js.Array(amount, portfolioID))
+      .map(_.affectedRows) map checkCount(_ => f"Could not be credit wallet with $amount%.2f") map (Ok(_))
+  }
 
-  override def debitWallet(portfolioID: String, amount: Double): Future[Double] = {
+  override def debitWallet(portfolioID: String, amount: Double): Future[PortfolioEquity] = {
     for {
       // lookup the user's wallet by portfolio ID
       (userID, wallet) <- conn.queryFuture[UserProfileData](
-        "SELECT U.userID, wallet FROM users U INNER JOIN portfolios P ON P.userID = U.userID WHERE portfolioID = ?",
+        """|SELECT U.userID, U.wallet
+           |FROM users U
+           |INNER JOIN portfolios P ON P.userID = U.userID
+           |WHERE portfolioID = ?
+           |""".stripMargin,
         js.Array(portfolioID)).map(_._1.headOption) map { user_? =>
         (for {user <- user_?; userID <- user.userID.toOption; wallet <- user.wallet.toOption} yield (userID, wallet)) match {
           case Some((_, wallet)) if wallet < amount => throw InsufficientFundsException(wallet, amount)
@@ -154,20 +168,19 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       }
 
       // perform the update
-      w <- conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ?", js.Array(amount, userID))
-        .map(_.affectedRows) map checkCount(_ => f"Could not be credit wallet with $amount%.2f")
-    } yield wallet - amount
+      w0 <- conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ?", js.Array(amount, userID))
+        .map(_.affectedRows) map checkCount(_ => f"Could not be debit wallet with $amount%.2f")
+    } yield new PortfolioEquity(cash = wallet, equity = amount)
   }
 
   override def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): Future[PurchasePerksResponse] = {
     val perks = Perk.availablePerks
     val perkMapping = js.Dictionary(perks.map(p => p.code -> p): _ *)
     val perksCost = (perkCodes flatMap perkMapping.get).map(_.cost).sum
-
     for {
-      funds <- debitPortfolio(portfolioID, perksCost)
-      w <- insertPerks(portfolioID, perkCodes)
-    } yield new PurchasePerksResponse(funds, count = w)
+      portfolioEquity <- debitPortfolio(portfolioID, perksCost)
+      w0 <- insertPerks(portfolioID, perkCodes)
+    } yield new PurchasePerksResponse(portfolioEquity, wPerks = w0)
   }
 
   //////////////////////////////////////////////////////////////////
@@ -176,13 +189,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   override def cancelOrder(orderID: String): Future[OrderOutcome] = {
     completeOrder(orderID, fulfilled = false, message = "Canceled by user")
-  }
-
-  override def closePortfolio(portfolioID: String): Future[ClosePortfolioResponse] = {
-    for {
-      rankings <- findPortfolioRankings(portfolioID)
-      recommendation <- closePortfolio(portfolioID, rankings)
-    } yield recommendation
   }
 
   override def completeOrder(orderID: String,
@@ -217,9 +223,12 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
-  override def creditPortfolio(portfolioID: String, amount: Double): Future[Double] = debitPortfolio(portfolioID, -amount)
+  override def creditPortfolio(portfolioID: String, amount: Double): Future[Ok] = {
+    conn.executeFuture("UPDATE portfolios SET funds = funds + ? WHERE portfolioID = ?",
+      js.Array(amount, portfolioID)).map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID)) map (Ok(_))
+  }
 
-  override def debitPortfolio(portfolioID: String, amount: Double): Future[Double] = {
+  override def debitPortfolio(portfolioID: String, amount: Double): Future[PortfolioEquity] = {
     for {
       // get the portfolio's funds
       funds <- conn.queryFuture[PortfolioData]("SELECT funds FROM portfolios WHERE portfolioID = ?",
@@ -232,7 +241,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       // perform the update
       w <- conn.executeFuture("UPDATE portfolios SET funds = funds - ? WHERE portfolioID = ?",
         js.Array(amount, portfolioID)).map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID))
-    } yield funds - amount
+    } yield new PortfolioEquity(cash = funds, equity = amount)
   }
 
   override def decreasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome] = {
@@ -242,7 +251,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       funds <- creditPortfolio(portfolioID, amount = metrics.marketValue.orZero - metrics.commission.orZero)
       w0 <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = false)
       order <- completeOrder(orderID, negotiatedPrice = metrics.lastTrade, fulfilled = true)
-      xp = 5 + Math.min(10.0, Math.max(0, 1e+5 * metrics.gainLoss.orZero))
+      xp = Math.min(10.0, Math.max(0, 1e+4 * metrics.gainLoss.orZero))
       w1 <- grantXP(portfolioID, xp = xp.toInt)
     } yield new OrderOutcome(negotiatedPrice = metrics.lastTrade, fulfilled = true, xp = xp, w = w0)
 
@@ -266,7 +275,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     } yield new OrderOutcome(positionID = js.undefined, negotiatedPrice = mv.lastTrade, fulfilled = true, w = w)
 
     outcome recoverWith {
-      case e@InsufficientFundsException(actual, expected) =>
+      case e: InsufficientFundsException =>
         completeOrder(orderID, fulfilled = false, message = e.getMessage)
       case PortfolioClosedException(portfolioID, closedTime) =>
         completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID is closed at ${closedTime.orNull}")
@@ -277,12 +286,50 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
-  override def liquidatePortfolio(portfolioID: String): Future[PortfolioEquity] = {
+  override def liquidatePortfolio(portfolioID: String): Future[ClosePortfolioResponse] = {
+    import Award._
     for {
-      proceeds <- computePortfolioEquity(portfolioID)
-      funds <- creditPortfolio(portfolioID, proceeds.equity)
-      wallet <- creditWallet(portfolioID, proceeds.equity + proceeds.cash)
-      w <- closePositions(portfolioID)
+      rankings <- findPortfolioRankings(portfolioID)
+      _ <- foreCloseOrders(portfolioID)
+      proceeds <- closeAndTransferFunds(portfolioID)
+      recommendation = determineAwards(portfolioID, rankings)
+      _ <- updateIf(recommendation.awardedXP > 0) { () => grantXP(portfolioID, recommendation.awardedXP) }
+      _ <- updateIf(recommendation.awardCodes.nonEmpty) { () => grantAwards(portfolioID, recommendation.awardCodes) }
+      _ <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesCompleted = +1,
+        trophiesGold = recommendation(GLDTRPHY),
+        trophiesSilver = recommendation(SLVRTRPHY),
+        trophiesBronze = recommendation(BRNZTRPHY)
+      ))
+    } yield new ClosePortfolioResponse(proceeds, recommendation, xp = recommendation.awardedXP)
+  }
+
+  private def closeAndTransferFunds(portfolioID: String): Future[PortfolioEquity] = {
+    for {
+      // retrieve the portfolio's funds and equity
+      proceeds <- conn.queryFuture[PortfolioEquity](
+        """|SELECT P.funds AS cash, SUM(S.lastTrade * PS.quantity) AS equity
+           |FROM portfolios P
+           |LEFT JOIN positions PS ON P.portfolioID = PS.portfolioID
+           |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+           |WHERE PS.portfolioID = ?
+           |""".stripMargin, js.Array(portfolioID)).map(_._1.headOption) map {
+        case Some(proceeds) => proceeds
+        case None => throw PortfolioNotFoundException(portfolioID)
+      }
+      wallet = proceeds.equity + proceeds.cash
+      funds = proceeds.equity
+      // transfer funds; then close-out the portfolio and the positions
+      _ <- conn.executeFuture(
+        """|UPDATE users U
+           |INNER JOIN portfolios P ON P.userID = U.userID
+           |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+           |SET U.wallet = U.wallet + ?,
+           |    P.funds = P.funds + ?,
+           |    P.closedTime = now(),
+           |    PS.quantity = 0.0
+           |WHERE P.portfolioID = ?
+           |""".stripMargin, js.Array(wallet, funds, portfolioID))
+        .map(_.affectedRows) map checkCount(_ => f"Could not be credit wallet with $wallet%.2f")
     } yield proceeds
   }
 
@@ -339,24 +386,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     case count => count
   }
 
-  private def closePortfolio(portfolioID: String, rankings: Seq[ContestRanking]): Future[ClosePortfolioResponse] = {
-    for {
-      proceeds <- liquidatePortfolio(portfolioID)
-      recommendation = determineAwards(portfolioID, rankings)
-      w0 <- foreCloseOrders(portfolioID)
-      w1 <- updateIf(recommendation.awardedXP > 0) { () => grantXP(portfolioID, recommendation.awardedXP) }
-      w2 <- updateIf(recommendation.awardCodes.nonEmpty) { () => grantAwards(portfolioID, recommendation.awardCodes) }
-      w3 <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesCompleted = +1))
-    } yield new ClosePortfolioResponse(proceeds = proceeds, recommendation = recommendation, foreCloseOrders = w0, xp = w1, awards = w2)
-  }
-
-  private def closePositions(portfolioID: String): Future[Int] = {
-    (for {
-      _ <- conn.executeFuture("UPDATE positions SET quantity = 0 WHERE portfolioID = ?", js.Array(portfolioID)).map(_.affectedRows)
-      w <- conn.executeFuture("UPDATE portfolios SET closedTime = now() WHERE portfolioID = ?", js.Array(portfolioID)).map(_.affectedRows)
-    } yield w) map checkCount(_ => s"Could not update portfolio $portfolioID")
-  }
-
   private def computeMarketValue(symbol: String, exchange: String, quantity: Double, priceType: String): Future[MarketValue] = {
     conn.queryFuture[MarketValue](
       """|SELECT S.lastTrade, S.lastTrade * ? AS marketValue, OPT.commission
@@ -369,22 +398,10 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
-  private def computePortfolioEquity(portfolioID: String): Future[PortfolioEquity] = {
-    conn.queryFuture[PortfolioEquity](
-      """|SELECT P.funds AS cash, SUM(S.lastTrade) AS equity
-         |FROM positions PS
-         |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
-         |INNER JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-         |WHERE PS.portfolioID = ?
-         |""".stripMargin, js.Array(portfolioID)).map(_._1.headOption) map {
-      case Some(proceeds) => proceeds
-      case None => new PortfolioEquity(cash = 0.0, equity = 0.0)
-    }
-  }
-
   private def determineAwards(portfolioID: String, rankings: Seq[ContestRanking]): AwardsRecommendation = {
     var items: List[(String, Int)] = Nil
     val myRanking = rankings.find(_.portfolioID.contains(portfolioID))
+    val userID = myRanking.flatMap(_.userID.toOption).getOrElse(throw js.JavaScriptException("User ID is required"))
     items = Award.CHKDFLAG -> 5 :: items
     items = (myRanking collect { case ranking if ranking.rankNum.contains(1) => Award.GLDTRPHY -> 100 }).toList ::: items
     items = (myRanking collect { case ranking if ranking.rankNum.contains(2) => Award.SLVRTRPHY -> 50 }).toList ::: items
@@ -392,7 +409,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 25.0) => Award.PAYDIRT -> 25 }).toList ::: items
     items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 50.0) => Award.MADMONEY -> 50 }).toList ::: items
     items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 100.0) => Award.CRYSTBAL -> 100 }).toList ::: items
-    new AwardsRecommendation(portfolioID, awardCodes = items.map(_._1).toJSArray, awardedXP = items.map(_._2).sum)
+    new AwardsRecommendation(portfolioID, userID, awardCodes = items.map(_._1).toJSArray, awardedXP = items.map(_._2).sum)
   }
 
   private def ensurePortfolioIsOpen(portfolioID: String): Future[Boolean] = {
@@ -402,11 +419,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       case Some(_) => true
       case None => throw PortfolioNotFoundException(portfolioID)
     }
-  }
-
-  private def findContestRankings(contestID: String): Future[js.Array[ContestRanking]] = {
-    conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE contestID = ?", js.Array(contestID))
-      .map(_._1).map(ContestRanking.computeRankings(_))
   }
 
   private def findContestAndPortfolioID(contestID: String, userID: String): Future[ContestPortfolioData] = {
@@ -488,7 +500,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   private def grantAwards(portfolioID: String, awardCodes: js.Array[String]): Future[Int] = {
     Future.sequence(awardCodes.toSeq map { awardCode =>
-      conn.executeFuture(
+    conn.executeFuture(
         """|REPLACE INTO user_awards (userAwardID, userID, awardCode)
            |SELECT uuid(), userID, ? FROM portfolios WHERE portfolioID = ?
            |""".stripMargin, js.Array(awardCode, portfolioID))
@@ -542,18 +554,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   private def newID: String = UUID.randomUUID().toString
 
-  private def stopContest(contestID: String): Future[Int] = {
-    conn.executeFuture(
-      """|UPDATE contests C
-         |INNER JOIN contest_statuses CS ON CS.status = 'CLOSED'
-         |SET
-         |   C.closedTime = now(),
-         |   C.statusID = CS.statusID
-         |WHERE C.contestID = ?
-         |""".stripMargin, js.Array(contestID))
-      .map(_.affectedRows) map checkCount(count => s"Contest $contestID could not be closed")
-  }
-
   private def updateIf(condition: Boolean)(task: () => Future[Int]): Future[Int] = {
     if (condition) task() else Future.successful(1)
   }
@@ -591,7 +591,10 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
         stats.gamesCreated.map(v => 'gamesCreated -> v).toList :::
         stats.gamesDeleted.map(v => 'gamesDeleted -> v).toList :::
         stats.gamesJoined.map(v => 'gamesJoined -> v).toList :::
-        stats.gamesWithdrawn.map(v => 'gamesWithdrawn -> v).toList
+        stats.gamesWithdrawn.map(v => 'gamesWithdrawn -> v).toList :::
+        stats.trophiesGold.map(v => 'trophiesGold -> v).toList :::
+        stats.trophiesSilver.map(v => 'trophiesSilver -> v).toList :::
+        stats.trophiesBronze.map(v => 'trophiesBronze -> v).toList
     }
 
     // build the SQL statement

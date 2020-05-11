@@ -23,7 +23,7 @@ trait VirtualMachineDAO {
   //    Contest Functions
   //////////////////////////////////////////////////////////////////
 
-  def closeContest(contestID: String): Future[js.Array[ClosePortfolioResponse]]
+  def closeContest(contestID: String): Future[Ok]
 
   def createContest(request: ContestCreationRequest): Future[ContestCreationResponse]
 
@@ -41,9 +41,9 @@ trait VirtualMachineDAO {
   //    Player Functions
   //////////////////////////////////////////////////////////////////
 
-  def creditWallet(portfolioID: String, amount: Double): Future[Double]
+  def creditWallet(portfolioID: String, amount: Double): Future[Ok]
 
-  def debitWallet(portfolioID: String, amount: Double): Future[Double]
+  def debitWallet(portfolioID: String, amount: Double): Future[PortfolioEquity]
 
   def purchasePerks(portfolioID: String, purchasePerkCodes: js.Array[String]): Future[PurchasePerksResponse]
 
@@ -53,21 +53,19 @@ trait VirtualMachineDAO {
 
   def cancelOrder(orderID: String): Future[OrderOutcome]
 
-  def closePortfolio(portfolioID: String): Future[ClosePortfolioResponse]
-
   def completeOrder(orderID: String, fulfilled: Boolean, negotiatedPrice: js.UndefOr[Double], message: js.UndefOr[String]): Future[OrderOutcome]
 
   def createOrder(portfolioID: String, order: OrderData): Future[OrderRef]
 
-  def creditPortfolio(portfolioID: String, amount: Double): Future[Double]
+  def creditPortfolio(portfolioID: String, amount: Double): Future[Ok]
 
-  def debitPortfolio(portfolioID: String, amount: Double): Future[Double]
+  def debitPortfolio(portfolioID: String, amount: Double): Future[PortfolioEquity]
 
   def decreasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]
 
   def increasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]
 
-  def liquidatePortfolio(portfolioID: String): Future[PortfolioEquity]
+  def liquidatePortfolio(portfolioID: String): Future[ClosePortfolioResponse]
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    User / Account Management

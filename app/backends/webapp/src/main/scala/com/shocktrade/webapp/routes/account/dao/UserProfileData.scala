@@ -19,4 +19,7 @@ class UserProfileData(val userID: js.UndefOr[String],
                       val gamesDeleted: js.UndefOr[Int],
                       val gamesJoined: js.UndefOr[Int],
                       val gamesWithdrawn: js.UndefOr[Int],
+                      val trophiesGold: js.UndefOr[Int],
+                      val trophiesSilver: js.UndefOr[Int],
+                      val trophiesBronze: js.UndefOr[Int],
                       val lastLoginTime: js.UndefOr[js.Date]) extends UserProfileLike with PlayerStatistics

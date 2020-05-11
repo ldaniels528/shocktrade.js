@@ -89,7 +89,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $interval(() => $scope.clock = clock, 1.second)
 
   // refresh the dashboard every 5 minutes
-  private def refreshDashboard(): Unit = initDash().map(_ onComplete { _ => $timeout(() => refreshDashboard(), 5.minute) })
+  private def refreshDashboard(): Unit = initDash().foreach(_ onComplete { _ => $timeout(() => refreshDashboard(), 5.minute) })
 
   $timeout(() => refreshDashboard(), 5.minutes)
 
@@ -118,7 +118,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
       contest <- contestFactory.findContest(contestID)
       messages <- contestService.findChatMessages(contestID)
       portfolio_? <- aUserID.toOption match {
-        case Some(userID) => portfolioService.findPortfolioByUser(contestID, userID).map(v => Option(v.data)) recover { case e => None }
+        case Some(userID) => contestFactory.findPortfolio(contestID, userID).map(v => Option(v)).recover { case _ => None }
         case None => Future.successful(None)
       }
     } yield (contest, portfolio_?.orUndefined, messages)).toJSPromise

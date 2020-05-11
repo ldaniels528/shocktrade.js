@@ -2,4 +2,4 @@ package com.shocktrade.common.models.contest
 
 import scala.scalajs.js
 
-class PurchasePerksResponse(val funds: Double, val count: Int) extends js.Object
+class PurchasePerksResponse(val portfolioEquity: js.Any, val wPerks: Int) extends js.Object

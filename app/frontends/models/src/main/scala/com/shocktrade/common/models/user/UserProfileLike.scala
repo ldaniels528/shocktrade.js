@@ -64,7 +64,7 @@ object UserProfileLike {
         half = if (xp % repFactor > 0) List(1) else List(0)
         full = (1 to Math.min(maxStars, xp / repFactor)).map(_ => 2).toList
         empty = ((half.length + full.length) until maxStars).map(_ => 0).toList
-      } yield (empty ::: half ::: full).reverse.toJSArray
+      } yield (empty ::: half ::: full).reverse.take(maxStars).toJSArray
     }
 
     @inline

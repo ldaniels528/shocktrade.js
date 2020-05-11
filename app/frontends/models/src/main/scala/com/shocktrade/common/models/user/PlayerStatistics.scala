@@ -18,6 +18,12 @@ trait PlayerStatistics extends js.Object {
 
   def gamesWithdrawn: js.UndefOr[Int]
 
+  def trophiesGold: js.UndefOr[Int]
+
+  def trophiesSilver: js.UndefOr[Int]
+
+  def trophiesBronze: js.UndefOr[Int]
+
 }
 
 /**
@@ -30,13 +36,19 @@ object PlayerStatistics {
             gamesCreated: js.UndefOr[Int] = js.undefined,
             gamesDeleted: js.UndefOr[Int] = js.undefined,
             gamesJoined: js.UndefOr[Int] = js.undefined,
-            gamesWithdrawn: js.UndefOr[Int] = js.undefined): PlayerStatistics = {
+            gamesWithdrawn: js.UndefOr[Int] = js.undefined,
+            trophiesGold: js.UndefOr[Int] = js.undefined,
+            trophiesSilver: js.UndefOr[Int] = js.undefined,
+            trophiesBronze: js.UndefOr[Int] = js.undefined): PlayerStatistics = {
     UserProfile(
       gamesCompleted = gamesCompleted,
       gamesCreated = gamesCreated,
       gamesDeleted = gamesDeleted,
       gamesJoined = gamesJoined,
-      gamesWithdrawn = gamesWithdrawn)
+      gamesWithdrawn = gamesWithdrawn,
+      trophiesGold = trophiesGold,
+      trophiesSilver = trophiesSilver,
+      trophiesBronze = trophiesBronze)
   }
 
 }

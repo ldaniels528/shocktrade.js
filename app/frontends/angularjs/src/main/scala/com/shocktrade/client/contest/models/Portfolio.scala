@@ -5,7 +5,7 @@ import com.shocktrade.common.models.contest.{PortfolioBalance, PortfolioLike, Po
 import scala.scalajs.js
 
 /**
- * Represents a Portfolio model
+ * Represents a Portfolio graph model
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class Portfolio(val portfolioID: js.UndefOr[String] = js.undefined,

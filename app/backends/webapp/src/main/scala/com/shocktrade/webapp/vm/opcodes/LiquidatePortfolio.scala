@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.vm
 package opcodes
 
-import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.PortfolioEquity
+import com.shocktrade.webapp.vm.dao.ClosePortfolioResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
  */
 case class LiquidatePortfolio(portfolioID: String) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[PortfolioEquity] = {
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[ClosePortfolioResponse] = {
     try ctx.liquidatePortfolio(portfolioID) catch {
       case e: Exception =>
         Future.failed(e)

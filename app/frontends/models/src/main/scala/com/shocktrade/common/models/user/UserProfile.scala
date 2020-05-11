@@ -18,6 +18,9 @@ class UserProfile(val userID: js.UndefOr[String],
                   val gamesDeleted: js.UndefOr[Int],
                   val gamesJoined: js.UndefOr[Int],
                   val gamesWithdrawn: js.UndefOr[Int],
+                  val trophiesGold: js.UndefOr[Int],
+                  val trophiesSilver: js.UndefOr[Int],
+                  val trophiesBronze: js.UndefOr[Int],
                   val lastLoginTime: js.UndefOr[js.Date]) extends UserProfileLike with PlayerStatistics
 
 /**
@@ -38,10 +41,14 @@ object UserProfile {
             gamesDeleted: js.UndefOr[Int] = js.undefined,
             gamesJoined: js.UndefOr[Int] = js.undefined,
             gamesWithdrawn: js.UndefOr[Int] = js.undefined,
+            trophiesGold: js.UndefOr[Int] = js.undefined,
+            trophiesSilver: js.UndefOr[Int] = js.undefined,
+            trophiesBronze: js.UndefOr[Int] = js.undefined,
             lastLoginTime: js.UndefOr[js.Date] = js.undefined): UserProfile = {
     new UserProfile(
       userID, username, email, equity, wallet, totalXP, awards,
-      gamesCompleted, gamesCreated, gamesDeleted, gamesJoined, gamesWithdrawn, lastLoginTime)
+      gamesCompleted, gamesCreated, gamesDeleted, gamesJoined, gamesWithdrawn,
+      trophiesGold, trophiesSilver, trophiesBronze, lastLoginTime)
   }
 
 }

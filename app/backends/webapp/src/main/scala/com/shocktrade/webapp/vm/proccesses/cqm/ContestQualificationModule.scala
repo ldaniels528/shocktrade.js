@@ -5,6 +5,7 @@ import com.shocktrade.webapp.vm.proccesses.cqm.dao._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 
 /**
  * Contest Qualification Module
@@ -61,10 +62,12 @@ class ContestQualificationModule()(implicit ec: ExecutionContext) {
   }
 
   def processContestClosedEvents(contests: js.Array[ContestExpiredData]): js.Array[OpCode] = {
-    for {
+    val opCodes = for {
       contest <- contests
-      contestID <- contest.contestID.toList
-    } yield CloseContest(contestID)
+      portfolioID <- contest.portfolioID.toList
+    } yield LiquidatePortfolio(portfolioID)
+
+    opCodes ++ contests.headOption.flatMap(_.contestID.toOption).map(CloseContest.apply).toJSArray
   }
 
 }

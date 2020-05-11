@@ -71,8 +71,11 @@ trait VirtualMachineSupport {
         val elapsedTime = js.Date.now() - startTime
         val count = results.length
         if (count > 0) logger.info(f"$count opCodes executed in $elapsedTime msec [${elapsedTime / count}%.1f ops/msec]")
-        results foreach { case VmProcess(code, result, runTime) =>
-          logger.info(s"[${runTime.toMillis} ms] $code => ${VirtualMachine.unwrap(result)}")
+        val codeTypes = Set("LiquidatePortfolio")
+        results foreach {
+          case VmProcess(code, result, runTime) if code.toJsObject.`type`.exists(codeTypes.contains) =>
+            logger.info(s"[${runTime.toMillis} ms] $code => ${VirtualMachine.unwrap(result)}")
+          case _ =>
         }
       case Failure(e) =>
         val elapsedTime = js.Date.now() - startTime

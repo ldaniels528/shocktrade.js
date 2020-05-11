@@ -40,15 +40,16 @@ INSERT INTO robots (username, strategy) VALUES ('naughtymonkey', 'penny-stock');
 INSERT INTO robots (username, strategy) VALUES ('joey', 'penny-stock');
 INSERT INTO robots (username, strategy) VALUES ('teddy', 'penny-stock');
 INSERT INTO robots (username, strategy) VALUES ('dannywoo', 'penny-stock');
+INSERT INTO robots (username, strategy) VALUES ('fugitive528', 'penny-stock');
 
 -- ------------------------------------------------------------
 -- User Awards
 -- ------------------------------------------------------------
-INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'MADMONEY' FROM users U WHERE username = 'fugitive528';
-INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'CHKDFLAG' FROM users U WHERE username = 'fugitive528';
-INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'CRYSTBAL' FROM users U WHERE username = 'fugitive528';
-INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'GLDTRPHY' FROM users U WHERE username = 'fugitive528';
-INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'PAYDIRT' FROM users U WHERE username = 'fugitive528';
+-- INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'MADMONEY' FROM users U WHERE username = 'fugitive528';
+-- INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'CHKDFLAG' FROM users U WHERE username = 'fugitive528';
+-- INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'CRYSTBAL' FROM users U WHERE username = 'fugitive528';
+-- INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'GLDTRPHY' FROM users U WHERE username = 'fugitive528';
+-- INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'PAYDIRT' FROM users U WHERE username = 'fugitive528';
 
 -- ------------------------------------------------------------
 -- Posts
