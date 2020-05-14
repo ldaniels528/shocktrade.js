@@ -2,8 +2,10 @@ package com.shocktrade.webapp.vm
 package opcodes
 
 import com.shocktrade.webapp.vm.dao.ClosePortfolioResponse
+import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
  * Liquidate Portfolio OpCode
@@ -18,6 +20,20 @@ case class LiquidatePortfolio(portfolioID: String) extends OpCode {
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex("portfolioID" -> portfolioID)
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties("portfolioID" -> portfolioID)
+
+}
+
+/**
+ * Liquidate Portfolio Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object LiquidatePortfolio extends OpCodeCompiler {
+
+  override def compile(index: OpCodeProperties): js.UndefOr[LiquidatePortfolio] = {
+    for {
+      portfolioID <- index.portfolioID
+    } yield LiquidatePortfolio(portfolioID)
+  }
 
 }

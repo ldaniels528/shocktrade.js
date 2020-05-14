@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
 import com.shocktrade.common.models.contest.{ChartData, PortfolioBalance}
-import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -18,19 +17,9 @@ trait PortfolioDAO {
   //  Order Management
   ///////////////////////////////////////////////////////////////////////
 
-  def findOrderByID(orderID: String): Future[Option[OrderData]]
+  def findOne(options: OrderSearchOptions): Future[Option[OrderData]]
 
-  def findOrders(contestID: String, userID: String): Future[js.Array[OrderData]]
-
-  ///////////////////////////////////////////////////////////////////////
-  //  Perks Management
-  ///////////////////////////////////////////////////////////////////////
-
-  /**
-   * Retrieves the collection of purchased perks
-   * @return the collection of purchased [[PerkData perks]]
-   */
-  def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]]
+  def search(options: OrderSearchOptions): Future[js.Array[OrderData]]
 
   ///////////////////////////////////////////////////////////////////////
   //  Portfolio Management
@@ -38,15 +27,15 @@ trait PortfolioDAO {
 
   def findPortfolioBalance(contestID: String, userID: String): Future[Option[PortfolioBalance]]
 
-  def findPortfolioByID(portfolioID: String): Future[Option[PortfolioData]]
+  /**
+   * Retrieves the collection of purchased perks
+   * @return the collection of purchased [[PerkData perks]]
+   */
+  def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]]
 
-  def findPortfolioByUser(contestID: String, userID: String): Future[Option[PortfolioData]]
+  def findOne(options: PortfolioSearchOptions): Future[Option[PortfolioData]]
 
-  def findPortfolioIdByUser(contestID: String, userID: String): Future[Option[String]]
-
-  def findPortfoliosByContest(contestID: String): Future[js.Array[PortfolioData]]
-
-  def findPortfoliosByUser(userID: String): Future[js.Array[PortfolioData]]
+  def search(options: PortfolioSearchOptions): Future[js.Array[PortfolioData]]
 
   ///////////////////////////////////////////////////////////////////////
   //  Position Management
@@ -54,11 +43,9 @@ trait PortfolioDAO {
 
   def findChartData(contestID: String, userID: String, chart: String): Future[js.Array[ChartData]]
 
-  def findHeldSecurities(portfolioID: String): Future[js.Array[Ticker]]
+  def findOne(options: PositionSearchOptions): Future[Option[PositionView]]
 
-  def findPositionByID(positionID: String): Future[Option[PositionView]]
-
-  def findPositions(contestID: String, userID: String): Future[js.Array[PositionView]]
+  def search(options: PositionSearchOptions): Future[js.Array[PositionView]]
 
 }
 

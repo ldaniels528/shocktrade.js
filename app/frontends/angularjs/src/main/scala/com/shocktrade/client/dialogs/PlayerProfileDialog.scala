@@ -83,7 +83,7 @@ case class PlayerProfileDialogController($scope: PlayerProfileDialogScope, $uibM
 
   $scope.getStars = () => $scope.player.flatMap(_.getStars)
 
-  $scope.getTotalXP = () => $scope.player.flatMap(_.totalXP)
+  $scope.getTotalXP = () => $scope.player.flatMap(_.getTotalXP)
 
   $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(onlineStatusService.getOnlineStatus).map(_.connected)
 

@@ -6,13 +6,13 @@
         </span>
         <span class="col-md-4">
             Pending BUY Orders:
-            <span class="pull-right" ng-class="portfolio.balance.totalBuyOrders > portfolio.balance.funds ? 'profitable' : 'unprofitable'">
+            <span class="pull-right" ng-class="portfolio.balance.totalBuyOrders > portfolio.balance.funds ? 'unprofitable' : 'profitable'">
                 {{ portfolio.balance.totalBuyOrders || 0.00 | number:2 }}
             </span>
         </span>
 
         <span class="col-md-4">
-            Experience Points Earned: <span class="pull-right XP">+{{ portfolio.totalXP || 0.00 | number:0 }}xp</span>
+            Experience Earned: <span class="pull-right XP">{{ portfolio.totalXP || 0.00 | number:0 }}xp</span>
         </span>
     </div>
 

@@ -8,14 +8,28 @@ select.font {
     font-weight: bold;
 }
 
+.neg_xp {
+    color: #cc0000;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
 .XP {
     color: #00aabb;
     font-weight: bold;
 }
 
 div.rank_cell {
-	background-color: #e0e0e0;
-    border: 1px solid #c0c0c0;
+	background-color: #f0f0f0;
+    border: 1px solid #d0d0d0;
+	border-radius: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+div.rank_cell_join {
+	background-color: #ddffff;
+	border: 1px solid #bbdddd;
 	border-radius: 5px 5px 5px 5px;
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -45,25 +59,12 @@ div.rank_cell_3rd {
 	margin-bottom: 5px;
 }
 
-div.rank_cell_join {
-	background-color: #eeffff;
-	border: 1px solid #c0c0c0;
-	border-radius: 5px 5px 5px 5px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
 .rank_1st, .rank_2nd, .rank_3rd {
 	font-weight: bold;
 	color: #4ba0ce;
 }
 
-.rank_4th {
-	font-weight: bold;
-	color: #4ba0ce;
-}
-
-.rank_5th, .rank_6th, .rank_7th, .rank_8th, .rank_9th, .rank_10th, .rank_11th, .rank_12th, .rank_13th, .rank_14th,
+.rank_4th, .rank_5th, .rank_6th, .rank_7th, .rank_8th, .rank_9th, .rank_10th, .rank_11th, .rank_12th, .rank_13th, .rank_14th,
 .rank_15th, .rank_16th, .rank_17th, .rank_18th, .rank_19th, .rank_20th, .rank_21th, .rank_22th, .rank_23th, .rank_24th {
 	font-weight: bold;
 	color: #4ba0ce;

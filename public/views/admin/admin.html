@@ -1,0 +1,17 @@
+<div ng-controller="GameSearchController" ng-init="searchTerm = ''; contestSearch(searchOptions)">
+    <div style="border-bottom: 1px solid #888888;">
+        <div>
+            <div ng-include src="'/views/admin/admin_options.html'"></div>
+        </div>
+        <div class="col-md-12 cs_search_divider cs_upper_lower_15px">
+            <i class="fa fa-gamepad"></i> {{ getSearchResults(searchTerm).length || 0 }} games matched.
+            <span ng-click="popupNewGameDialog(userProfile.userID)" class="clickable pull-right" style="padding-right: 16px">
+                <i class="fa fa-plus-circle"></i> Create a new game.
+            </span>
+        </div>
+        <div ng-include src="'/views/admin/admin_header.html'"></div>
+        <div class="availGamesContainer">
+            <div ng-include src="'/views/admin/admin_results.html'"></div>
+        </div>
+    </div>
+</div>

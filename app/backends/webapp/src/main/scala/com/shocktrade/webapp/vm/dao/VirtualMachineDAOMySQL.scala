@@ -209,7 +209,8 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     import order._
     val newOrderID = newID
     val outcome = for {
-      yes <- ensurePortfolioIsOpen(portfolioID)
+
+      - <- ensurePortfolioIsOpen(portfolioID)
       w <- conn.executeFuture(
         """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
            |VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -223,64 +224,44 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
-  override def creditPortfolio(portfolioID: String, amount: Double): Future[Ok] = {
-    conn.executeFuture("UPDATE portfolios SET funds = funds + ? WHERE portfolioID = ?",
-      js.Array(amount, portfolioID)).map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID)) map (Ok(_))
-  }
-
-  override def debitPortfolio(portfolioID: String, amount: Double): Future[PortfolioEquity] = {
-    for {
-      // get the portfolio's funds
-      funds <- conn.queryFuture[PortfolioData]("SELECT funds FROM portfolios WHERE portfolioID = ?",
-        js.Array(portfolioID)).map(_._1.headOption).map(_.flatMap(_.funds.toOption) match {
-        case Some(funds) if funds < amount => throw InsufficientFundsException(funds, amount)
-        case Some(funds) => funds
-        case None => throw PortfolioNotFoundException(portfolioID)
-      })
-
-      // perform the update
-      w <- conn.executeFuture("UPDATE portfolios SET funds = funds - ? WHERE portfolioID = ?",
-        js.Array(amount, portfolioID)).map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID))
-    } yield new PortfolioEquity(cash = funds, equity = amount)
-  }
-
   override def decreasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome] = {
     val outcome = for {
-      yes <- ensurePortfolioIsOpen(portfolioID)
+      _ <- ensurePortfolioIsOpen(portfolioID)
       metrics <- findPositionMetrics(portfolioID, symbol, exchange, quantity, priceType)
-      funds <- creditPortfolio(portfolioID, amount = metrics.marketValue.orZero - metrics.commission.orZero)
-      w0 <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = false)
-      order <- completeOrder(orderID, negotiatedPrice = metrics.lastTrade, fulfilled = true)
-      xp = Math.min(10.0, Math.max(0, 1e+4 * metrics.gainLoss.orZero))
-      w1 <- grantXP(portfolioID, xp = xp.toInt)
-    } yield new OrderOutcome(negotiatedPrice = metrics.lastTrade, fulfilled = true, xp = xp, w = w0)
+      xp = 1e+1 * metrics.gainLossPct.orZero
+      _ <- creditPortfolio(portfolioID, amount = metrics.marketValue.orZero - metrics.commission.orZero, xp = xp)
+      pu <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = false)
+      ou <- completeOrder(orderID, negotiatedPrice = metrics.lastTrade, fulfilled = true)
+    } yield new OrderOutcome(positionID = pu.positionID, negotiatedPrice = metrics.lastTrade, fulfilled = true, xp = xp, w = pu.w)
 
     outcome recoverWith {
-      case PortfolioClosedException(portfolioID, closedTime) =>
-        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID was closed at ${closedTime.orNull}")
-      case PortfolioNotFoundException(portfolioID) =>
-        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID was not found")
+      case e: InsufficientQuantityException =>
+        completeOrder(orderID, fulfilled = false, message = e.getMessage)
+      case PortfolioClosedException(_, closedTime) =>
+        completeOrder(orderID, fulfilled = false, message = s"Portfolio was closed at ${closedTime.orNull}")
+      case _: PortfolioNotFoundException =>
+        completeOrder(orderID, fulfilled = false, message = "Portfolio was not found")
       case e: Exception =>
-        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID: ${e.getMessage}")
+        completeOrder(orderID, fulfilled = false, message = e.getMessage)
     }
   }
 
   override def increasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome] = {
     val outcome = for {
-      yes <- ensurePortfolioIsOpen(portfolioID)
+      _ <- ensurePortfolioIsOpen(portfolioID)
       mv <- computeMarketValue(symbol, exchange, quantity, priceType)
-      funds <- debitPortfolio(portfolioID, amount = mv.marketValue + mv.commission)
-      w <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = true)
-      order <- completeOrder(orderID, negotiatedPrice = mv.lastTrade, fulfilled = true)
-    } yield new OrderOutcome(positionID = js.undefined, negotiatedPrice = mv.lastTrade, fulfilled = true, w = w)
+      proceeds <- debitPortfolio(portfolioID, amount = mv.marketValue + mv.commission)
+      pu <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = true)
+      ou <- completeOrder(orderID, negotiatedPrice = mv.lastTrade, fulfilled = true)
+    } yield new OrderOutcome(positionID = pu.positionID, negotiatedPrice = mv.lastTrade, fulfilled = true, w = pu.w)
 
     outcome recoverWith {
       case e: InsufficientFundsException =>
         completeOrder(orderID, fulfilled = false, message = e.getMessage)
-      case PortfolioClosedException(portfolioID, closedTime) =>
-        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID is closed at ${closedTime.orNull}")
-      case PortfolioNotFoundException(portfolioID) =>
-        completeOrder(orderID, fulfilled = false, message = s"Portfolio $portfolioID was not found")
+      case PortfolioClosedException(_, closedTime) =>
+        completeOrder(orderID, fulfilled = false, message = s"Portfolio is closed at ${closedTime.orNull}")
+      case _: PortfolioNotFoundException =>
+        completeOrder(orderID, fulfilled = false, message = "Portfolio was not found")
       case e: Exception =>
         completeOrder(orderID, fulfilled = false, message = e.getMessage)
     }
@@ -316,8 +297,10 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
         case Some(proceeds) => proceeds
         case None => throw PortfolioNotFoundException(portfolioID)
       }
-      wallet = proceeds.equity + proceeds.cash
-      funds = proceeds.equity
+
+      // compute the new wallet and portfolio funds
+      (wallet, funds) = (proceeds.equity + proceeds.cash, proceeds.equity)
+
       // transfer funds; then close-out the portfolio and the positions
       _ <- conn.executeFuture(
         """|UPDATE users U
@@ -341,13 +324,13 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     import event._
     conn.executeFuture(
       """|INSERT INTO eventsource (
-         |  command, type, response, responseTimeMillis, contestID, portfolioID, userID,
-         |  orderID, orderType, priceType, negotiatedPrice, quantity, symbol, exchange, xp, failed
+         |  command, type, contestID, portfolioID, userID, orderID, positionID, orderType, priceType,
+         |  negotiatedPrice, quantity, symbol, exchange, xp, failed, response, responseTimeMillis
          |)
-         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          |""".stripMargin, js.Array(
-        command, `type`, response, responseTimeMillis, contestID, portfolioID, userID,
-        orderID, orderType, priceType, negotiatedPrice, quantity, symbol, exchange, xp, failed)
+        command, `type`, contestID, portfolioID, userID, orderID, positionID, orderType, priceType,
+        negotiatedPrice, quantity, symbol, exchange, xp, failed, response, responseTimeMillis)
     ).map(_.affectedRows) map (Ok(_))
   }
 
@@ -361,6 +344,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
            |WHERE E.portfolioID IS NOT NULL
            |AND (E.contestID IS NULL OR E.userID IS NULL)
            |""".stripMargin).map(_.affectedRows)
+
       // is portfolioID null?
       w1 <- conn.executeFuture(
         """|UPDATE eventsource E
@@ -396,6 +380,34 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       case Some(proceeds) => proceeds
       case None => throw TickerNotFoundException(symbol, exchange)
     }
+  }
+
+  private def creditPortfolio(portfolioID: String, amount: Double, xp: Double): Future[Ok] = {
+    conn.executeFuture(
+      """|UPDATE users U
+         |INNER JOIN portfolios P ON P.userID = U.userID
+         |SET U.totalXP = U.totalXP + ?,
+         |    P.totalXP = P.totalXP + ?,
+         |    P.funds = P.funds + ?
+         |WHERE P.portfolioID = ?
+         |""".stripMargin, js.Array(xp.toInt, xp.toInt, amount, portfolioID))
+      .map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID)) map (Ok(_))
+  }
+
+  private def debitPortfolio(portfolioID: String, amount: Double): Future[PortfolioEquity] = {
+    for {
+      // get the portfolio's funds
+      funds <- conn.queryFuture[PortfolioData]("SELECT funds FROM portfolios WHERE portfolioID = ?",
+        js.Array(portfolioID)).map(_._1.headOption).map(_.flatMap(_.funds.toOption) match {
+        case Some(funds) if funds < amount => throw InsufficientFundsException(funds, amount)
+        case Some(funds) => funds
+        case None => throw PortfolioNotFoundException(portfolioID)
+      })
+
+      // perform the update
+      _ <- conn.executeFuture("UPDATE portfolios SET funds = funds - ? WHERE portfolioID = ?",
+        js.Array(amount, portfolioID)).map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID))
+    } yield new PortfolioEquity(cash = funds, equity = amount)
   }
 
   private def determineAwards(portfolioID: String, rankings: Seq[ContestRanking]): AwardsRecommendation = {
@@ -475,7 +487,8 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |  S.lastTrade, OPT.commission,
          |  S.lastTrade * ? AS marketValue,
          |  AVG(O.negotiatedPrice) AS pricePaid,
-         |  S.lastTrade - AVG(O.negotiatedPrice) AS gainLoss
+         |  S.lastTrade - AVG(O.negotiatedPrice) * SUM(O.quantity) AS gainLoss,
+         |  (S.lastTrade - AVG(O.negotiatedPrice) * SUM(O.quantity)) / (AVG(O.negotiatedPrice) * SUM(O.quantity)) AS gainLossPct
          |FROM orders O
          |INNER JOIN order_price_types OPT ON OPT.name = ?
          |LEFT JOIN stocks S ON S.symbol = O.symbol AND S.exchange = O.exchange
@@ -558,7 +571,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     if (condition) task() else Future.successful(1)
   }
 
-  private def updatePosition(portfolioID: String, symbol: String, exchange: String, quantity: Double, isBuying: Boolean): Future[Int] = {
+  private def updatePosition(portfolioID: String, symbol: String, exchange: String, quantity: Double, isBuying: Boolean): Future[PositionUpdate] = {
     if (isBuying) {
       val positionID = newID
       conn.executeFuture(
@@ -567,7 +580,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
            |""".stripMargin, js.Array(
           /* insert */ positionID, portfolioID, symbol, exchange, quantity,
           /* update */ quantity
-        )).map(_.affectedRows) map checkCount(_ => "Failed to increase position")
+        )).map(_.affectedRows) map checkCount(_ => "Failed to increase position") map (w => new PositionUpdate(positionID, w))
     } else {
       val outcome = for {
         w <- conn.executeFuture(
@@ -579,7 +592,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       } yield (w, ownedQty)
 
       outcome map {
-        case (count, _) if count > 0 => count
+        case (count, _) if count > 0 => new PositionUpdate(w = count, positionID = js.undefined)
         case (_, ownedQty) => throw InsufficientQuantityException(expected = quantity, actual = ownedQty.quantity)
       }
     }
@@ -631,6 +644,9 @@ object VirtualMachineDAOMySQL {
                         val marketValue: js.UndefOr[Double],
                         val pricePaid: js.UndefOr[Double],
                         val gainLoss: js.UndefOr[Double],
+                        val gainLossPct: js.UndefOr[Double],
                         val commission: js.UndefOr[Double]) extends js.Object
+
+  class PositionUpdate(val positionID: js.UndefOr[String], val w: Int) extends js.Object
 
 }

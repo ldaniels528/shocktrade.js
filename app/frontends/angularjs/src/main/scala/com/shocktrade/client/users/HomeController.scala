@@ -57,7 +57,7 @@ case class HomeController($scope: HomeControllerScope, $cookies: Cookies, $timeo
 
   $scope.getStars = () => $scope.userProfile.flatMap(_.getStars)
 
-  $scope.getTotalXP = () => $scope.userProfile.flatMap(_.totalXP)
+  $scope.getTotalXP = () => $scope.userProfile.flatMap(_.getTotalXP)
 
 }
 

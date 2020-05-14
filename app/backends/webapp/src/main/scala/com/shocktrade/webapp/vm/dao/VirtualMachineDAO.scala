@@ -57,10 +57,6 @@ trait VirtualMachineDAO {
 
   def createOrder(portfolioID: String, order: OrderData): Future[OrderRef]
 
-  def creditPortfolio(portfolioID: String, amount: Double): Future[Ok]
-
-  def debitPortfolio(portfolioID: String, amount: Double): Future[PortfolioEquity]
-
   def decreasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]
 
   def increasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]

@@ -2,6 +2,7 @@ package com.shocktrade.common.models.contest
 
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.OptionHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Date
@@ -88,13 +89,22 @@ object ContestRanking {
     )
   }
 
+  def computeRankings(rankings: js.Array[ContestRanking]): js.Array[ContestRanking] = computeRankings(rankings.toSeq)
+
   def computeRankings(rankings: Seq[ContestRanking]): js.Array[ContestRanking] = {
-    case class Accumulator(rankings: List[ContestRanking] = Nil, lastRanking: Option[ContestRanking] = None, index: Int = 1)
+    case class Accumulator(rankings: List[ContestRanking] = Nil, lastRanking: Option[ContestRanking] = None, index: Int = 0)
 
     // sort the rankings and add the position (e.g. "1st")
-    val results = rankings.sortBy(r => (-r.totalEquity.orZero, -r.totalEquity.orZero)).foldLeft[Accumulator](Accumulator()) {
+    val results = rankings.sortBy(r => (-r.totalXP.orZero, -r.totalEquity.orZero)).foldLeft[Accumulator](Accumulator()) {
       case (acc@Accumulator(rankings, lastRanking, index), ranking) =>
-        val newIndex = if (lastRanking.exists(_.totalEquity.exists(_ > ranking.totalEquity.orZero))) index + 1 else index
+        val isGreater = (for {
+          lastXP <- lastRanking.flatMap(_.totalXP.toOption)
+          lastEquity <- lastRanking.flatMap(_.totalEquity.toOption)
+          xp <- ranking.totalXP.toOption
+          equity <- ranking.totalEquity.toOption
+        } yield (xp > lastXP) || (xp == lastXP && equity > lastEquity)).isTrue
+
+        val newIndex = if (!isGreater) index + 1 else index
         val newRanking = ranking.copy(rank = newIndex.nth, rankNum = newIndex)
         acc.copy(rankings = newRanking :: rankings, lastRanking = Some(ranking), index = newIndex)
     }

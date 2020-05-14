@@ -19,7 +19,7 @@ case class QuitContest(contestID: String, userID: String) extends OpCode {
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties(
     "contestID" -> contestID,
     "userID" -> userID
   )

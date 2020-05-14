@@ -31,7 +31,7 @@ trait UserProfileLike extends js.Object {
  */
 object UserProfileLike {
   private val levelFactor = 1000
-  private val repFactor = 2500
+  private val repFactor = 5000
 
   /**
    * User Profile Enrichment
@@ -43,7 +43,7 @@ object UserProfileLike {
     def getLevel: js.UndefOr[Int] = for {
       xp <- profile.totalXP
       level = xp / levelFactor + 1
-    } yield level
+    } yield Math.max(1, level)
 
     @inline
     def getLevelDescription: js.UndefOr[String] = getLevel flatMap {
@@ -66,6 +66,9 @@ object UserProfileLike {
         empty = ((half.length + full.length) until maxStars).map(_ => 0).toList
       } yield (empty ::: half ::: full).reverse.take(maxStars).toJSArray
     }
+
+    @inline
+    def getTotalXP: js.UndefOr[Int] = for {totalXP <- profile.totalXP} yield Math.max(0, totalXP)
 
     @inline
     def userID_! : String = profile.userID.getOrElse(throw js.JavaScriptException("User ID is required"))

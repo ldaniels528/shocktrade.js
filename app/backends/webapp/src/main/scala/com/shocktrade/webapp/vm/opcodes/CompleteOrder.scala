@@ -2,6 +2,7 @@ package com.shocktrade.webapp.vm
 package opcodes
 
 import com.shocktrade.common.models.contest.OrderOutcome
+import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -23,11 +24,28 @@ case class CompleteOrder(orderID: String,
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties(
     "orderID" -> orderID,
     "fulfilled" -> fulfilled,
     "negotiatedPrice" -> negotiatedPrice,
     "message" -> message
   )
+
+}
+
+/**
+ * Complete Order Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object CompleteOrder extends OpCodeCompiler {
+
+  override def compile(index: OpCodeProperties): js.UndefOr[CompleteOrder] = {
+    for {
+      orderID <- index.orderID
+      fulfilled <- index.getAs[Boolean]("fulfilled")
+      negotiatedPrice <- index.getAs[Double]("negotiatedPrice")
+      message <- index.getAs[String]("message")
+    } yield CompleteOrder(orderID, fulfilled, negotiatedPrice, message)
+  }
 
 }

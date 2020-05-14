@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
 import com.shocktrade.common.models.contest.{ChartData, PortfolioBalance}
-import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -18,34 +17,30 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
   //  Order Management
   ///////////////////////////////////////////////////////////////////////
 
-  override def findOrderByID(orderID: String): Future[Option[OrderData]] = {
-    conn.queryFuture[OrderData](
-      """|SELECT O.*, S.lastTrade
-         |FROM orders O
-         |LEFT  JOIN stocks S ON S.symbol = O.symbol
-         |WHERE O.orderID = ?
-         |""".stripMargin,
-      js.Array(orderID)).map(_._1.headOption)
-  }
+  override def findOne(options: OrderSearchOptions): Future[Option[OrderData]] = search(options).map(_.headOption)
 
-  override def findOrders(contestID: String, userID: String): Future[js.Array[OrderData]] = {
-    conn.queryFuture[OrderData](
-      """|SELECT O.*, S.lastTrade
-         |FROM orders O
-         |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
-         |LEFT  JOIN stocks S ON S.symbol = O.symbol
-         |WHERE P.contestID = ? AND P.userID = ?
-         |AND (O.closed = 0 OR now() < DATE_ADD(O.processedTime, INTERVAL 1 DAY))
-         |""".stripMargin,
-      js.Array(contestID, userID)).map(_._1)
-  }
-
-  ///////////////////////////////////////////////////////////////////////
-  //  Perk Management
-  ///////////////////////////////////////////////////////////////////////
-
-  override def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]] = {
-    conn.queryFuture[PerkData]("SELECT * FROM perks WHERE portfolioID = ?", js.Array(portfolioID)).map(_._1)
+  override def search(options: OrderSearchOptions): Future[js.Array[OrderData]] = {
+    val dict: List[(String, Any)] = {
+      options.contestID.map(id => "P.contestID = ?" -> id).toList :::
+        options.userID.map(id => "P.userID = ?" -> id).toList :::
+        options.portfolioID.map(id => "P.portfolioID = ?" -> id).toList :::
+        options.orderID.map(id => "O.orderID = ?" -> id).toList
+    }
+    val sql: String = {
+      val sb = new StringBuilder(
+        """|SELECT O.*, S.lastTrade
+           |FROM orders O
+           |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
+           |LEFT JOIN stocks S ON S.symbol = O.symbol
+           |WHERE (O.closed = 0 OR now() < DATE_ADD(O.processedTime, INTERVAL 1 DAY))
+           |""".stripMargin
+      )
+      if (dict.nonEmpty) sb.append(" AND ")
+      sb.append(dict.map(_._1).mkString(" AND "))
+      sb.toString()
+    }
+    val values = dict.map(_._2)
+    conn.queryFuture[OrderData](sql, values).map(_._1)
   }
 
   ///////////////////////////////////////////////////////////////////////
@@ -75,54 +70,34 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |      AND O.portfolioID = P.portfolioID
          |      AND P.contestID = ? AND P.userID = ?) AS totalSellOrders
          |FROM portfolios P
-         |INNER JOIN contests C ON C.contestID = P.contestID
          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
          |LEFT JOIN stocks S ON S.symbol = PS.symbol
-         |WHERE C.contestID = ? AND P.userID = ?
+         |WHERE P.contestID = ? AND P.userID = ?
          |GROUP BY P.userID, P.funds
          |""".stripMargin,
       js.Array(contestID, userID, contestID, userID, contestID, userID)).map(_._1.headOption)
   }
 
-  override def findPortfolioByID(portfolioID: String): Future[Option[PortfolioData]] = {
-    conn.queryFuture[PortfolioData](
-      """|SELECT *
-         |FROM portfolios
-         |WHERE portfolioID = ?
-         |""".stripMargin,
-      js.Array(portfolioID)).map(_._1.headOption)
+  override def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]] = {
+    conn.queryFuture[PerkData]("SELECT * FROM perks WHERE portfolioID = ?", js.Array(portfolioID)).map(_._1)
   }
 
-  override def findPortfolioByUser(contestID: String, userID: String): Future[Option[PortfolioData]] = {
-    conn.queryFuture[PortfolioData](
-      """|SELECT * FROM portfolios WHERE contestID = ? AND userID = ?
-         |""".stripMargin,
-      js.Array(contestID, userID)).map(_._1.headOption)
-  }
+  override def findOne(options: PortfolioSearchOptions): Future[Option[PortfolioData]] = search(options).map(_.headOption)
 
-  override def findPortfolioIdByUser(contestID: String, userID: String): Future[Option[String]] = {
-    conn.queryFuture[PortfolioData](
-      """|SELECT portfolioID FROM portfolios WHERE contestID = ? AND userID = ?
-         |""".stripMargin,
-      js.Array(contestID, userID)) map { case (rows, _) => rows.headOption.flatMap(_.portfolioID.toOption) }
-  }
-
-  override def findPortfoliosByContest(contestID: String): Future[js.Array[PortfolioData]] = {
-    conn.queryFuture[PortfolioData](
-      """|SELECT *
-         |FROM portfolios
-         |WHERE contestID = ?
-         |""".stripMargin,
-      js.Array(contestID)).map(_._1)
-  }
-
-  override def findPortfoliosByUser(userID: String): Future[js.Array[PortfolioData]] = {
-    conn.queryFuture[PortfolioData](
-      """|SELECT *
-         |FROM portfolios
-         |WHERE userID = ?
-         |""".stripMargin,
-      js.Array(userID)).map(_._1)
+  override def search(options: PortfolioSearchOptions): Future[js.Array[PortfolioData]] = {
+    val dict: List[(String, Any)] = {
+      options.contestID.map(id => "contestID = ?" -> id).toList :::
+        options.userID.map(id => "userID = ?" -> id).toList :::
+        options.portfolioID.map(id => "portfolioID = ?" -> id).toList
+    }
+    val sql: String = {
+      val sb = new StringBuilder("SELECT * FROM portfolios")
+      if (dict.nonEmpty) sb.append(" WHERE ")
+      sb.append(dict.map(_._1).mkString(" AND "))
+      sb.toString()
+    }
+    val values = dict.map(_._2)
+    conn.queryFuture[PortfolioData](sql, values).map(_._1)
   }
 
   ///////////////////////////////////////////////////////////////////////
@@ -142,13 +117,12 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
 
   private def findContestChart(contestID: String): Future[js.Array[ChartData]] = {
     conn.queryFuture[ChartData](
-      s"""|SELECT U.username AS name, SUM(P.funds) + SUM(IFNULL(s.lastTrade,0) * IFNULL(PS.quantity,0)) AS value
-          |FROM contests C
-          |LEFT JOIN portfolios P ON P.contestID = C.contestID
+      s"""|SELECT U.username AS name, SUM(P.funds) + SUM(IFNULL(S.lastTrade * PS.quantity, 0)) AS value
+          |FROM portfolios P 
           |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
           |LEFT JOIN stocks S ON S.symbol = PS.symbol
           |LEFT JOIN users U ON U.userID = P.userID
-          |WHERE C.contestID = ?
+          |WHERE P.contestID = ?
           |GROUP BY U.username
           |""".stripMargin, js.Array(contestID)).map(_._1)
   }
@@ -156,54 +130,43 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
   private def findExposureChartData(contestID: String, userID: String, column: String): Future[js.Array[ChartData]] = {
     conn.queryFuture[ChartData](
       s"""|SELECT IFNULL($column, 'Unclassified') AS name, SUM(S.lastTrade * PS.quantity) AS value
-          |FROM users U
-          |INNER JOIN portfolios P ON P.userID = P.userID
+          |FROM portfolios P
           |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
           |INNER JOIN stocks S ON S.symbol = PS.symbol
-          |INNER JOIN contests C ON C.contestID = P.contestID
-          |WHERE C.contestID = ? AND U.userID = ? AND PS.quantity > 0
+          |WHERE P.contestID = ? AND P.userID = ?
+          |AND PS.quantity > 0
           |GROUP BY $column
           |     UNION
           |SELECT 'Cash' AS name, P.funds AS value
-          |FROM users U
-          |INNER JOIN portfolios P ON P.userID = U.userID
-          |INNER JOIN contests C ON C.contestID = P.contestID
-          |WHERE C.contestID = ? AND U.userID = ?
+          |FROM portfolios P
+          |WHERE P.contestID = ? AND P.userID = ?
           |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map(_._1)
   }
 
-  override def findHeldSecurities(portfolioID: String): Future[js.Array[Ticker]] = {
-    conn.queryFuture[Ticker](
-      """|SELECT S.symbol, S.exchange, S.lastTrade, S.tradeDateTime,
-         |       S.name AS businessName,
-         |       S.lastTrade * PS.quantity AS marketValue
-         |FROM portfolios P
-         |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
-         |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-         |WHERE P.portfolioID = ?
-         |AND PS.quantity > 0
-         |""".stripMargin,
-      js.Array(portfolioID)).map(_._1)
-  }
+  override def findOne(options: PositionSearchOptions): Future[Option[PositionView]] = search(options).map(_.headOption)
 
-  override def findPositionByID(positionID: String): Future[Option[PositionView]] = {
-    conn.queryFuture[PositionView](
-      """|SELECT PS.*, S.lastTrade, S.name AS businessName, S.lastTrade * PS.quantity AS marketValue, S.high, S.low
-         |FROM positions PS
-         |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-         |WHERE PS.positionID = ?
-         |""".stripMargin,
-      js.Array(positionID)).map(_._1.headOption)
-  }
-
-  override def findPositions(contestID: String, userID: String): Future[js.Array[PositionView]] = {
-    conn.queryFuture[PositionView](
-      """|SELECT PS.*, S.lastTrade, S.name AS businessName, PS.quantity * S.lastTrade AS marketValue, S.high, S.low
-         |FROM positions PS
-         |INNER JOIN portfolios P on P.portfolioID = PS.portfolioID AND PS.quantity > 0
-         |LEFT  JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-         |WHERE P.contestID = ? AND P.userID = ?
-         |""".stripMargin, js.Array(contestID, userID)).map(_._1)
+  override def search(options: PositionSearchOptions): Future[js.Array[PositionView]] = {
+    val dict: List[(String, Any)] = {
+      options.contestID.map(id => "P.contestID = ?" -> id).toList :::
+        options.userID.map(id => "P.userID = ?" -> id).toList :::
+        options.portfolioID.map(id => "P.portfolioID = ?" -> id).toList :::
+        options.positionID.map(id => "PS.positionID = ?" -> id).toList
+    }
+    val sql: String = {
+      val sb = new StringBuilder(
+        """|SELECT PS.*, S.lastTrade, S.tradeDateTime, S.name AS businessName, PS.quantity * S.lastTrade AS marketValue, S.high, S.low
+           |FROM positions PS
+           |INNER JOIN portfolios P on P.portfolioID = PS.portfolioID
+           |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+           |WHERE PS.quantity > 0
+           |""".stripMargin
+      )
+      if (dict.nonEmpty) sb.append(" AND ")
+      sb.append(dict.map(_._1).mkString(" AND "))
+      sb.toString()
+    }
+    val values = dict.map(_._2)
+    conn.queryFuture[PositionView](sql, values).map(_._1)
   }
 
 }

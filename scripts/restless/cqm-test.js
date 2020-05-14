@@ -12,10 +12,11 @@ print "looking up users..."
 [dizorganizer] findUserByName dizorganizer
 [dannywoo] findUserByName dannywoo
 [ldaniels] findUserByName ldaniels
+[chunkymonkey] findUserByName chunkymonkey
 
 // create a new game
 print "creating a new game..."
-[contest] createContest { "name": "Game Day!", "userID": "$$fugitive528.userID", "startingBalance": 25000, "duration": 3 }
+[contest] createContest { "name": "Sons of Israel", "userID": "$$fugitive528.userID", "startingBalance": 25000, "duration": 3 }
 
 // join the other players to the contest
 print "joining users to game..."
@@ -30,6 +31,7 @@ print "joining users to game..."
 //[join_dizorganizer] joinContest $$contest.contestID $$dizorganizer.userID
 [join_dannywoo] joinContest $$contest.contestID $$dannywoo.userID
 [join_ldaniels] joinContest $$contest.contestID $$ldaniels.userID
+[join_chunkymonkey] joinContest $$contest.contestID $$chunkymonkey.userID
 
 // buy some securities
 print "buying some securities..."

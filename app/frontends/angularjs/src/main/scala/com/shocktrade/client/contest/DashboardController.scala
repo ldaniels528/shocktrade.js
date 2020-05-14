@@ -34,7 +34,6 @@ import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
@@ -102,7 +101,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.onUserProfileUpdated { (event, userProfile) => initDash() }
 
-  private def initDash(): js.UndefOr[js.Promise[(Contest, UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])]] = {
+  private def initDash(): js.UndefOr[js.Promise[(Contest, js.UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])]] = {
     $scope.resetMarketStatus($routeParams.contestID)
     for (contestID <- $routeParams.contestID) yield refreshView(contestID, _userID)
   }
@@ -112,7 +111,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     new js.Date(js.Date.now() - timeOffset)
   }
 
-  private def refreshView(contestID: String, aUserID: js.UndefOr[String]): js.Promise[(Contest, UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])] = {
+  private def refreshView(contestID: String, aUserID: js.UndefOr[String]): js.Promise[(Contest, js.UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])] = {
     $timeout(() => $scope.isRefreshing = true, 0.millis)
     val outcome = (for {
       contest <- contestFactory.findContest(contestID)
@@ -207,7 +206,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   //          Perk Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => false // aPerkCode.exists(???)
+  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => false // TODO aPerkCode.exists(???)
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Ranking Functions
@@ -223,6 +222,11 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   }
 
   $scope.getPlayerRankings = () => $scope.contest.flatMap(_.rankings)
+
+  $scope.getPlayerRankCellClass = (aRanking: js.UndefOr[ContestRanking]) => aRanking map {
+    case ranking if ranking.userID == _userID => "rank_cell_join"
+    case _ => "rank_cell"
+  }
 
   $scope.getRankCellClass = (aRanking: js.UndefOr[String]) => aRanking map {
     case rank if rank == "1st" & isTiedForLead => "rank_cell_2nd"
@@ -378,10 +382,11 @@ object DashboardController {
     with USMarketsStatusSupportScope {
 
     // functions
-    var initDash: js.Function0[js.UndefOr[js.Promise[(Contest, UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])]]] = js.native
+    var initDash: js.Function0[js.UndefOr[js.Promise[(Contest, js.UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])]]] = js.native
     var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
     var getPlayerRankings: js.Function0[js.UndefOr[js.Array[ContestRanking]]] = js.native
     var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
+    var getPlayerRankCellClass: js.Function1[js.UndefOr[ContestRanking], js.UndefOr[String]] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
     var isParticipant: js.Function0[js.UndefOr[Boolean]] = js.native

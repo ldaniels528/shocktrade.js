@@ -20,7 +20,7 @@ case class SendChatMessage(contestID: String, userID: String, message: String) e
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties(
     "contestID" -> contestID,
     "userID" -> userID,
     "message" -> message

@@ -25,6 +25,7 @@ INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'naughtymonkey', 10
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'joey', 1000000);
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'teddy', 1000000);
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'dannywoo', 1000000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'chunkymonkey', 1000000);
 
 -- ------------------------------------------------------------
 -- Robots
@@ -41,6 +42,7 @@ INSERT INTO robots (username, strategy) VALUES ('joey', 'penny-stock');
 INSERT INTO robots (username, strategy) VALUES ('teddy', 'penny-stock');
 INSERT INTO robots (username, strategy) VALUES ('dannywoo', 'penny-stock');
 INSERT INTO robots (username, strategy) VALUES ('fugitive528', 'penny-stock');
+INSERT INTO robots (username, strategy) VALUES ('chunkymonkey', 'penny-stock');
 
 -- ------------------------------------------------------------
 -- User Awards

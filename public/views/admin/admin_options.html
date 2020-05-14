@@ -1,0 +1,104 @@
+<div class="col-md-1">
+    <avatar id="{{ userProfile.userID }}" class="avatar-100 pull-right"></avatar>
+</div>
+<div>
+    <div class="col-md-11">
+        <span class="col-md-5">
+            <input class="symbol_input_text_field form-control"
+                   style="border-radius: 4px 4px 4px 4px; height: 100%; margin-bottom: 4px"
+                   type="text"
+                   ng-model="searchOptions.nameLike"
+                   placeholder="&#xf002; Filter by Game Title">
+        </span>
+
+        <button class="btn btn-default st_button" ng-click="contestSearch(searchOptions)">
+            <i class="fa fa-search"></i> Search
+        </button>
+    </div>
+
+    <div class="col-md-11">
+        <span class="col-md-4 bold">
+            <i class="fa fa-money st_blue"></i> Contest Buy-in
+            <select ng-model="searchOptions.buyIn"
+                    ng-options="buyIn.label for buyIn in buyIns"
+                    class="pull-right"
+                    style="margin-left: 16px">
+                <option value="">-- Any --</option>
+            </select>
+        </span>
+
+        <span class="col-md-3 bold">
+            <i ng-class="'fa fa-toggle-' + (searchOptions.friendsOnly ? 'on' : 'off')"
+               ng-click="searchOptions.friendsOnly = !searchOptions.friendsOnly"
+               class="clickable"></i>
+            <i class="fa fa-user st_blue"></i> Friends-Only
+        </span>
+
+        <span class="col-md-3 bold">
+            <i ng-class="'fa fa-toggle-' + (searchOptions.perksAllowed ? 'on' : 'off')"
+               ng-click="searchOptions.perksAllowed = !searchOptions.perksAllowed"
+               class="clickable"></i>
+            <i class="fa fa-gift st_blue"></i> Perks Allowed
+        </span>
+    </div>
+
+    <div class="col-md-11">
+        <span class="col-md-4 bold">
+            <i class="fa fa-clock-o st_blue"></i> Contest Duration
+            <select ng-model="searchOptions.duration"
+                    ng-options="duration.label for duration in durations"
+                    class="pull-right"
+                    style="margin-left: 16px">
+                <option value="">-- Any --</option>
+            </select>
+        </span>
+
+        <span class="col-md-3 bold">
+            <i ng-class="'fa fa-toggle-' + (searchOptions.invitationOnly ? 'on' : 'off')"
+               ng-click="searchOptions.invitationOnly = !searchOptions.invitationOnly"
+               class="clickable"></i>
+            <i class="fa fa-lock st_blue"></i> Invitation-Only
+        </span>
+
+        <span class="col-md-3 bold">
+            <i ng-class="'fa fa-toggle-' + (searchOptions.robotsAllowed ? 'on' : 'off')"
+               ng-click="searchOptions.robotsAllowed = !searchOptions.robotsAllowed"
+               class="clickable"></i>
+            <i class="fa fa-android st_blue"></i> Robots Allowed
+        </span>
+    </div>
+
+    <div class="col-md-11">
+        <span class="col-md-4 bold">
+            <i class="fa fa-flag-o st_blue"></i> Contest Status
+            <select ng-model="searchOptions.status"
+                    ng-options="status.description for status in statuses"
+                    class="pull-right"
+                    style="margin-left: 16px">
+            </select>
+        </span>
+
+        <span class="col-md-3 bold">
+            <i ng-class="'fa fa-toggle-' + (searchOptions.continuousTrading ? 'on' : 'off')"
+               ng-click="searchOptions.continuousTrading = !searchOptions.continuousTrading"
+               class="clickable"></i>
+            <i class="fa fa-refresh st_blue"></i> Continuous Trading
+        </span>
+
+        <span class="col-md-3 bold">
+            <i ng-class="'fa fa-toggle-' + (searchOptions.levelCapAllowed ? 'on' : 'off')"
+               ng-click="searchOptions.levelCapAllowed = !searchOptions.levelCapAllowed"
+               class="clickable"></i>
+            <i class="fa fa-vcard-o st_blue"></i> Level-Cap (by rank)
+        </span>
+        <select ng-model="searchOptions.levelCap"
+                ng-show="searchOptions.levelCapAllowed"
+                style="margin-left: 16px">
+            <option value="">-- None --</option>
+            <option ng-repeat="level in levels"
+                    value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
+        </select>
+    </div>
+
+</div>
+<br style="clear: both"/>

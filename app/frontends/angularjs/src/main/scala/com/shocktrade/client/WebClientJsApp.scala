@@ -56,9 +56,8 @@ object WebClientJsApp {
 
       // configure the routes
       $routeProvider
-        .when("/about/investors", new RouteTo(templateUrl = "/views/about/investors.html"))
         .when("/about/me", new RouteTo(templateUrl = "/views/about/me.html"))
-        .when("/about/us", new RouteTo(templateUrl = "/views/about/us.html"))
+        .when("/admin", new RouteTo(templateUrl = "/views/admin/admin.html"))
         .when("/dashboard", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
         .when("/dashboard/:contestID", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
         .when("/discover", new RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))

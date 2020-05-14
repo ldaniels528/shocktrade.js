@@ -3,8 +3,10 @@ package opcodes
 
 import com.shocktrade.common.OrderConstants
 import com.shocktrade.common.models.contest.OrderOutcome
+import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
  * Increase Position OpCode
@@ -24,7 +26,7 @@ case class IncreasePosition(portfolioID: String, orderID: String, priceType: Str
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties(
     "portfolioID" -> portfolioID,
     "orderID" -> orderID,
     "orderType" -> OrderConstants.BUY,
@@ -33,5 +35,24 @@ case class IncreasePosition(portfolioID: String, orderID: String, priceType: Str
     "exchange" -> exchange,
     "quantity" -> quantity
   )
+
+}
+
+/**
+ * Increase Position Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object IncreasePosition extends OpCodeCompiler {
+
+  override def compile(index: OpCodeProperties): js.UndefOr[IncreasePosition] = {
+    for {
+      portfolioID <- index.portfolioID
+      orderID <- index.orderID
+      priceType <- index.getAs[String]("priceType")
+      symbol <- index.getAs[String]("symbol")
+      exchange <- index.getAs[String]("exchange")
+      quantity <- index.getAs[Double]("quantity")
+    } yield IncreasePosition(portfolioID, orderID, priceType, symbol, exchange, quantity)
+  }
 
 }

@@ -3,8 +3,10 @@ package com.shocktrade.webapp.vm.opcodes
 import com.shocktrade.common.models.contest.OrderRef
 import com.shocktrade.webapp.routes.contest.dao.OrderData
 import com.shocktrade.webapp.vm.VirtualMachineContext
+import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
  * Create Order
@@ -20,7 +22,7 @@ case class CreateOrder(portfolioID: String, order: OrderData) extends OpCode {
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties(
     "portfolioID" -> portfolioID,
     "order" -> order,
     "symbol" -> order.symbol,
@@ -30,5 +32,20 @@ case class CreateOrder(portfolioID: String, order: OrderData) extends OpCode {
     "price" -> order.price,
     "quantity" -> order.quantity
   )
+
+}
+
+/**
+ * Create Order Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object CreateOrder extends OpCodeCompiler {
+
+  override def compile(index: OpCodeProperties): js.UndefOr[CreateOrder] = {
+    for {
+      portfolioID <- index.portfolioID
+      order <- index.getAs[OrderData]("order")
+    } yield CreateOrder(portfolioID, order)
+  }
 
 }

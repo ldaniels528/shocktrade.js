@@ -1,0 +1,38 @@
+<div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable">
+    <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
+        <i ng-class="c.isLoading ? 'fa fa-cog fa-spin fa-fw' : ( c.isExpanded ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o' )" ng-click="expandContest(c)"></i>
+        <i ng-class="getContestStatusClass(c.status)" ng-class="c.status == 'CLOSED' ? 'opaque' : ''"></i>
+        <span ng-click="enterGame(c.contestID)" ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
+            {{ c.name }}
+            <i class="fa fa-star st_orange" ng-show="c.hostUserID === userProfile.userID"></i>
+            <i class="fa fa-user st_green" ng-show="c.hostUserID !== userProfile.userID && c.isParticipant "></i>
+        </span>
+        <span ng-show="c.startingBalance" class="positive pull-right"  ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
+            $ {{ c.startingBalance | number:0 }}
+        </span>
+        <div ng-repeat="player in c.rankings" ng-include src="'/views/profile/my_contests_player_row.html'"></div>
+    </div>
+    <div class="col-md-2 left"
+         ng-click="popupPlayerProfile(c.hostUserID)"
+         ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
+        <avatar id="{{ c.hostUserID }}" class="avatar-20"></avatar> {{ c.hostUsername }}
+    </div>
+    <div class="col-md-3 left" ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
+        <span ng-show="c.status == 'CLOSED'">
+             <span ng-show="c.startTime && c.expirationTime">Closed</span>
+         </span>
+         <span ng-hide="c.status == 'CLOSED'">
+             <span ng-show="c.startTime && c.expirationTime">Started {{ c.startTime | duration }}; ends {{ c.expirationTime | duration }}</span>
+         </span>
+    </div>
+    <div class="col-md-1 right" ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
+        <span>{{ c.playerCount }} / {{ maxPlayers }}</span>
+    </div>
+    <div class="col-md-2 right" ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
+        <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
+        <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
+        <i ng-class="c.levelCap ? '' : 'null'" class="fa fa-user-times" title="{{ c.levelCap ? 'Level ' + c.levelCap + 'and under' : 'No level cap' }}"></i>
+        <i ng-class="c.perksAllowed ? '' : 'null'" class="fa fa-gift" title="perks are {{ c.perksAllowed ? '' : 'NOT' }} allowed"></i>
+        <i ng-class="c.robotsAllowed ? '' : 'null'" class="fa fa-android" title="robots are {{ c.robotsAllowed ? '' : 'NOT' }} allowed"></i>
+    </div>
+</div>

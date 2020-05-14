@@ -1,4 +1,4 @@
-<div ng-class="getRankCellClass(player.rank)">
+<div ng-class="getPlayerRankCellClass(player)">
     <div lass="pull-left" style="display: inline">
         <div class="pull-left" style="display: inline">
             <avatar id="{{ player.userID }}" class="avatar-45 clickable" ng-click="popupPlayerProfile(player.userID)"></avatar>
@@ -16,12 +16,16 @@
             <div>
                 <span class="positive">$ {{ player.totalEquity | number: 2 }}</span>
                 <span ng-class="player.gainLoss >= 0 ? 'positive' : 'negative'">
-                    <changearrow value="{{ player.gainLoss }}"></changearrow> {{ player.gainLoss | abs | number:2 }}%
+                    <changearrow value="{{ player.gainLoss }}"></changearrow>
+                    <span ng-show="player.gainLoss > -10 && player.gainLoss < 10">{{ player.gainLoss | abs | number:1 }}%</span>
+                    <span ng-hide="player.gainLoss > -10 && player.gainLoss < 10">{{ player.gainLoss | abs | number:0 }}%</span>
                 </span>
             </div>
         </div>
         <div>
-            <span class="pull-right xp" ng-show="player.totalXP">+{{ player.totalXP }}xp &nbsp;</span>
+            <span class="pull-right"
+                  ng-class="player.totalXP >= 0 ? 'xp' : 'neg_xp'"
+                  ng-show="player.totalXP">{{ player.totalXP }}xp &nbsp;</span>
         </div>
     </div>
     <br style="clear: both">

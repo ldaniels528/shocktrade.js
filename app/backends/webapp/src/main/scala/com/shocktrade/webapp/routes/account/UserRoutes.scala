@@ -254,7 +254,7 @@ object UserRoutes {
         ("ldaniels", "./public/images/avatars/gears.jpg"),
         ("natech", "./public/images/avatars/dcu.png"),
         ("gunst4rhero", "./public/images/avatars/gunstar-heroes.jpg"),
-        ("gadget", "./public/images/avatars/sickday.jpg"),
+        ("gadget", "./public/images/avatars/knight.jpg"),
         ("daisy", "./public/images/avatars/daisy.jpg"),
         ("teddy", "./public/images/avatars/teddy.jpg"),
         ("joey", "./public/images/avatars/joey.jpg"),
@@ -262,7 +262,8 @@ object UserRoutes {
         ("naughtymonkey", "./public/images/avatars/naughtymonkey.jpg"),
         ("seralovett", "./public/images/avatars/hearts.jpg"),
         ("fugitive528", "./public/images/avatars/fugitive528.jpg"),
-        ("dannywoo", "./public/images/avatars/dannywoo.jpg")) map { case (name, path) if Fs.existsSync(path) =>
+        ("dannywoo", "./public/images/avatars/dannywoo.jpg"),
+        ("chunkymonkey", "./public/images/avatars/sickday.jpg")) map { case (name, path) if Fs.existsSync(path) =>
         val outcome = writeImage(name = name, path = path)
         outcome onComplete {
           case Success(value) => println(s"$name ~> $path: count = $value")

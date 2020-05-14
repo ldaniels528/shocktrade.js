@@ -2,8 +2,10 @@ package com.shocktrade.webapp.vm
 package opcodes
 
 import com.shocktrade.common.Ok
+import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
  * Close Contest OpCode
@@ -17,6 +19,16 @@ case class CloseContest(contestID: String) extends OpCode {
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex("contestID" -> contestID)
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties("contestID" -> contestID)
+
+}
+
+/**
+ * Close Contest Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object CloseContest extends OpCodeCompiler {
+
+  override def compile(index: OpCodeProperties): js.UndefOr[CloseContest] = index.contestID.map(CloseContest.apply)
 
 }

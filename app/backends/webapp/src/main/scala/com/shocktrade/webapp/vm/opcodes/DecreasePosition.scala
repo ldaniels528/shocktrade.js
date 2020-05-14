@@ -3,8 +3,10 @@ package opcodes
 
 import com.shocktrade.common.OrderConstants
 import com.shocktrade.common.models.contest.OrderOutcome
+import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
  * Decrease Position OpCode
@@ -24,7 +26,7 @@ case class DecreasePosition(portfolioID: String, orderID: String, priceType: Str
     }
   }
 
-  override val toJsObject: EventSourceIndex = super.toJsObject ++ EventSourceIndex(
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties(
     "portfolioID" -> portfolioID,
     "orderID" -> orderID,
     "orderType" -> OrderConstants.SELL,
@@ -33,5 +35,24 @@ case class DecreasePosition(portfolioID: String, orderID: String, priceType: Str
     "exchange" -> exchange,
     "quantity" -> quantity
   )
+
+}
+
+/**
+ * Decrease Position Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object DecreasePosition extends OpCodeCompiler {
+
+  override def compile(index: OpCodeProperties): js.UndefOr[DecreasePosition] = {
+    for {
+      portfolioID <- index.portfolioID
+      orderID <- index.orderID
+      priceType <- index.getAs[String]("priceType")
+      symbol <- index.getAs[String]("symbol")
+      exchange <- index.getAs[String]("exchange")
+      quantity <- index.getAs[Double]("quantity")
+    } yield DecreasePosition(portfolioID, orderID, priceType, symbol, exchange, quantity)
+  }
 
 }

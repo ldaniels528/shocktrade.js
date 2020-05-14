@@ -2,17 +2,17 @@ package com.shocktrade.webapp.vm
 
 import com.shocktrade.common.Ok
 import com.shocktrade.server.common.LoggerFactory
-import com.shocktrade.webapp.vm.VirtualMachine.{OpCodeCallback, VmProcess}
+import com.shocktrade.webapp.vm.VirtualMachine.VmProcess
 import com.shocktrade.webapp.vm.dao._
-import com.shocktrade.webapp.vm.opcodes.{EventSourceIndex, OpCode}
+import com.shocktrade.webapp.vm.opcodes.{OpCode, OpCodeProperties}
 import io.scalajs.JSON
 import io.scalajs.nodejs.setImmediate
 import io.scalajs.util.JsUnderOrHelper._
 
-import scala.scalajs.js.JSConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -29,7 +29,7 @@ class VirtualMachine() {
    */
   def invoke(opCode: OpCode)(implicit ctx: VirtualMachineContext): Future[js.Any] = {
     val promise = Promise[js.Any]()
-    pipeline.push(OpCodeCallback(opCode, promise))
+    pipeline.push(OpCode.Callback(opCode, promise))
     promise.future
   }
 
@@ -119,8 +119,8 @@ object VirtualMachine {
                          response: String,
                          responseTimeMillis: Double,
                          failed: Boolean)(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Ok] = {
-    val requestProps = request.toJsObject
-    val responseProps = if (response.startsWith("{") && response.endsWith("}")) JSON.parseAs[js.UndefOr[EventSourceIndex]](response) else js.undefined
+    val requestProps = request.decompile
+    val responseProps = if (response.startsWith("{") && response.endsWith("}")) JSON.parseAs[js.UndefOr[OpCodeProperties]](response) else js.undefined
     val outcome = ctx.trackEvent(EventSourceData(
       command = JSON.stringify(requestProps),
       `type` = requestProps.`type`,
@@ -155,23 +155,6 @@ object VirtualMachine {
       case x if x.toString.startsWith("[object") => JSON.stringify(x.asInstanceOf[js.Any])
       case v => v.toString
     } getOrElse "undefined"
-  }
-
-  case class OpCodeCallback(opCode: OpCode, promise: Promise[js.Any]) extends OpCode {
-
-    override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Any] = {
-      val outcome = opCode.invoke()
-      outcome onComplete {
-        case Success(value) => promise.success(value.asInstanceOf[js.Any])
-        case Failure(e) => promise.failure(e)
-      }
-      outcome
-    }
-
-    override val toJsObject: EventSourceIndex = opCode.toJsObject
-
-    override def toString: String = opCode.toString
-
   }
 
   case class VmProcess(code: OpCode, result: js.UndefOr[Any], runTime: FiniteDuration) {

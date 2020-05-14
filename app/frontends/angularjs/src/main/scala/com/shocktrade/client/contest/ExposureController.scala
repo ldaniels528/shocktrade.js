@@ -43,8 +43,8 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.exposures = js.Array(
-    new ChartSelection(value = "contest", label = "Distribution of Wealth"),
-    new ChartSelection(value = "securities", label = "Securities Exposure"),
+    new ChartSelection(value = "contest", label = "Performance Comparison"),
+   // new ChartSelection(value = "securities", label = "Securities Exposure"),
     new ChartSelection(value = "exchange", label = "Exchange Exposure"),
     new ChartSelection(value = "industry", label = "Industry Exposure"),
     new ChartSelection(value = "sector", label = "Sector Exposure"))

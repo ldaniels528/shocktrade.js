@@ -1,13 +1,11 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.contest.models.{Contest, Portfolio}
-import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Factory, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.util.{Failure, Success}
 
 /**
  * Contest Graph Factory

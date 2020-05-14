@@ -52,9 +52,9 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
     val options = robotName match {
       case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = 25)
       case "gadget" => new ResearchOptions(priceMax = 5.00, maxResults = 25)
-      case "joey" => new ResearchOptions(priceMin = 5.00, priceMax = 25.00, spreadMin = 25.0, maxResults = 25)
-      case "teddy" => new ResearchOptions(priceMin = 1.00, priceMax = 5.00, spreadMin = 50.0, maxResults = 25)
-      case "naughtymonkey" => new ResearchOptions(priceMin = 1.00, priceMax = 25.00, spreadMin = 25.0, maxResults = 25)
+      case "teddy" => new ResearchOptions(priceMin = 5.00, priceMax = 25.00, spreadMin = 25.0, maxResults = 25)
+      case "fugitive528" => new ResearchOptions(priceMin = 1.00, priceMax = 5.00, spreadMin = 50.0, maxResults = 25)
+      case "joey" => new ResearchOptions(priceMin = 1.00, priceMax = 25.00, spreadMin = 25.0, maxResults = 25)
       case _ => new ResearchOptions(priceMax = random.nextDouble(), changeMax = 0.0, spreadMin = random.nextInt(75).toDouble, maxResults = 25)
     }
     researchProxy.research(options)
