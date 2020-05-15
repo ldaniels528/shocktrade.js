@@ -162,7 +162,8 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $location: 
 
     outcome onComplete { _ =>
       clearLoggedInItems()
-      $timeout(() => $scope.isLoggingOut = false, 500.millis)
+      $scope.$apply(() => $scope.isLoggingOut = false)
+      $window.location.reload()
     }
     outcome onComplete {
       case Success(_) =>

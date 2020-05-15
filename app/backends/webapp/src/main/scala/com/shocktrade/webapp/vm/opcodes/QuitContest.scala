@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.vm
 package opcodes
 
-import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.PortfolioEquity
+import com.shocktrade.common.models.contest.PortfolioEquity
 
 import scala.concurrent.{ExecutionContext, Future}
 

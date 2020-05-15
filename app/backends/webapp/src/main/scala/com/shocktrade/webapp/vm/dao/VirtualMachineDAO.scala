@@ -7,7 +7,6 @@ import com.shocktrade.common.models.user.UserRef
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData}
 import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData}
-import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.PortfolioEquity
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -27,7 +26,7 @@ trait VirtualMachineDAO {
 
   def createContest(request: ContestCreationRequest): Future[ContestCreationResponse]
 
-  def joinContest(contestID: String, userID: String): Future[PortfolioRef]
+  def joinContest(contestID: String, userID: String): Future[JoinContestResponse]
 
   def quitContest(contestID: String, userID: String): Future[PortfolioEquity]
 

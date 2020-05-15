@@ -3,7 +3,7 @@ package com.shocktrade.remote.proxies
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.ContestAPI
 import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchOptions}
-import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, PortfolioRef}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, JoinContestResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -43,7 +43,7 @@ class ContestProxy(host: String, port: Int)(implicit ec: ExecutionContext) exten
 
   def deleteContest(contestID: String): Future[Ok] = delete(deleteContestURL(contestID))
 
-  def joinContest(contestID: String, userID: String): Future[PortfolioRef] = put(joinContestURL(contestID, userID))
+  def joinContest(contestID: String, userID: String): Future[JoinContestResponse] = put(joinContestURL(contestID, userID))
 
   ///////////////////////////////////////////////////////////////
   //          Contest Messages

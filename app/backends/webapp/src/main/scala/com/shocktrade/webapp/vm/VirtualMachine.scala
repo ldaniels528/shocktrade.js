@@ -79,32 +79,26 @@ object VirtualMachine {
     var results: List[VmProcess] = Nil
 
     def recurse(codes: List[OpCode]): Unit = {
-      val currentOpcode = codes.headOption
         codes match {
           case code :: codes =>
             try {
               val startTime = js.Date.now()
               code.invoke() onComplete {
+                // track this successful completion
                 case Success(result) =>
                   val elapsedTime = js.Date.now() - startTime
                   results = VmProcess(code, result, elapsedTime.millis) :: results
-                  recurse(codes)
-
-                  // track this outcome
                   trackEvent(request = code, requestedTime = startTime, response = unwrap(result), responseTimeMillis = elapsedTime, failed = false)
-
+                  recurse(codes)
+                // track this failure
                 case Failure(e) =>
                   val elapsedTime = js.Date.now() - startTime
-                  promise.failure(e)
-
-                  // track this outcome
                   trackEvent(request = code, requestedTime = startTime, response = e.getMessage, responseTimeMillis = elapsedTime, failed = true)
+                  recurse(codes)
               }
             } catch {
               case e: Exception =>
-                currentOpcode.map(code => logger.error(s"OpCode failed: ${e.getMessage} ~> ${code.toString}")) getOrElse {
-                  logger.error(s"OpCode failed: ${e.getMessage}")
-                }
+                logger.error(s"OpCode failed: ${e.getMessage} ~> ${code.toString}")
             }
           case Nil => promise.success(results.reverse.toJSArray)
         }

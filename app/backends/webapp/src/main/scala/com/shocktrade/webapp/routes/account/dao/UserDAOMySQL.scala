@@ -51,6 +51,15 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
       .map { case (rows, _) => rows.headOption }
   }
 
+  override def findUsernameIcon(username: String)(implicit ec: ExecutionContext): Future[Option[UserIconData]] = {
+    conn.queryFuture[UserIconData](
+      """|SELECT UI.* FROM user_icons UI
+         |INNER JOIN users U ON U.userID = UI.userID
+         |WHERE U.username = ?
+         |""".stripMargin, js.Array(username))
+      .map { case (rows, _) => rows.headOption }
+  }
+
 }
 
 /**

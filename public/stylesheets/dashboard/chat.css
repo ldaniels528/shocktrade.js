@@ -18,6 +18,10 @@
 	margin-right: 5px
 }
 
+.chat_user_ref {
+    color: #008888;
+}
+
 .chat_text_area {
 	border: 1px solid #cccccc;
 	border-radius: 4px;

@@ -83,11 +83,33 @@ trait ChatController {
       lastMessageCount = chatMessages.length
 
       // build an HTML string with emoticons
-      val html = chatMessages.foldLeft[String]("") { (html, msg) =>
+      val viewHtml = chatMessages.foldLeft[String]("") { (html, msg) =>
+        var text = new StringBuilder(msg.message getOrElse "")
+
         // replace the symbols with icon images
-        var text = msg.message getOrElse ""
+        if (text.nonEmpty) Emoticons.foreach { emo =>
+          text = new StringBuilder(text.replaceAllLiterally(emo.symbol, s"""<img src="/images/smilies/${emo.uri}">"""))
+        }
+
+        // replace the user references (e.g. "@fugitive528")
         if (text.nonEmpty) {
-          Emoticons.foreach { emo => text = text.replaceAllLiterally(emo.symbol, s"""<img src="/images/smilies/${emo.uri}">""") }
+          var offset: Int = -1
+          do {
+            offset = text.indexOf("@", offset)
+            if (offset != -1) {
+              var limit = offset + 1
+              while (limit < text.length && text(limit).isLetterOrDigit) limit += 1
+              val theUsernameWithTag = text.substring(offset, limit).trim
+              val theUsername = text.substring(offset + 1, limit).trim
+              val replacementText =
+                s"""|<img src="/api/username/$theUsername/icon"
+                    |     class="chat_icon"
+                    |     title="$theUsername"><span class="chat_user_ref">$theUsernameWithTag</span>
+                    |""".stripMargin
+              text = text.replace(offset, limit, replacementText)
+              offset = limit + (replacementText.length - theUsernameWithTag.length)
+            }
+          } while (offset != -1)
         }
 
         // build the message HTML
@@ -99,7 +121,7 @@ trait ChatController {
       }
 
       //console.log(f"Generated HTML in ${js.Date.now() - startTime}%.1f msec(s)")
-      cachedHtml = html
+      cachedHtml = viewHtml
       lastUpdateTime = js.Date.now()
       cachedHtml
     }

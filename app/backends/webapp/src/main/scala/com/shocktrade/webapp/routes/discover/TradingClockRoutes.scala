@@ -42,7 +42,7 @@ class TradingClockRoutes(app: Application)(implicit ec: ExecutionContext, tradin
         response.send(new TradingStatus(
           contestID = contestID,
           stateChanged = (lastUpdateTimeMillis > 0) && (active != tradingClock.isTradingActive(lastUpdateTimeMillis)),
-          active = active,
+          active = true, // TODO active,
           sysTime = System.currentTimeMillis(),
           delay = tradingClock.getDelayUntilTradingStartInMillis - timeOffset,
           start = tradingClock.getTradeStartTime.getTime() - timeOffset,

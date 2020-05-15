@@ -26,7 +26,7 @@ class ContestProxyTest extends AsyncFunSpec {
     }
 
     it("should create new contests") {
-      val outcome = contestProxy.createContest(new ContestCreationRequest(
+      val outcome = contestProxy.createContest(ContestCreationRequest(
         userID = "af3480c6-72d5-11ea-83ac-857ee918b853",
         name = s"It's time to play!",
         perksAllowed = true,

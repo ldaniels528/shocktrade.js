@@ -35,11 +35,7 @@ class RobotRoutes(app: Application)(implicit ec: ExecutionContext, robotDAO: Rob
   }
 
   def findSecurities(request: Request, response: Response, next: NextFunction): Unit = {
-    val username = request.params("name")
-    robotProcessor.findSecurities(username) onComplete {
-      case Success(results) => response.send(results); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
+    response.internalServerError("Not implemented")
   }
 
   def findRobot(request: Request, response: Response, next: NextFunction): Unit = {
@@ -58,11 +54,7 @@ class RobotRoutes(app: Application)(implicit ec: ExecutionContext, robotDAO: Rob
   }
 
   def startRobot(request: Request, response: Response, next: NextFunction): Unit = {
-    val username = request.params("name")
-    robotProcessor.start(username) onComplete {
-      case Success(results) => response.send(results); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
+    response.internalServerError("Not implemented")
   }
 
   def toggleRobot(request: Request, response: Response, next: NextFunction, isActive: Boolean): Unit = {

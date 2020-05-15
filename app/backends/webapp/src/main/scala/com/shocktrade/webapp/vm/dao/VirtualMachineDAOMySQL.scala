@@ -10,7 +10,7 @@ import com.shocktrade.common.{AppConstants, Ok}
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserIconData, UserProfileData}
 import com.shocktrade.webapp.routes.contest.dao.{ContestData, OrderData, PortfolioData}
-import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL.{PortfolioEquity, _}
+import com.shocktrade.webapp.vm.dao.VirtualMachineDAOMySQL._
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 import io.scalajs.util.JsUnderOrHelper._
 
@@ -23,8 +23,7 @@ import scala.scalajs.js.JSConverters._
  * Virtual Machine DAO (MySQL implementation)
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options)
-  with VirtualMachineDAO {
+class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with VirtualMachineDAO {
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    Account Management
@@ -88,7 +87,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }
   }
 
-  override def joinContest(contestID: String, userID: String): Future[PortfolioRef] = {
+  override def joinContest(contestID: String, userID: String): Future[JoinContestResponse] = {
     for {
       // verify whether the user can actually join this contest
       ps <- findPortfolioStatus(contestID, userID) map {
@@ -99,15 +98,15 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       }
       portfolioID <- insertPortfolio(contestID = contestID, userID = userID, funds = ps.startingBalance)
       proceeds <- debitWallet(portfolioID, ps.startingBalance)
-      w0 <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesJoined = +1))
-    } yield new PortfolioRef(portfolioID)
+      _ <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesJoined = +1))
+    } yield new JoinContestResponse(portfolioID, proceeds)
   }
 
   override def quitContest(contestID: String, userID: String): Future[PortfolioEquity] = {
     for {
       cp <- findContestAndPortfolioID(contestID, userID)
       proceeds <- closeAndTransferFunds(cp.portfolioID)
-      w1 <- updatePlayerStatistics(cp.portfolioID)(PlayerStatistics(gamesWithdrawn = +1))
+      _ <- updatePlayerStatistics(cp.portfolioID)(PlayerStatistics(gamesWithdrawn = +1))
     } yield proceeds
   }
 
@@ -157,7 +156,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
         """|SELECT U.userID, U.wallet
            |FROM users U
            |INNER JOIN portfolios P ON P.userID = U.userID
-           |WHERE portfolioID = ?
+           |WHERE P.portfolioID = ?
            |""".stripMargin,
         js.Array(portfolioID)).map(_._1.headOption) map { user_? =>
         (for {user <- user_?; userID <- user.userID.toOption; wallet <- user.wallet.toOption} yield (userID, wallet)) match {
@@ -168,7 +167,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       }
 
       // perform the update
-      w0 <- conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ?", js.Array(amount, userID))
+      _ <- conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ?", js.Array(amount, userID))
         .map(_.affectedRows) map checkCount(_ => f"Could not be debit wallet with $amount%.2f")
     } yield new PortfolioEquity(cash = wallet, equity = amount)
   }
@@ -209,8 +208,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     import order._
     val newOrderID = newID
     val outcome = for {
-
-      - <- ensurePortfolioIsOpen(portfolioID)
+      _ <- ensurePortfolioIsOpen(portfolioID)
       w <- conn.executeFuture(
         """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
            |VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -228,7 +226,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     val outcome = for {
       _ <- ensurePortfolioIsOpen(portfolioID)
       metrics <- findPositionMetrics(portfolioID, symbol, exchange, quantity, priceType)
-      xp = 1e+1 * metrics.gainLossPct.orZero
+      xp = 5 * metrics.gainLossPct.orZero
       _ <- creditPortfolio(portfolioID, amount = metrics.marketValue.orZero - metrics.commission.orZero, xp = xp)
       pu <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = false)
       ou <- completeOrder(orderID, negotiatedPrice = metrics.lastTrade, fulfilled = true)
@@ -299,7 +297,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       }
 
       // compute the new wallet and portfolio funds
-      (wallet, funds) = (proceeds.equity + proceeds.cash, proceeds.equity)
+      (wallet, funds) = (proceeds.equity.orZero + proceeds.cash.orZero, proceeds.equity)
 
       // transfer funds; then close-out the portfolio and the positions
       _ <- conn.executeFuture(
@@ -458,7 +456,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |FROM portfolios P
          |INNER JOIN contest_rankings CR ON CR.contestID = P.contestID
          |WHERE P.portfolioID = ?
-         |""".stripMargin, js.Array(portfolioID)).map(_._1).map(ContestRanking.computeRankings(_))
+         |""".stripMargin, js.Array(portfolioID)).map(_._1).map(ContestRanking.computeRankings)
   }
 
   private def findPortfolioStatus(contestID: String, userID: String): Future[PortfolioStatus] = {
@@ -487,8 +485,8 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |  S.lastTrade, OPT.commission,
          |  S.lastTrade * ? AS marketValue,
          |  AVG(O.negotiatedPrice) AS pricePaid,
-         |  S.lastTrade - AVG(O.negotiatedPrice) * SUM(O.quantity) AS gainLoss,
-         |  (S.lastTrade - AVG(O.negotiatedPrice) * SUM(O.quantity)) / (AVG(O.negotiatedPrice) * SUM(O.quantity)) AS gainLossPct
+         |  (S.lastTrade - AVG(O.negotiatedPrice)) * SUM(O.quantity) AS gainLoss,
+         |  ((S.lastTrade - AVG(O.negotiatedPrice)) * SUM(O.quantity)) / (AVG(O.negotiatedPrice) * SUM(O.quantity)) AS gainLossPct
          |FROM orders O
          |INNER JOIN order_price_types OPT ON OPT.name = ?
          |LEFT JOIN stocks S ON S.symbol = O.symbol AND S.exchange = O.exchange
@@ -637,8 +635,6 @@ object VirtualMachineDAOMySQL {
   class MarketValue(val lastTrade: Double, val marketValue: Double, val commission: Double) extends js.Object
 
   class OwnedQuantity(val quantity: Double) extends js.Object
-
-  class PortfolioEquity(val cash: Double, val equity: Double) extends js.Object
 
   class PositionMetrics(val lastTrade: js.UndefOr[Double],
                         val marketValue: js.UndefOr[Double],

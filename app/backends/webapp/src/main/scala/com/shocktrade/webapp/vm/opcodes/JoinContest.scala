@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.vm
 package opcodes
 
-import com.shocktrade.common.models.contest.PortfolioRef
+import com.shocktrade.common.models.contest.JoinContestResponse
 import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -14,7 +14,7 @@ import scala.scalajs.js
  */
 case class JoinContest(contestID: String, userID: String) extends OpCode {
 
-  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[PortfolioRef] = {
+  override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[JoinContestResponse] = {
     try ctx.joinContest(contestID, userID) catch {
       case e: Exception =>
         Future.failed(e)

@@ -90,7 +90,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   // refresh the dashboard every 5 minutes
   private def refreshDashboard(): Unit = initDash().foreach(_ onComplete { _ => $timeout(() => refreshDashboard(), 5.minute) })
 
-  $timeout(() => refreshDashboard(), 5.minutes)
+  $timeout(() => refreshDashboard(), 1.minutes)
 
   $scope.initDash = () => {
     console.info(s"${getClass.getSimpleName} initializing...")

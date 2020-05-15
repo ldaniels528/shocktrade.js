@@ -14,6 +14,8 @@ trait UserAPI extends BaseAPI {
 
   def findUserIconURL(userID: String) = s"$baseURL/api/user/$userID/icon"
 
+  def findUsernameIconURL(username: String) = s"$baseURL/api/username/$username/icon"
+
   def findUserByIDURL(userID: String) = s"$baseURL/api/user/$userID"
 
   def findUserByNameURL(username: String) = s"$baseURL/api/user/name/$username"

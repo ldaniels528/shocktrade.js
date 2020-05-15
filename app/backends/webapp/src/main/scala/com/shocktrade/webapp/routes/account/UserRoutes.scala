@@ -34,6 +34,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
   app.get(findUserByIDURL(":userID"), (request: Request, response: Response, next: NextFunction) => findUserByID(request, response, next))
   app.get(findUserByNameURL(":username"), (request: Request, response: Response, next: NextFunction) => findUserByName(request, response, next))
   app.get(findUserIconURL(":userID"), (request: Request, response: Response, next: NextFunction) => findUserIcon(request, response, next))
+  app.get(findUsernameIconURL(":username"), (request: Request, response: Response, next: NextFunction) => findUsernameIcon(request, response, next))
   app.get(findUsersURL(":ids"), (request: Request, response: Response, next: NextFunction) => findUsersByIDs(request, response, next))
   app.get(findMyAwardsURL(":userID"), (request: Request, response: Response, next: NextFunction) => findMyAwards(request, response, next))
 
@@ -115,6 +116,26 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
     val userID = request.params("userID")
     val outcome = for {
       icon_? <- userDAO.findUserIcon(userID)
+      (mime, image) <- icon_? match {
+        case Some(icon) => Future.successful((icon.mime, icon.image))
+        case None => Fs.readFileFuture("./public/images/avatars/avatar101.png").map(image => ("image/png": js.UndefOr[String], image))
+      }
+    } yield (mime, image)
+
+    outcome onComplete {
+      case Success((mime, image)) =>
+        mime.foreach(response.setContentType)
+        response.send(image)
+        next()
+      case Failure(e) =>
+        response.showException(e).internalServerError(e); next()
+    }
+  }
+
+  def findUsernameIcon(request: Request, response: Response, next: NextFunction): Unit = {
+    val username = request.params("username")
+    val outcome = for {
+      icon_? <- userDAO.findUsernameIcon(username)
       (mime, image) <- icon_? match {
         case Some(icon) => Future.successful((icon.mime, icon.image))
         case None => Fs.readFileFuture("./public/images/avatars/avatar101.png").map(image => ("image/png": js.UndefOr[String], image))
