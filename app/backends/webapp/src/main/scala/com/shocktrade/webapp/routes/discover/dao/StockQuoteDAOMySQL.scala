@@ -13,11 +13,11 @@ import scala.scalajs.js
 class StockQuoteDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with StockQuoteDAO {
 
   override def findQuote[A <: js.Any](symbol: String)(implicit ec: ExecutionContext): Future[Option[A]] = {
-    conn.queryFuture[A]("SELECT * FROM stocks WHERE symbol = ?", js.Array(symbol)) map { case (rows, _) => rows.headOption }
+    conn.queryFuture[A]("SELECT * FROM mock_stocks WHERE symbol = ?", js.Array(symbol)) map { case (rows, _) => rows.headOption }
   }
 
   override def findQuotes[A <: js.Any](symbols: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[A]] = {
-    conn.queryFuture[A]("SELECT * FROM stocks WHERE symbol IN ( ? )", Seq(symbols)) map { case (rows, _) => rows }
+    conn.queryFuture[A]("SELECT * FROM mock_stocks WHERE symbol IN ( ? )", Seq(symbols)) map { case (rows, _) => rows }
   }
 
 }

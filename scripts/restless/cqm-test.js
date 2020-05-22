@@ -16,7 +16,7 @@ print "looking up users..."
 
 // create a new game
 print "creating a new game..."
-[contest] createContest { "name": "Sons of the True God", "userID": "$$fugitive528.userID", "startingBalance": 25000, "duration": 3 }
+[contest] createContest { "name": "Winter is coming", "userID": "$$fugitive528.userID", "startingBalance": 25000, "duration": 3 }
 
 // join the other players to the contest
 print "joining users to game..."

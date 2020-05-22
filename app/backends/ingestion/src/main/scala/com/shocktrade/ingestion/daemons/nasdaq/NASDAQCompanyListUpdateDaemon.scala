@@ -2,7 +2,8 @@ package com.shocktrade.ingestion.daemons.nasdaq
 
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.services.NASDAQCompanyListService
-import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
+import com.shocktrade.server.services.NASDAQCompanyListService.{NASDAQCompanyInfo, parseCSVBlob}
+import io.scalajs.nodejs.fs.Fs
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -15,6 +16,7 @@ import scala.util.{Failure, Success}
  */
 class NASDAQCompanyListUpdateDaemon()(implicit ec: ExecutionContext) {
   private val logger = LoggerFactory.getLogger(getClass)
+  private val isLocal = true
 
   // get DAO and service references
   private val nasdaqDAO = NASDAQCompanyListUpdateDAO()
@@ -58,7 +60,6 @@ class NASDAQCompanyListUpdateDaemon()(implicit ec: ExecutionContext) {
   private def processCompanyList(companies: Seq[NASDAQCompanyInfo]): Future[Int] = {
     logger.info(s"Saving ${companies.size} company information record(s)...")
     Future.sequence(companies map { data =>
-      logger.info(s"Updating NASDAQ company list for ${data.exchange}:${data.symbol}...")
       nasdaqDAO.updateCompanyList(
         new NASDAQCompanyData(
           symbol = data.symbol,
@@ -76,7 +77,7 @@ class NASDAQCompanyListUpdateDaemon()(implicit ec: ExecutionContext) {
 
   private def getCompanyList(exchange: String): Future[Seq[NASDAQCompanyInfo]] = {
     logger.info(s"$exchange: Requesting company information records...")
-    loadCompanyList(exchange) map { companies =>
+    (if (isLocal) getCompanyListFromLocal(exchange) else getCompanyListFromNASDAQ(exchange)) map { companies =>
       logger.info(s"$exchange: Retrieved %d company information record(s)", companies.size)
       companies
     } recover { case e =>
@@ -85,12 +86,19 @@ class NASDAQCompanyListUpdateDaemon()(implicit ec: ExecutionContext) {
     }
   }
 
-  private def loadCompanyList(exchange: String): Future[Seq[NASDAQCompanyInfo]] = {
+  private def getCompanyListFromLocal(exchange: String): Future[Seq[NASDAQCompanyInfo]] = {
+    for {
+      data <- Fs.readFileFuture(s"./temp/companylist-${exchange.toLowerCase()}.csv")
+      companies <- parseCSVBlob(exchange, data)
+    } yield companies
+  }
+
+  private def getCompanyListFromNASDAQ(exchange: String): Future[Seq[NASDAQCompanyInfo]] = {
     exchange match {
       case "AMEX" => companyListService.amex()
       case "NASDAQ" => companyListService.nasdaq()
       case "NYSE" => companyListService.nyse()
-      case other => Future.failed(die(s"Exchange '$exchange' is not recognized"))
+      case other => Future.failed(die(s"Exchange '$other' is not recognized"))
     }
   }
 

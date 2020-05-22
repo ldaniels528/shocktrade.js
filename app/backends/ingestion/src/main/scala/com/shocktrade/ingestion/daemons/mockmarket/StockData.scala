@@ -1,6 +1,7 @@
 package com.shocktrade.ingestion.daemons.mockmarket
 
 import io.scalajs.util.JsUnderOrHelper._
+
 import scala.scalajs.js
 
 /**
@@ -20,6 +21,8 @@ class StockData(val symbol: js.UndefOr[String],
                 val close: js.UndefOr[Double],
                 val high: js.UndefOr[Double],
                 val low: js.UndefOr[Double],
+                val highLimit: js.UndefOr[Double],
+                val lowLimit: js.UndefOr[Double],
                 val spread: js.UndefOr[Double],
                 val change: js.UndefOr[Double],
                 val changePct: js.UndefOr[Double],
@@ -48,6 +51,8 @@ object StockData {
              close: js.UndefOr[Double] = js.undefined,
              high: js.UndefOr[Double] = js.undefined,
              low: js.UndefOr[Double] = js.undefined,
+             highLimit: js.UndefOr[Double] = js.undefined,
+             lowLimit: js.UndefOr[Double] = js.undefined,
              spread: js.UndefOr[Double] = js.undefined,
              change: js.UndefOr[Double] = js.undefined,
              changePct: js.UndefOr[Double] = js.undefined,
@@ -68,6 +73,8 @@ object StockData {
         close = close ?? stock.close,
         high = high ?? stock.high,
         low = low ?? stock.low,
+        highLimit = highLimit ?? stock.highLimit,
+        lowLimit = lowLimit ?? stock.lowLimit,
         spread = spread ?? stock.spread,
         change = change ?? stock.change,
         changePct = changePct ?? stock.changePct,

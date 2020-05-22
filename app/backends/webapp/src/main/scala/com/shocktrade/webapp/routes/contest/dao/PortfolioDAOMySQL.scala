@@ -31,7 +31,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
         """|SELECT O.*, S.lastTrade
            |FROM orders O
            |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
-           |LEFT JOIN stocks S ON S.symbol = O.symbol
+           |LEFT JOIN mock_stocks S ON S.symbol = O.symbol
            |WHERE (O.closed = 0 OR now() < DATE_ADD(O.processedTime, INTERVAL 1 DAY))
            |""".stripMargin
       )
@@ -56,7 +56,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |    (SELECT SUM(IFNULL(O.price, S.lastTrade) * O.quantity)
          |      FROM orders O
          |      INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
-         |      LEFT JOIN stocks S ON S.symbol = O.symbol
+         |      LEFT JOIN mock_stocks S ON S.symbol = O.symbol
          |      WHERE O.orderType = 'BUY'
          |      AND O.closed = 0
          |      AND O.portfolioID = P.portfolioID
@@ -64,14 +64,14 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |    (SELECT SUM(S.lastTrade * O.quantity)
          |      FROM orders O
          |      INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
-         |      LEFT JOIN stocks S ON S.symbol = O.symbol
+         |      LEFT JOIN mock_stocks S ON S.symbol = O.symbol
          |      WHERE O.orderType = 'SELL'
          |      AND O.closed = 0
          |      AND O.portfolioID = P.portfolioID
          |      AND P.contestID = ? AND P.userID = ?) AS totalSellOrders
          |FROM portfolios P
          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
-         |LEFT JOIN stocks S ON S.symbol = PS.symbol
+         |LEFT JOIN mock_stocks S ON S.symbol = PS.symbol
          |WHERE P.contestID = ? AND P.userID = ?
          |GROUP BY P.userID, P.funds
          |""".stripMargin,
@@ -117,10 +117,8 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
 
   private def findContestChart(contestID: String): Future[js.Array[ChartData]] = {
     conn.queryFuture[ChartData](
-      s"""|SELECT U.username AS name, SUM(P.funds) + SUM(IFNULL(S.lastTrade * PS.quantity, 0)) AS value
-          |FROM portfolios P 
-          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
-          |LEFT JOIN stocks S ON S.symbol = PS.symbol
+      s"""|SELECT U.username AS name, SUM(P.totalXP + 1) AS value
+          |FROM portfolios P
           |LEFT JOIN users U ON U.userID = P.userID
           |WHERE P.contestID = ?
           |GROUP BY U.username
@@ -132,7 +130,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
       s"""|SELECT IFNULL($column, 'Unclassified') AS name, SUM(S.lastTrade * PS.quantity) AS value
           |FROM portfolios P
           |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
-          |INNER JOIN stocks S ON S.symbol = PS.symbol
+          |INNER JOIN mock_stocks S ON S.symbol = PS.symbol
           |WHERE P.contestID = ? AND P.userID = ?
           |AND PS.quantity > 0
           |GROUP BY $column
@@ -157,7 +155,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
         """|SELECT PS.*, S.lastTrade, S.tradeDateTime, S.name AS businessName, PS.quantity * S.lastTrade AS marketValue, S.high, S.low
            |FROM positions PS
            |INNER JOIN portfolios P on P.portfolioID = PS.portfolioID
-           |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+           |LEFT JOIN mock_stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
            |WHERE PS.quantity > 0
            |""".stripMargin
       )

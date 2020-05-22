@@ -18,7 +18,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
        |LEFT JOIN portfolios P ON P.userID = U.userID
        |LEFT JOIN contests C ON C.contestID = P.contestID
        |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
-       |LEFT JOIN stocks S ON S.symbol = PS.symbol
+       |LEFT JOIN mock_stocks S ON S.symbol = PS.symbol
        |""".stripMargin
 
   override def findUserByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {

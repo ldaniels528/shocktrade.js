@@ -18,13 +18,17 @@ CREATE TABLE mock_stocks (
     spread DOUBLE,
     high DOUBLE,
     low DOUBLE,
+    highLimit DOUBLE,
+    lowLimit DOUBLE,
     `change` DOUBLE,
     changePct DOUBLE,
     lastTrade DOUBLE,
     tradeDateTime DATETIME,
+    marketCap DOUBLE,
     beta DOUBLE,
     volume BIGINT,
     avgVolume10Day BIGINT,
+    isActive TINYINT NOT NULL DEFAULT 1,
     PRIMARY KEY(symbol, exchange)
 );
 
@@ -80,9 +84,9 @@ CREATE TABLE stocks_wikipedia (
     sector VARCHAR(128),
     industry VARCHAR(128),
     cityState VARCHAR(128),
-    initialReportingDate VARCHAR(12),
+    initialReportingDate VARCHAR(32),
     cikNumber VARCHAR(11),
-    yearFounded VARCHAR(4)
+    yearFounded VARCHAR(34)
 );
 
 -- ------------------------------------------------------------

@@ -32,7 +32,7 @@ object Scope {
     var list: List[VariableRef] = Nil
     do {
       val result = for {
-        start <- line.indexOfOpt("$$", lastIndex)
+        start <- line.indexOfOpt(anchor, lastIndex)
         (name, end) <- findIdentifier(line, start)
       } yield VariableRef(name, start, end)
 
@@ -44,7 +44,7 @@ object Scope {
           lastIndex = line.length
       }
 
-    } while (lastIndex < line.length && line.indexOf("$$", lastIndex) >= 0)
+    } while (lastIndex < line.length && line.indexOf(anchor, lastIndex) >= 0)
 
     list.sortBy(-_.start)
   }

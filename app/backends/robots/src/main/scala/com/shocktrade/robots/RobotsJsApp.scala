@@ -1,8 +1,8 @@
 package com.shocktrade.robots
 
+import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.util.StringHelper._
-import com.shocktrade.robots.RobotProcessor.RobotActivity
-import com.shocktrade.robots.dao.{RobotDAO, RobotPortfolioData}
+import com.shocktrade.robots.dao.{RobotDAO, RobotPortfolioData, RobotSearchOptions}
 import com.shocktrade.robots.routes.{NextFunction, RobotRoutes}
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
@@ -91,7 +91,7 @@ object RobotsJsApp {
     def run(): Unit = {
       val startTime = System.currentTimeMillis()
       val outcome = for {
-        robots <- robotDAO.findRobotPortfolios
+        robots <- robotDAO.search(new RobotSearchOptions(isActive = 1))
         orders <- invokeRobots(robots)
       } yield (robots, orders)
 
@@ -106,16 +106,16 @@ object RobotsJsApp {
 
     // start and run the robots every 5 minutes
     setTimeout(() => run(), 0.millis)
-    setInterval(() => run(), 1.minutes)
+    setInterval(() => run(), 5.minutes)
 
     // setup the robot routes
     new RobotRoutes(app)
     ()
   }
 
-  def invokeRobots(robots: Seq[RobotPortfolioData])(implicit robotProcessor: RobotProcessor): Future[js.Array[RobotActivity]] = {
-    val promise = Promise[js.Array[RobotActivity]]()
-    var results: List[RobotActivity] = Nil
+  def invokeRobots(robots: Seq[RobotPortfolioData])(implicit robotProcessor: RobotProcessor): Future[js.Array[NewOrderForm]] = {
+    val promise = Promise[js.Array[NewOrderForm]]()
+    var results: List[NewOrderForm] = Nil
 
     def recurse(myRobots: List[RobotPortfolioData]): Unit = {
       myRobots match {

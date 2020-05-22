@@ -29,8 +29,9 @@ class ResearchDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options
     // build the query
     val (conditions, values) = (tuples.map(_._1), tuples.flatMap(_._2))
     val query =
-      s"""|SELECT * FROM stocks
-          |${if (conditions.nonEmpty) s"WHERE ${conditions.mkString(" AND ")}" else ""}
+      s"""|SELECT * FROM mock_stocks
+          |WHERE isActive = 1
+          |${if (conditions.nonEmpty) s"AND ${conditions.mkString(" AND ")}" else ""}
           |${options.sortBy.toOption.map(field => s"ORDER BY $field ${if (options.reverse.contains(true)) "DESC" else "ASC"}").getOrElse("")}
           |LIMIT $maxResults
           |""".stripMargin

@@ -58,8 +58,9 @@ object IngestionJsApp {
     // setup stock market mock generation
     val mockStockMarket = new MockStockUpdateDaemon()
     setImmediate(() => mockStockMarket.run())
-    setInterval(() => mockStockMarket.run(), 1.minute)
+    setInterval(() => mockStockMarket.run(), 15.seconds)
 
+    // one-time processes
     //setTimeout(() => new WikipediaCompanyLoader().run(), 1.second)
 
     // schedule the daemons

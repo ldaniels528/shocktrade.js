@@ -17,8 +17,8 @@ class GlobalSearchDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(opt
     val term = s"$searchTerm%".toUpperCase
     conn.queryFuture[EntitySearchResult](
       s"""|SELECT symbol AS _id, symbol AS name, name AS description, 'STOCK' AS type
-          |FROM stocks
-          |WHERE name LIKE '$term' OR symbol LIKE '$term'
+          |FROM mock_stocks
+          |WHERE isActive = 1 AND (name LIKE '$term' OR symbol LIKE '$term')
           |         UNION
           |SELECT userID AS _id, username AS name, 'Investor/Trader' AS description, 'USER' AS type
           |FROM users

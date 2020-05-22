@@ -11,6 +11,7 @@ import com.shocktrade.server.common.LoggerFactory
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
@@ -24,99 +25,98 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
   private implicit val portfolioProxy: PortfolioProxy = new PortfolioProxy(host, port)
   private implicit val researchProxy: ResearchProxy = new ResearchProxy(host, port)
   private implicit val userProxy: UserProxy = new UserProxy(host, port)
-  private val states = js.Dictionary[RobotState]()
+  private val states = js.Dictionary[RobotContext]()
   private val isDebug = true
 
   /**
-   * Starts a robot by name
+   * Allows the robot to conduct its trading activities
    * @param robotName the given robot name
-   * @return the resulting collection of [[RobotActivity robot activities]]
+   * @param portfolio the given [[RobotPortfolioData]]
+   * @return the resulting collection of [[NewOrderForm orders]]
    */
-  def start(robotName: String, portfolio: RobotPortfolioData): Future[js.Array[RobotActivity]] = {
-    val state = states.getOrElseUpdate(robotName, RobotState(robotName, portfolio.contestID.orNull, portfolio.userID.orNull, portfolio))
+  def start(robotName: String, portfolio: RobotPortfolioData): Future[js.Array[NewOrderForm]] = {
+    // get or create the robot's context
+    implicit val state: RobotContext = states.getOrElseUpdate(robotName, RobotContext(
+      robotName = robotName,
+      contestID = portfolio.contestID_!,
+      portfolioID = portfolio.portfolioID_!,
+      userID = portfolio.userID_!,
+      previousRankings = js.undefined
+    ))
+
+    // get the robot's personality
     implicit val personality: Personality = Personality(state)
+
     for {
-      rankings <- contestProxy.findContestRankings(state.contestID)
-      _ <- checkForOvertakes(state, rankings)
-      orders <- produceOrders(state)
+      orders <- produceOrders()
       _ <- saveOrders(orders)
-    } yield orders.map(_.asInstanceOf[RobotActivity])
+      rankings <- contestProxy.findContestRankings(portfolio.contestID_!).map(_.sortBy(_.rankNum.getOrElse(Int.MaxValue)))
+      _ <- handleRankChanges(rankings)
+      _ = state.previousRankings = rankings
+    } yield orders
   }
 
-  private def checkForOvertakes(state: RobotState, rankings: js.Array[ContestRanking])(implicit personality: Personality): Future[Unit] = {
-    val myRanking = rankings.find(_.username.contains(state.robotName))
-    if (state.prevRankNum_?.isEmpty) state.prevRankNum_? = myRanking.flatMap(_.rankNum.toOption)
+  private def findSecurities(implicit personality: Personality, state: RobotContext): Future[js.Array[ResearchQuote]] = {
+    personality.onFindStocksToBuy.map(researchProxy.research) getOrElse Future.successful(js.Array())
+  }
+
+  private def handleRankChanges(rankings: js.Array[ContestRanking])(implicit personality: Personality, state: RobotContext): Future[Unit] = {
     (for {
-      prevRankNum <- state.prevRankNum_?
-      newRankNum <- myRanking.flatMap(_.rankNum.toOption)
-      promise <- if (prevRankNum <= newRankNum) None else {
-        personality.onOvertake(oldRank = prevRankNum, newRank = newRankNum,
-          me = myRanking.orUndefined, him = rankings.find(_.rankNum.contains(prevRankNum)).orUndefined)
-          .map(sendChatMessage(state, _))
-          .toOption
-      }
-      _ = state.prevRankNum_? = Option(newRankNum)
-    } yield promise) getOrElse Future.successful({})
+      current <- rankings.find(_.username.contains(state.robotName))
+      currentRank <- current.rankNum.toOption
+      previous <- state.previousRankings.toOption.flatMap(_.find(_.username.contains(state.robotName)))
+      previousRank <- previous.rankNum.toOption if currentRank != previousRank
+      message <- personality.onRankChange(previousRank, currentRank, state.previousRankings, rankings).toOption
+    } yield sendChatMessage(message)) getOrElse Future.successful({})
   }
 
-  private def findSecurities()(implicit personality: Personality): Future[js.Array[ResearchQuote]] = {
-    researchProxy.research(personality.onBuying())
-  }
-
-  private def produceOrders(state: RobotState)(implicit personality: Personality): Future[js.Array[RobotOrders]] = {
+  private def produceOrders()(implicit personality: Personality, state: RobotContext): Future[js.Array[NewOrderForm]] = {
     for {
       robotUser <- userProxy.findUserByName(state.robotName)
-      myPortfolios <- portfolioProxy.findPortfoliosByUser(robotUser.userID_!)
-      portfolios = myPortfolios.filter(_.closedTime.flat.isEmpty)
-      buyOrders <- Future.sequence(portfolios.toList.collect {
-        case portfolio if portfolio.closedTime.flat.isEmpty & portfolio.funds.orZero > 100 =>
-          import portfolio._
-          for {
-            allOrders <- portfolioProxy.findOrders(portfolio.contestID_!, robotUser.userID_!).map(_.map(_.asInstanceOf[MyOrder]))
-            stocks <- findSecurities()
-          } yield {
-            val outstandingOrders = allOrders.filter(o => o.closed.contains(0) && o.orderType.contains(BUY))
-            val outstandingOrderTotal = outstandingOrders.flatMap(o => (for {price <- o.price ?? o.lastTrade; qty <- o.quantity} yield price * qty).toOption).sum
-            val orderedSymbols = outstandingOrders.flatMap(_.symbol.toOption).distinct
-            val filteredStocks = stocks.filterNot(_.symbol.exists(orderedSymbols.contains))
-            val eligibleStocks = if (funds.exists(_ >= outstandingOrderTotal)) filteredStocks else js.Array()
-            val newOrders = produceBuyOrders(portfolio, eligibleStocks, costTarget = funds.map(_ / eligibleStocks.length).orZero)
-            if(isDebug) {
-              import state.robotName
-              logger.info(s"$robotName: ${stocks.size} stocks identified")
-              logger.info(f"$robotName: funds: ${funds.orZero}%.2f | outstanding orders: $outstandingOrderTotal%.2f")
-              logger.info(s"$robotName: ${orderedSymbols.size} ordered symbols [${orderedSymbols.mkString(",")}]")
-              logger.info(s"$robotName: ${filteredStocks.size} filtered stocks")
-              logger.info(s"$robotName: ${eligibleStocks.size} eligible stocks")
-              logger.info(s"$robotName: ${newOrders.size} new orders")
-              logger.info("*" * 60)
-            }
-            new RobotOrders(contestID, userID, portfolioID, orders = newOrders.toJSArray)
+      portfolios <- portfolioProxy.findPortfoliosByUser(robotUser.userID_!).map(_.filter(_.closedTime.flat.isEmpty))
+      buyOrders <- Future.sequence(portfolios.toList collect { case portfolio if portfolio.funds.orZero > 100 =>
+        for {
+          allOrders <- portfolioProxy.findOrders(portfolio.contestID_!, robotUser.userID_!).map(_.map(_.asInstanceOf[RobotOrder]))
+          stocks <- findSecurities
+        } yield {
+          val outstandingOrders = allOrders.filter(o => o.closed.contains(0) && o.orderType.contains(BUY))
+          val outstandingOrderTotal = outstandingOrders.flatMap(o => (for {price <- o.price ?? o.lastTrade; qty <- o.quantity} yield price * qty).toOption).sum
+          val orderedSymbols = outstandingOrders.flatMap(_.symbol.toOption).distinct
+          val filteredStocks = stocks.filterNot(_.symbol.exists(orderedSymbols.contains))
+          val eligibleStocks = if (portfolio.funds.exists(_ >= outstandingOrderTotal)) filteredStocks else js.Array()
+          val newOrders = produceBuyOrders(portfolio, eligibleStocks, costTarget = portfolio.funds.map(_ / eligibleStocks.length).orZero)
+          if (isDebug) {
+            import state.robotName
+            logger.info(s"$robotName: ${stocks.size} stocks identified")
+            logger.info(s"$robotName: ${orderedSymbols.size} ordered symbols [${orderedSymbols.mkString(",")}]")
+            logger.info(f"$robotName: financial - funds: ${portfolio.funds.orZero}%.2f,  BUY orders: $outstandingOrderTotal%.2f")
+            logger.info(s"$robotName: stocks - filtered: ${filteredStocks.size}, eligible: ${eligibleStocks.size}")
+            logger.info(s"$robotName: ${newOrders.size} new orders")
+            logger.info("*" * 60)
           }
+          newOrders
+        }
       })
-      sellOrders <- Future.sequence(portfolios.toList.collect {
-        case portfolio if portfolio.closedTime.flat.isEmpty =>
-          import portfolio._
-          for {
-            positions <- portfolioProxy.findPositions(portfolio.contestID_!, robotUser.userID_!)
-            allOrders <- portfolioProxy.findOrders(portfolio.contestID_!, robotUser.userID_!)
-          } yield {
-            val outstandingOrders = allOrders.filter(o => o.closed.contains(0) && o.orderType.contains(SELL))
-            val orderedSymbols = outstandingOrders.flatMap(_.symbol.toOption).distinct
-            new RobotOrders(contestID, userID, portfolioID, orders = produceSellOrders(positions, orderedSymbols))
-          }
+      sellOrders <- Future.sequence(portfolios.toList map { portfolio =>
+        for {
+          positions <- portfolioProxy.findPositions(portfolio.contestID_!, robotUser.userID_!)
+          allOrders <- portfolioProxy.findOrders(portfolio.contestID_!, robotUser.userID_!)
+        } yield {
+          val outstandingOrders = allOrders.filter(o => o.closed.contains(0) && o.orderType.contains(SELL))
+          val orderedSymbols = outstandingOrders.flatMap(_.symbol.toOption).distinct
+          produceSellOrders(positions, orderedSymbols)
+        } toList
       })
-    } yield (buyOrders ::: sellOrders).toJSArray
+    } yield (buyOrders ::: sellOrders).flatten.toJSArray
   }
 
-  private def produceBuyOrders(portfolio: PortfolioLike, stocks: Seq[ResearchQuote], costTarget: Double): List[NewOrderForm] = {
+  private def produceBuyOrders(portfolio: PortfolioLike, stocks: Seq[ResearchQuote], costTarget: Double)(implicit personality: Personality, state: RobotContext): List[NewOrderForm] = {
     case class Accumulator(orders: List[NewOrderForm] = Nil, budget: Double)
     val candidateOrders = for {
       stock <- stocks
-      low <- stock.low.toList
-      limitPrice = low * 1.1
-      quantity = (costTarget / limitPrice).toInt if quantity >= 25
-    } yield stock.toBuyOrder(quantity, limitPrice)
+      purchasePrice <- personality.computePurchasePrice(stock).toList
+      quantity = (costTarget / purchasePrice).toInt if quantity >= 25
+    } yield stock.toBuyOrder(quantity, purchasePrice)
 
     val results = candidateOrders.foldLeft(Accumulator(budget = portfolio.funds.orZero)) {
       case (acc@Accumulator(orders, budget), order) if order.totalCost.exists(tc => tc > 0.0 && tc <= budget) =>
@@ -126,24 +126,24 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
     results.orders
   }
 
-  private def produceSellOrders(positions: js.Array[Position], orderedSymbols: js.Array[String]): js.Array[NewOrderForm] = {
+  private def produceSellOrders(positions: js.Array[Position], orderedSymbols: js.Array[String])(implicit personality: Personality, state: RobotContext): js.Array[NewOrderForm] = {
     for {
       position <- positions.filterNot(_.symbol.exists(orderedSymbols.contains))
-      high <- position.high.toList
+      salePrice <- personality.computeSalePrice(position).toList
       quantity <- position.quantity.toList
-    } yield position.toSellOrder(quantity, limitPrice = high * 0.90)
+    } yield position.toSellOrder(quantity, salePrice)
   }
 
-  private def saveOrders(reports: js.Array[RobotOrders]): Future[js.Array[OrderRef]] = {
+  private def saveOrders(orders: js.Array[NewOrderForm])(implicit personality: Personality, state: RobotContext): Future[js.Array[OrderRef]] = {
+    import state._
     Future.sequence(
       for {
-        RobotOrders(contestID, userID, portfolioID, orders) <- reports.toSeq
-        order <- orders
+        order <- orders.toList
         outcome = portfolioProxy.createOrder(contestID = contestID, userID = userID, order)
       } yield outcome).map(_.toJSArray)
   }
 
-  private def sendChatMessage(state: RobotState, message: String): Future[Unit] = {
+  private def sendChatMessage(message: String)(implicit state: RobotContext): Future[Unit] = {
     contestProxy.sendChatMessage(state.contestID, new ChatMessage(
       userID = state.userID,
       username = state.robotName,
@@ -160,49 +160,10 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
 object RobotProcessor {
 
   /**
-   * Custom Order Type
+   * Robot Order Type
    */
-  sealed trait MyOrder extends OrderLike {
+  sealed trait RobotOrder extends OrderLike {
     def lastTrade: js.UndefOr[Double]
-  }
-
-  /**
-   * Base trait for Robot Activities
-   */
-  sealed trait RobotActivity extends js.Object
-
-  /**
-   * Robot Orders
-   * @param contestID   the given contest ID
-   * @param userID      the given user ID
-   * @param portfolioID the given portfolio ID
-   * @param orders      the given [[NewOrderForm orders]]
-   */
-  class RobotOrders(val contestID: js.UndefOr[String],
-                    val userID: js.UndefOr[String],
-                    val portfolioID: js.UndefOr[String],
-                    val orders: js.Array[NewOrderForm]) extends RobotActivity
-
-  /**
-   * Robot Orders Companion
-   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-   */
-  object RobotOrders {
-    def unapply(r: RobotOrders): Option[(String, String, String, js.Array[NewOrderForm])] = {
-      for {
-        contestID <- r.contestID.toOption
-        userID <- r.userID.toOption
-        portfolioID <- r.portfolioID.toOption
-      } yield (contestID, userID, portfolioID, r.orders)
-    }
-  }
-
-  /**
-   * New Order Form Enriched
-   * @param form the host [[NewOrderForm]]
-   */
-  final implicit class NewOrderFormEnriched(val form: NewOrderForm) extends AnyVal {
-    def totalCost: js.UndefOr[Double] = for (price <- form.limitPrice; qty <- form.quantity) yield price * qty
   }
 
   /**
@@ -210,6 +171,7 @@ object RobotProcessor {
    * @param quote the host [[ResearchQuote]]
    */
   final implicit class ResearchQuoteEnriched(val quote: ResearchQuote) extends AnyVal {
+    @inline
     def toBuyOrder(quantity: Double, limitPrice: Double): NewOrderForm = NewOrderForm(
       symbol = quote.symbol,
       exchange = quote.exchange,
@@ -225,6 +187,7 @@ object RobotProcessor {
    * @param position the host [[Position]]
    */
   final implicit class PositionEnriched(val position: Position) extends AnyVal {
+    @inline
     def toSellOrder(quantity: Double, limitPrice: Double): NewOrderForm = NewOrderForm(
       symbol = position.symbol,
       exchange = position.exchange,

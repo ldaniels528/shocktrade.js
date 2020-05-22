@@ -151,7 +151,7 @@ LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
 LEFT JOIN portfolios P ON P.contestID = C.contestID
 LEFT JOIN users U ON U.userID = P.userID
 LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
-LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+LEFT JOIN mock_stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
 GROUP BY C.contestID, C.name, P.portfolioID, U.userID, U.username
 ORDER BY totalEquity DESC;
 

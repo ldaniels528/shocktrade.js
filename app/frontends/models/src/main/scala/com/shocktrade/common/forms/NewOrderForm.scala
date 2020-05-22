@@ -65,6 +65,9 @@ object NewOrderForm {
     def isMarketOrder: Boolean = form.priceType.contains("MARKET")
 
     @inline
+    def totalCost: js.UndefOr[Double] = for (price <- form.limitPrice; qty <- form.quantity) yield price * qty
+
+    @inline
     def validate: js.Array[String] = {
       val messages = js.Array[String]()
       if (form.symbol.nonAssigned) messages.append("Symbol is required")

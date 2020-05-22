@@ -44,51 +44,40 @@ class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionConte
          |""".stripMargin, js.Array(username, portfolioID)) map (_._1)
   }
 
-  override def findRobot(username: String): Future[js.Array[RobotPortfolioData]] = {
-    conn.queryFuture[RobotPortfolioData](
-      """|SELECT C.name AS contestName, U.userID, P.contestID, P.portfolioID, P.funds, R.*
-         |FROM robots R
-         |INNER JOIN users U ON R.username = U.username
-         |INNER JOIN portfolios P ON P.userID = U.userID
-         |INNER JOIN contests C ON C.contestID = P.contestID
-         |WHERE R.username = ?
-         |""".stripMargin, js.Array(username)) map (_._1)
+  override def findOne(options: RobotSearchOptions): Future[Option[RobotPortfolioData]] = {
+    search(options.copy(maxResults = 1)).map(_.headOption)
   }
 
-  override def findRobotPortfolios: Future[js.Array[RobotPortfolioData]] = {
-    conn.queryFuture[RobotPortfolioData](
-      """|SELECT C.name AS contestName, U.userID, P.contestID, P.portfolioID, P.funds, R.*
-         |FROM robots R
-         |INNER JOIN users U ON R.username = U.username
-         |INNER JOIN portfolios P ON P.userID = U.userID
-         |INNER JOIN contests C ON C.contestID = P.contestID
-         |""".stripMargin) map (_._1)
-  }
-
-  override def findRobots(isActive: Boolean): Future[js.Array[RobotPortfolioData]] = {
-    conn.queryFuture[RobotPortfolioData](
-      """|SELECT C.name AS contestName, U.userID, P.contestID, P.portfolioID, P.funds, R.*
-         |FROM robots R
-         |INNER JOIN users U ON R.username = U.username
-         |INNER JOIN portfolios P ON P.userID = U.userID
-         |INNER JOIN contests C ON C.contestID = P.contestID
-         |WHERE R.isActive = ?
-         |""".stripMargin, js.Array(isActive)) map (_._1)
-  }
-
-  override def setRobotActivity(username: String, activity: String): Future[Int] = {
-    conn.executeFuture(
-      """|UPDATE robots
-         |SET lastActivity = ?, lastActiveTime = now()
-         |WHERE username = ?
-         |""".stripMargin, js.Array(activity, username)).map(_.affectedRows)
+  override def search(options: RobotSearchOptions): Future[js.Array[RobotPortfolioData]] = {
+    val dict: List[(String, Any)] = {
+      options.contestID.map(id => "C.contestID = ?" -> id).toList :::
+        options.isActive.map(enabled => "R.isActive = ?" -> enabled).toList :::
+        options.portfolioID.map(id => "P.portfolioID = ?" -> id).toList :::
+        options.robotName.map(name => "R.username = ?" -> name).toList :::
+        options.userID.map(id => "U.userID = ?" -> id).toList
+    }
+    val sql: String = {
+      val sb = new StringBuilder(
+        """|SELECT C.name AS contestName, U.userID, U.username, P.*, R.*
+           |FROM robots R
+           |INNER JOIN users U ON R.username = U.username
+           |INNER JOIN portfolios P ON P.userID = U.userID
+           |INNER JOIN contests C ON C.contestID = P.contestID
+           |WHERE C.closedTime IS NULL
+           |""".stripMargin
+      )
+      if (dict.nonEmpty) sb.append(" AND ")
+      sb.append(dict.map(_._1).mkString(" AND "))
+      options.maxResults.foreach(maxResults => s" LIMIT $maxResults")
+      sb.toString()
+    }
+    val values = dict.map(_._2)
+    conn.queryFuture[RobotPortfolioData](sql, values).map(_._1)
   }
 
   override def toggleRobot(username: String, isActive: Boolean): Future[Int] = {
     conn.executeFuture(
-      """|UPDATE robots
-         |SET isActive = ?
-         |WHERE username = ?
+      """|UPDATE robots SET isActive = ? WHERE username = ?
          |""".stripMargin, js.Array(isActive, username)).map(_.affectedRows)
   }
 

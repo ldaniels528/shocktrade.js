@@ -15,7 +15,7 @@ class CikUpdateDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(option
   override def findMissing(implicit ec: ExecutionContext): Future[js.Array[MissingCikData]] = {
     conn.queryFuture[MissingCikData](
       """|SELECT A.symbol, A.exchange
-         |FROM stocks A
+         |FROM mock_stocks A
          |LEFT JOIN stocks_cik B ON B.symbol = A.symbol AND B.exchange = A.exchange
          |WHERE B.symbol IS NULL
          |""".stripMargin

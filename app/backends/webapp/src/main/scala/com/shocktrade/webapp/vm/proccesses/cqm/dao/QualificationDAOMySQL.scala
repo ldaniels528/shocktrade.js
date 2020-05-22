@@ -47,11 +47,11 @@ class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execut
          |INNER JOIN order_price_types OPT ON OPT.name = O.priceType
          |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
          |INNER JOIN contests C ON C.contestID = P.contestID
-         |INNER JOIN stocks S ON S.symbol = O.symbol AND S.`exchange` = O.`exchange`
+         |INNER JOIN mock_stocks S ON S.symbol = O.symbol AND S.`exchange` = O.`exchange`
          |WHERE O.closed = O.fulfilled AND O.closed = 0
          |AND C.closedTime IS NULL
          |AND S.tradeDateTime BETWEEN O.creationTime AND IFNULL(O.expirationTime, DATE_ADD(NOW(), INTERVAL 1 DAY))
-         |AND S.volume > O.quantity
+         |AND S.volume >= O.quantity
          |AND (
          |  (O.orderType = 'BUY' AND ((O.priceType = 'MARKET') OR (O.priceType = 'LIMIT' AND O.price >= S.lastTrade)))
          |  OR (O.orderType = 'SELL' AND ((O.priceType = 'MARKET') OR (O.priceType = 'LIMIT' AND O.price <= S.lastTrade)))

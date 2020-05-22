@@ -2,7 +2,7 @@ package com.shocktrade.robots.routes
 
 import com.shocktrade.common.Ok
 import com.shocktrade.robots.RobotProcessor
-import com.shocktrade.robots.dao.RobotDAO
+import com.shocktrade.robots.dao.{RobotDAO, RobotSearchOptions}
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
@@ -40,14 +40,14 @@ class RobotRoutes(app: Application)(implicit ec: ExecutionContext, robotDAO: Rob
 
   def findRobot(request: Request, response: Response, next: NextFunction): Unit = {
     val username = request.params("name")
-    robotDAO.findRobot(username) onComplete {
+    robotDAO.search(new RobotSearchOptions(robotName = username)) onComplete {
       case Success(robots) => response.send(robots); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
   def findRobots(request: Request, response: Response, next: NextFunction): Unit = {
-    robotDAO.findRobotPortfolios onComplete {
+    robotDAO.search(new RobotSearchOptions()) onComplete {
       case Success(robots) => response.send(robots); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }

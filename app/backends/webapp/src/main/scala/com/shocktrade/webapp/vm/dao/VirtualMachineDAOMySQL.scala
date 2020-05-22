@@ -201,7 +201,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |WHERE orderID = ?
          |""".stripMargin, js.Array(closed, fulfilled, negotiatedPrice, message.orNull, orderID))
       .map(_.affectedRows).map(checkCount(_ => s"Order $orderID could not be closed"))
-      .map(w => new OrderOutcome(fulfilled = fulfilled, w = w))
+      .map(w => new OrderOutcome(orderID, fulfilled = fulfilled, w = w, negotiatedPrice = negotiatedPrice, message = message))
   }
 
   override def createOrder(portfolioID: String, order: OrderData): Future[OrderRef] = {
@@ -229,8 +229,8 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       xp = 5 * metrics.gainLossPct.orZero
       _ <- creditPortfolio(portfolioID, amount = metrics.marketValue.orZero - metrics.commission.orZero, xp = xp)
       pu <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = false)
-      ou <- completeOrder(orderID, negotiatedPrice = metrics.lastTrade, fulfilled = true)
-    } yield new OrderOutcome(positionID = pu.positionID, negotiatedPrice = metrics.lastTrade, fulfilled = true, xp = xp, w = pu.w)
+      orderOutcome <- completeOrder(orderID, negotiatedPrice = metrics.lastTrade, fulfilled = true)
+    } yield orderOutcome.copy(xp = xp, positionID = pu.positionID)
 
     outcome recoverWith {
       case e: InsufficientQuantityException =>
@@ -248,10 +248,10 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     val outcome = for {
       _ <- ensurePortfolioIsOpen(portfolioID)
       mv <- computeMarketValue(symbol, exchange, quantity, priceType)
-      proceeds <- debitPortfolio(portfolioID, amount = mv.marketValue + mv.commission)
+      _ <- debitPortfolio(portfolioID, amount = mv.marketValue + mv.commission)
       pu <- updatePosition(portfolioID, symbol, exchange, quantity, isBuying = true)
-      ou <- completeOrder(orderID, negotiatedPrice = mv.lastTrade, fulfilled = true)
-    } yield new OrderOutcome(positionID = pu.positionID, negotiatedPrice = mv.lastTrade, fulfilled = true, w = pu.w)
+      orderOutcome <- completeOrder(orderID, negotiatedPrice = mv.lastTrade, fulfilled = true)
+    } yield orderOutcome.copy(positionID = pu.positionID)
 
     outcome recoverWith {
       case e: InsufficientFundsException =>
@@ -289,7 +289,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
         """|SELECT P.funds AS cash, SUM(S.lastTrade * PS.quantity) AS equity
            |FROM portfolios P
            |LEFT JOIN positions PS ON P.portfolioID = PS.portfolioID
-           |LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+           |LEFT JOIN mock_stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
            |WHERE PS.portfolioID = ?
            |""".stripMargin, js.Array(portfolioID)).map(_._1.headOption) map {
         case Some(proceeds) => proceeds
@@ -371,7 +371,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   private def computeMarketValue(symbol: String, exchange: String, quantity: Double, priceType: String): Future[MarketValue] = {
     conn.queryFuture[MarketValue](
       """|SELECT S.lastTrade, S.lastTrade * ? AS marketValue, OPT.commission
-         |FROM stocks S
+         |FROM mock_stocks S
          |INNER JOIN order_price_types OPT ON OPT.name = ?
          |WHERE S.symbol = ? AND S.exchange = ?
          |""".stripMargin, js.Array(quantity, priceType, symbol, exchange)).map(_._1.headOption) map {
@@ -489,7 +489,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |  ((S.lastTrade - AVG(O.negotiatedPrice)) * SUM(O.quantity)) / (AVG(O.negotiatedPrice) * SUM(O.quantity)) AS gainLossPct
          |FROM orders O
          |INNER JOIN order_price_types OPT ON OPT.name = ?
-         |LEFT JOIN stocks S ON S.symbol = O.symbol AND S.exchange = O.exchange
+         |LEFT JOIN mock_stocks S ON S.symbol = O.symbol AND S.exchange = O.exchange
          |WHERE O.portfolioID = ? AND O.symbol = ? AND O.exchange = ?
          |AND O.orderType = 'BUY' AND O.fulfilled = 1
          |GROUP BY O.symbol, O.exchange

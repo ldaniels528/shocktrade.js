@@ -1,25 +1,32 @@
 package com.shocktrade.robots
 
 import com.shocktrade.common.forms.ResearchOptions
-import com.shocktrade.common.models.contest.ContestRanking
+import com.shocktrade.common.models.contest.{ContestRanking, Position}
+import com.shocktrade.common.models.quote.ResearchQuote
 
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 import scala.util.Random
 
 /**
- * Represents a synthetic personality
+ * Represents a synthetic personality; an artificial intelligence (AI)
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 trait Personality {
 
-  def onBuying(): ResearchOptions
+  def computePurchasePrice(stock: ResearchQuote)(implicit state: RobotContext): js.UndefOr[Double]
 
-  def onGoodbye(): js.UndefOr[String]
+  def computeSalePrice(position: Position)(implicit state: RobotContext): js.UndefOr[Double]
 
-  def onOvertake(oldRank: Int, newRank: Int, me: js.UndefOr[ContestRanking], him: js.UndefOr[ContestRanking]): js.UndefOr[String]
+  def onFindStocksToBuy(implicit state: RobotContext): js.UndefOr[ResearchOptions]
 
-  def onWelcome(): js.UndefOr[String]
+  def onGoodbye(implicit state: RobotContext): js.UndefOr[String]
+
+  def onHello(implicit state: RobotContext): js.UndefOr[String]
+
+  def onRankChange(oldRank: Int, newRank: Int,
+                   oldRankings: js.UndefOr[js.Array[ContestRanking]],
+                   newRankings: js.Array[ContestRanking]): js.UndefOr[String]
 
 }
 
@@ -31,19 +38,26 @@ object Personality {
 
   /**
    * Default Personality constructor
-   * @param state the given [[RobotState]]
    * @return a new [[Personality]]
    */
-  def apply(state: RobotState): Personality = new GenericPersonality(state)
+  def apply(state: RobotContext): Personality = GenericPersonality
 
   /**
    * Generic Personality
-   * @param state the given [[RobotState]]
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class GenericPersonality(state: RobotState) extends Personality {
+  object GenericPersonality extends Personality {
     private val random = new Random()
 
-    override def onBuying(): ResearchOptions = {
+    override def computePurchasePrice(stock: ResearchQuote)(implicit state: RobotContext): js.UndefOr[Double] = {
+      stock.low.map(_ * 1.10) // day's low + 10%
+    }
+
+    override def computeSalePrice(position: Position)(implicit state: RobotContext): js.UndefOr[Double] = {
+      position.high.map(_ * 0.90) // day's high - 10%
+    }
+
+    override def onFindStocksToBuy(implicit state: RobotContext): js.UndefOr[ResearchOptions] = {
       val limit = 50
       state.robotName match {
         case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = limit)
@@ -55,30 +69,32 @@ object Personality {
       }
     }
 
-    override def onGoodbye(): UndefOr[String] = {
+    override def onGoodbye(implicit state: RobotContext): UndefOr[String] = {
       state.robotName match {
         case "daisy" => "Adios..."
-        case "teddy" =>  "Goodbye."
+        case "teddy" => "Goodbye."
         case _ => js.undefined
       }
     }
 
-    override def onOvertake(oldRank: Int, newRank: Int, me: js.UndefOr[ContestRanking], him: js.UndefOr[ContestRanking]): js.UndefOr[String] = {
-      val contestantName = him.flatMap(_.username).orNull
-      newRank match {
-        case 1 => s"Wake up @$contestantName! I just took first... Haha"
-        case 2 => s"Sorry @$contestantName, you were in my way..."
-        case _ => js.undefined
-      }
-    }
-
-    override def onWelcome(): js.UndefOr[String] = {
+    override def onHello(implicit state: RobotContext): js.UndefOr[String] = {
       state.robotName match {
         case "daisy" => "Don't waste my time..."
         case "teddy" => "Hello everyone"
         case _ => js.undefined
       }
     }
+
+    override def onRankChange(oldRank: Int, newRank: Int,
+                              oldRankings: js.UndefOr[js.Array[ContestRanking]],
+                              newRankings: js.Array[ContestRanking]): js.UndefOr[String] = {
+      val contestantName = newRankings(newRank + 1).username.orNull
+      newRank match {
+        case 1 if oldRankings.nonEmpty => s"Wake up @$contestantName! I just took first... Haha!"
+        case _ => js.undefined
+      }
+    }
+
   }
 
 }

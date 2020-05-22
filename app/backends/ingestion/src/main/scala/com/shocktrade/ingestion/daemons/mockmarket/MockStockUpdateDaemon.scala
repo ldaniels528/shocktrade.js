@@ -7,54 +7,90 @@ import com.shocktrade.remote.proxies.RemoteEventProxy
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.{DataAccessObjectHelper, MySQLDAO}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
 import scala.scalajs.js
-import scala.util.{Failure, Random, Success}
+import scala.util.{Failure, Success}
 
 /**
  * Mock Stock Update Daemon
  * @param options the given [[MySQLConnectionOptions]]
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class MockStockUpdateDaemon(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions) extends MySQLDAO(options) {
   private val logger = LoggerFactory.getLogger(getClass)
-  private val random = new Random()
   private val restProxy = new RemoteEventProxy(host = "localhost", port = 9000)
-  private var lastUpdateTime: Double = 0
-  import random.nextDouble
+  import StockTrends._
+
+  // watch these symbols
+  StockTrends.watch("AAPL", "TSLA", "TACOW", "AMZN")
 
   /**
    * Updates all stocks to simulate an active market
    */
   def run(): Unit = {
-    logger.info("Starting Mock-Stock Update process...")
     val startTime = System.currentTimeMillis()
     val outcome = for {
       stocks <- findStocks
-      refreshedStocks = stocks.map(randomize)
-      count <- Future.sequence(refreshedStocks.toSeq.map(updateStock)).map(_.sum)
-    } yield (refreshedStocks, count)
+      refreshedStocks = stocks.map(refreshStock)
+      count <- saveStocks(refreshedStocks)
+    } yield (stocks, refreshedStocks, count)
 
     outcome onComplete {
-      case Success((refreshedStocks, count)) =>
+      case Success((stocks, refreshedStocks, count)) =>
         val elapsedTime = System.currentTimeMillis() - startTime
         val rate = if (elapsedTime > 0) count / (elapsedTime / 1000.0) else count
         logger.info(f"Processed $count symbols in $elapsedTime msec [$rate%.1f rec/sec]")
-        /*
-        if (lastUpdateTime == 0 || js.Date.now() - lastUpdateTime >= 5.minutes.toMillis) {
-          transmitUpdates(refreshedStocks.take(75))
-          lastUpdateTime = js.Date.now()
-        }*/
       case Failure(e) =>
         logger.error("Failed while updating mock stocks...")
         e.printStackTrace()
     }
   }
 
-  def transmitUpdates(stocks: js.Array[StockData]): Unit = {
+  private def findStocks: Future[js.Array[StockData]] = {
+    conn.queryFuture[StockData]("SELECT * FROM mock_stocks WHERE isActive = 1 ORDER BY tradeDateTime").map(_._1)
+  }
+
+  private def refreshStock(stock: StockData): StockData = {
+    (for {
+      newSale <- getNewSale(stock)
+      high <- stock.high.map(Math.max(newSale, _))
+      low <- stock.low.map(Math.min(newSale, _))
+      prevClose <- stock.prevClose
+      volume <- stock.volume ?? 0.0
+
+      change = newSale - prevClose
+      changePct = 100.0 * (change / prevClose)
+      spread: js.UndefOr[Double] = if (high != 0) 100.0 * ((high - low) / high) else js.undefined
+
+    } yield stock.copy(
+      change = change, changePct = changePct, lastTrade = newSale, spread = spread, volume = volume,
+      high = high, low = low, tradeDateTime = new js.Date
+    )) getOrElse {
+      logger.warn(s"Problem with stock ${stock.symbol.orNull}")
+      stock
+    }
+  }
+
+  private def saveStocks(stockList: Seq[StockData]): Future[Int] = {
+    val batchSize = 1500
+    Future.sequence(stockList.sliding(batchSize, batchSize).toSeq map { stocks =>
+      conn.executeFuture(
+        s"""|REPLACE INTO mock_stocks (
+            |  symbol, `exchange`, `name`, lastTrade, tradeDateTime, prevClose, `open`, `close`, high, low, highLimit, lowLimit,
+            |  spread, `change`, changePct, volume, avgVolume10Day, beta, cikNumber, sector, industry
+            |) VALUES ${stocks map { _ => "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" } mkString ",\n"}
+            |""".stripMargin,
+        stocks flatMap { stock =>
+          import stock._
+          Seq(symbol, exchange, name, lastTrade, tradeDateTime, prevClose, open, close, high, low, highLimit, lowLimit,
+            spread, change, changePct, volume, avgVolume10Day, beta, cikNumber, sector, industry).map(_.orNull)
+        }).map(_.affectedRows)
+    }).map(_.sum)
+  }
+
+  private def transmitUpdates(stocks: js.Array[StockData]): Unit = {
     try {
       logger.info(s"Transmitting ${stocks.length} stocks to relay...")
       val startTime = js.Date.now()
@@ -76,27 +112,6 @@ class MockStockUpdateDaemon(options: MySQLConnectionOptions = DataAccessObjectHe
         e.printStackTrace()
     }
     ()
-  }
-
-  def randomize(stock: StockData): StockData = {
-    stock.copy(
-      lastTrade = for {high <- stock.high; low <- stock.low} yield nextDouble() * (high - low) + low,
-      tradeDateTime = new js.Date()
-    )
-  }
-
-  def findStocks: Future[js.Array[StockData]] = conn.queryFuture[StockData]("SELECT * FROM mock_stocks").map(_._1)
-
-  def updateStock(stock: StockData): Future[Int] = {
-    import stock._
-    conn.executeFuture(
-      """|REPLACE INTO mock_stocks (
-         |  symbol, `exchange`, `name`, lastTrade, tradeDateTime, prevClose, `open`, `close`, high, low,
-         |  spread, `change`, changePct, volume, avgVolume10Day, beta, cikNumber, sector, industry
-         |) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-         |""".stripMargin,
-      js.Array(symbol, exchange, name, lastTrade, tradeDateTime, prevClose, open, close, high, low,
-        spread, change, changePct, volume, avgVolume10Day, beta, cikNumber, sector, industry).map(_.orNull)).map(_.affectedRows)
   }
 
 }
