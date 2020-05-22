@@ -24,7 +24,7 @@
         </span>
 
         <span class="col-md-4">
-            Experience Earned: <span class="pull-right XP">{{ portfolio.totalXP || 0.00 | number:0 }}</span>
+            Experience Earned: <span class="pull-right XP">{{ getPortfolioTotalXP() || 0.00 | number:1 }}</span>
         </span>
     </div>
 

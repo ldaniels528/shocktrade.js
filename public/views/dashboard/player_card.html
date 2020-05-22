@@ -25,7 +25,7 @@
         <div>
             <span class="pull-right"
                   ng-class="player.totalXP >= 0 ? 'xp' : 'neg_xp'"
-                  ng-show="player.totalXP">{{ player.totalXP }}xp &nbsp;</span>
+                  ng-show="player.totalXP">{{ player.totalXP || 0 | number:1 }}xp &nbsp;</span>
         </div>
     </div>
     <br style="clear: both">

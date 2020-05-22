@@ -74,7 +74,7 @@ CREATE TABLE portfolios (
      userID CHAR(36) NOT NULL,
      contestID CHAR(36) NOT NULL,
      funds DOUBLE NOT NULL,
-     totalXP INTEGER NOT NULL DEFAULT 0,
+     totalXP DOUBLE NOT NULL DEFAULT 0,
      joinTime DATETIME NOT NULL DEFAULT now(),
      closedTime DATETIME NULL
 );

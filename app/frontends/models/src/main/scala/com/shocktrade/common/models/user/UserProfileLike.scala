@@ -19,7 +19,7 @@ trait UserProfileLike extends js.Object {
 
   def wallet: js.UndefOr[Double]
 
-  def totalXP: js.UndefOr[Int]
+  def totalXP: js.UndefOr[Double]
 
   def lastLoginTime: js.UndefOr[js.Date]
 
@@ -41,7 +41,7 @@ object UserProfileLike {
 
     @inline
     def getLevel: js.UndefOr[Int] = for {
-      xp <- profile.totalXP
+      xp <- getTotalXP.map(_.toInt)
       level = xp / levelFactor + 1
     } yield Math.max(1, level)
 
@@ -60,7 +60,7 @@ object UserProfileLike {
     def getStars: js.UndefOr[js.Array[Int]] = {
       val maxStars = 5
       for {
-        xp <- profile.totalXP
+        xp <- getTotalXP.map(_.toInt)
         half = if (xp % repFactor > 0) List(1) else List(0)
         full = (1 to Math.min(maxStars, xp / repFactor)).map(_ => 2).toList
         empty = ((half.length + full.length) until maxStars).map(_ => 0).toList
@@ -68,7 +68,7 @@ object UserProfileLike {
     }
 
     @inline
-    def getTotalXP: js.UndefOr[Int] = for {totalXP <- profile.totalXP} yield Math.max(0, totalXP)
+    def getTotalXP: js.UndefOr[Double] = for {totalXP <- profile.totalXP} yield Math.max(0, totalXP)
 
     @inline
     def userID_! : String = profile.userID.getOrElse(throw js.JavaScriptException("User ID is required"))

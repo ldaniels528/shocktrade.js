@@ -252,6 +252,8 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     reorderedRankings ?? aRankings
   }
 
+  $scope.getPortfolioTotalXP = () => $scope.portfolio.flatMap(_.totalXP)
+
   $scope.toggleRankingsShown = () => $scope.rankingsHidden = !$scope.rankingsHidden.isTrue
 
   private def getJoiningPlayerRank(playerName: String, totalEquity: Double, rankings: js.Array[ContestRanking]): js.UndefOr[String] = {
@@ -385,8 +387,9 @@ object DashboardController {
     var initDash: js.Function0[js.UndefOr[js.Promise[(Contest, js.UndefOr[PerksDialogResult], HttpResponse[js.Array[ChatMessage]])]]] = js.native
     var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
     var getPlayerRankings: js.Function0[js.UndefOr[js.Array[ContestRanking]]] = js.native
-    var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
     var getPlayerRankCellClass: js.Function1[js.UndefOr[ContestRanking], js.UndefOr[String]] = js.native
+    var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
+    var getPortfolioTotalXP: js.Function0[js.UndefOr[Double]] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
     var isParticipant: js.Function0[js.UndefOr[Boolean]] = js.native

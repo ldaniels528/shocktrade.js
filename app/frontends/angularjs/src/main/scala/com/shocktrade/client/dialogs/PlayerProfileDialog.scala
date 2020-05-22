@@ -107,7 +107,7 @@ object PlayerProfileDialogController {
     var getLevelDescription: js.Function0[js.UndefOr[String]] = js.native
     var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
     var getStars: js.Function0[js.UndefOr[js.Array[Int]]] = js.native
-    var getTotalXP: js.Function0[js.UndefOr[Int]] = js.native
+    var getTotalXP: js.Function0[js.UndefOr[Double]] = js.native
     var isOnline: js.Function1[js.UndefOr[String], js.UndefOr[Boolean]] = js.native
     var okay: js.Function0[Unit] = js.native
 

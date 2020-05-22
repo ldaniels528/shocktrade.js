@@ -10,7 +10,7 @@ CREATE TABLE users (
     username VARCHAR(40) NOT NULL,
     email VARCHAR(255) NULL,
     password TEXT NULL,
-    totalXP INTEGER NOT NULL DEFAULT 0,
+    totalXP DOUBLE NOT NULL DEFAULT 0,
     wallet DOUBLE NOT NULL,
     gamesCompleted INT NOT NULL DEFAULT 0,
     gamesCreated INT NOT NULL DEFAULT 0,

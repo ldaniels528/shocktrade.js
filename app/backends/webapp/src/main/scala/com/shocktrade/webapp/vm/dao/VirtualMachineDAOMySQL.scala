@@ -80,7 +80,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
           portfolioID <- insertPortfolio(contestID, userID, startingBalance)
           proceeds <- debitWallet(portfolioID, startingBalance)
           messageRef <- sendChatMessage(contestID, userID, message = s"Welcome to $name!")
-          w0 <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesCreated = +1))
+          _ <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesCreated = +1))
         } yield new ContestCreationResponse(contestID, portfolioID, messageRef.messageID)
       case None =>
         Future.failed(js.JavaScriptException("Required parameters are missing"))
@@ -122,11 +122,11 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   override def startContest(contestID: String, userID: String): Future[Boolean] = {
     conn.executeFuture(
-      s"""|UPDATE portfolios P
-          |INNER JOIN contest_statuses CS ON CS.status = 'ACTIVE'
-          |SET startTime = now(), statusID = CS.statusID
-          |WHERE contestID = ? AND hostUserID = ? AND statusID <> CS.statusID
-          |""".stripMargin, js.Array(contestID, userID)) map (_.affectedRows > 0)
+      """|UPDATE portfolios P
+         |INNER JOIN contest_statuses CS ON CS.status = 'ACTIVE'
+         |SET startTime = now(), statusID = CS.statusID
+         |WHERE contestID = ? AND hostUserID = ? AND statusID <> CS.statusID
+         |""".stripMargin, js.Array(contestID, userID)) map (_.affectedRows > 0)
   }
 
   override def updateContest(contest: ContestData): Future[Ok] = {
@@ -272,14 +272,15 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       _ <- foreCloseOrders(portfolioID)
       proceeds <- closeAndTransferFunds(portfolioID)
       recommendation = determineAwards(portfolioID, rankings)
-      _ <- updateIf(recommendation.awardedXP > 0) { () => grantXP(portfolioID, recommendation.awardedXP) }
+      _ <- updateIf(recommendation.xp > 0) { () => grantXP(portfolioID, recommendation.xp) }
       _ <- updateIf(recommendation.awardCodes.nonEmpty) { () => grantAwards(portfolioID, recommendation.awardCodes) }
-      _ <- updatePlayerStatistics(portfolioID)(PlayerStatistics(gamesCompleted = +1,
+      _ <- updatePlayerStatistics(portfolioID)(PlayerStatistics(
+        gamesCompleted = +1,
         trophiesGold = recommendation(GLDTRPHY),
         trophiesSilver = recommendation(SLVRTRPHY),
         trophiesBronze = recommendation(BRNZTRPHY)
       ))
-    } yield new ClosePortfolioResponse(proceeds, recommendation, xp = recommendation.awardedXP)
+    } yield new ClosePortfolioResponse(proceeds, recommendation, xp = recommendation.xp)
   }
 
   private def closeAndTransferFunds(portfolioID: String): Future[PortfolioEquity] = {
@@ -388,7 +389,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |    P.totalXP = P.totalXP + ?,
          |    P.funds = P.funds + ?
          |WHERE P.portfolioID = ?
-         |""".stripMargin, js.Array(xp.toInt, xp.toInt, amount, portfolioID))
+         |""".stripMargin, js.Array(xp, xp, amount, portfolioID))
       .map(_.affectedRows) map checkUpdate(_ => PortfolioNotFoundException(portfolioID)) map (Ok(_))
   }
 
@@ -419,7 +420,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 25.0) => Award.PAYDIRT -> 25 }).toList ::: items
     items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 50.0) => Award.MADMONEY -> 50 }).toList ::: items
     items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 100.0) => Award.CRYSTBAL -> 100 }).toList ::: items
-    new AwardsRecommendation(portfolioID, userID, awardCodes = items.map(_._1).toJSArray, awardedXP = items.map(_._2).sum)
+    new AwardsRecommendation(portfolioID, userID, awardCodes = items.map(_._1).toJSArray, xp = items.map(_._2).sum)
   }
 
   private def ensurePortfolioIsOpen(portfolioID: String): Future[Boolean] = {
@@ -519,7 +520,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     }) map (_.sum)
   }
 
-  private def grantXP(portfolioID: String, xp: Int): Future[Int] = {
+  private def grantXP(portfolioID: String, xp: Double): Future[Int] = {
     conn.executeFuture(
       """|UPDATE users U
          |INNER JOIN portfolios P ON P.userID = U.userID
