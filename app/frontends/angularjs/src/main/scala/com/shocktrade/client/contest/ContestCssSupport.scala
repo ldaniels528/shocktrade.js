@@ -21,6 +21,12 @@ trait ContestCssSupport {
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
+  $scope.getAccessStatusClass = (aContest: js.UndefOr[ContestSearchResult]) => aContest map {
+    case c if c.isOwner.contains(1) => "fa fa-user-circle-o"
+    case c if c.isParticipant.contains(1) => "fa fa-user"
+    case _ => "fa fa-user-o"
+  }
+
   $scope.getContestStatusClass = (aStatus: js.UndefOr[String]) => aStatus map {
     case "ACTIVE" => "fa fa-circle positive"
     case "CLOSED" => "fa fa-circle negative"
@@ -82,6 +88,7 @@ trait ContestCssSupportScope extends js.Object {
   var getDurationClass: js.Function1[js.UndefOr[Int], js.UndefOr[String]] = js.native
   var getExpandedTrophyIcon: js.Function1[js.UndefOr[ContestRanking], js.UndefOr[String]] = js.native
   var getStatusClass: js.Function1[js.UndefOr[ContestSearchResult], String] = js.native
+  var getAccessStatusClass: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[String]] = js.native
   var trophy: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
 
 }

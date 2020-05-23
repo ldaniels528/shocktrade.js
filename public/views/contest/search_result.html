@@ -1,0 +1,25 @@
+<div class="clickable" ng-class="'cs_game_card_' + c.status">
+    <div style="display: inline; float: left">
+        <avatar id="{{ c.hostUserID }}" class="avatar-53 clickable {{ 'cs_game_card_' + c.status }}" ng-click="popupPlayerProfile(c.hostUserID)"></avatar>
+        <img class="top" ng-src="/images/status/{{ isOnline(c.hostUserID) == true ? 'greenlight' : 'offlight' }}.png">
+    </div>
+    <div ng-click="enterGame(c.contestID)" style="display: inline; float: right; width: 70%">
+        <div>
+            <span class="bold">
+                <i ng-show="c.invitationOnly" class="fa fa-lock"></i> {{ c.name }}
+            </span>
+            <span class="bold pull-right" ng-class="c.playerCount >= maxPlayers ? 'st_orange' : ''">
+                {{ c.playerCount }} <i ng-class="getAccessStatusClass(c)"></i>
+            </span>
+        </div>
+        <div>
+            <span class="positive">
+                <i class="fa fa-money"></i> {{ c.startingBalance | number:2 }}
+            </span>
+        </div>
+        <div>
+            <i class="fa fa-clock-o"></i> {{ c.status == 'CLOSED' ? 'Ended' : 'Ends' }} {{ c.expirationTime | duration }}
+        </div>
+    </div>
+    <br style="clear: both" />
+</div>

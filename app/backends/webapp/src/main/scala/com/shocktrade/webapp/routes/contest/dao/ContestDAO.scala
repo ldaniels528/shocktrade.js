@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
-import com.shocktrade.common.forms.ContestSearchOptions
+import com.shocktrade.common.forms.ContestSearchRequest
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -18,7 +18,7 @@ trait ContestDAO {
 
   def findRankings(contestID: String): Future[js.Array[ContestRanking]]
 
-  def contestSearch(form: ContestSearchOptions): Future[js.Array[ContestSearchResult]]
+  def contestSearch(form: ContestSearchRequest): Future[js.Array[ContestSearchResult]]
 
   def findChatMessages(contestID: String): Future[js.Array[ChatMessage]]
 

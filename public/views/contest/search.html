@@ -9,9 +9,10 @@
                 <i class="fa fa-plus-circle"></i> Create a new game.
             </span>
         </div>
-        <div ng-include src="'/views/contest/search_header.html'"></div>
         <div class="availGamesContainer">
-            <div ng-include src="'/views/contest/search_results.html'"></div>
+            <div ng-repeat="c in getSearchResults(searchTerm) track by $index">
+                <div class="col-md-3" ng-include src="'/views/contest/search_result.html'"></div>
+            </div>
         </div>
     </div>
 </div>

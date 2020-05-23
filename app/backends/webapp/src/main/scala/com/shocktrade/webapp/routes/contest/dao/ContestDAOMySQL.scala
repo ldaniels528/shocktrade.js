@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
-import com.shocktrade.common.forms.ContestSearchOptions
-import com.shocktrade.common.forms.ContestSearchOptions._
+import com.shocktrade.common.forms.ContestSearchRequest
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.MySQLDAO
@@ -33,7 +32,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
       .map { case (rows, _) => rows }
   }
 
-  override def contestSearch(form: ContestSearchOptions): Future[js.Array[ContestSearchResult]] = {
+  override def contestSearch(form: ContestSearchRequest): Future[js.Array[ContestSearchResult]] = {
     val sql = makeSearchSQL(form)
     try conn.queryFuture[ContestSearchResult](sql).map(_._1) catch {
       case e: Throwable =>
@@ -42,20 +41,21 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
     }
   }
 
-  private def makeSearchSQL(form: ContestSearchOptions): String = {
+  private def makeSearchSQL(form: ContestSearchRequest): String = {
+    import ContestSearchRequest._
     var options: List[String] = Nil
 
     // build the search options
-    form.buyIn.flat.foreach(bi => options = s"C.startingBalance <= ${bi.value}" :: options)
-    form.continuousTrading.flat.foreach(checked => if (checked) options = "" :: options)
-    form.duration.flat.foreach(gd => options = s"C.expirationTime > DATE_ADD(now(), INTERVAL ${gd.value} DAY)" :: options)
+    form.buyIn.flat.foreach(buyIn => options = s"C.startingBalance <= $buyIn" :: options)
+    //form.continuousTrading.flat.foreach(checked => if (checked) options = "C.mode = 0" :: options)
+    form.duration.flat.foreach(duration => options = s"C.expirationTime > DATE_ADD(now(), INTERVAL $duration DAY)" :: options)
     form.friendsOnly.flat.foreach(checked => if (checked) options = "C.friendsOnly = 1" :: options)
     form.invitationOnly.flat.foreach(checked => if (checked) options = "C.invitationOnly = 1" :: options)
-    for (allowed <- form.levelCapAllowed; level <- form.levelCap) if (allowed) options = s"(levelCap = 0 OR levelCap < $level)" :: options
+    for (allowed <- form.levelCapAllowed.flat; level <- form.levelCap.flat) if (allowed) options = s"(levelCap = 0 OR levelCap < $level)" :: options
     form.nameLike.flat.foreach(name => options = s"C.name LIKE '%$name%'" :: options)
     form.perksAllowed.flat.foreach(checked => if (checked) options = "C.perksAllowed = 1" :: options)
     form.robotsAllowed.flat.foreach(checked => if (checked) options = "C.robotsAllowed = 1" :: options)
-    form.status.flat.map(_.statusID).foreach {
+    form.statusID.flat.foreach {
       case ACTIVE_AND_QUEUED => options = "C.closedTime IS NULL" :: options
       case ACTIVE_ONLY => options = "CS.status = 'ACTIVE'" :: options
       case QUEUED_ONLY => options = "CS.status = 'QUEUED'" :: options
@@ -67,10 +67,10 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
       form.myGamesOnly.flat.foreach(checked => if (checked) options = s"(C.hostUserID = U.userID OR P.userID = U.userID)" :: options)
     }
 
-    form.userID.toOption match {
-      case Some(userID) => makeSearchSQLWithUser(userID, options)
-      case None => makeSearchSQLWithoutUser(options)
-    }
+   form.userID.toOption match {
+     case Some(userID) => makeSearchSQLWithUser(userID, options)
+     case None => makeSearchSQLWithoutUser(options)
+   }
   }
 
   private def makeSearchSQLWithUser(userID: String, options: List[String]): String = {
@@ -89,7 +89,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCon
         |	  SUM(CASE WHEN userID = '$userID' THEN 1 ELSE 0 END) AS isParticipant
         |   FROM portfolios GROUP BY contestID
         |) AS PC ON PC.contestID = C.contestID
-        |${if (options.nonEmpty) s"WHERE ${options.mkString(" AND ")} " else ""}
+        |${if (options.nonEmpty) s"WHERE ${options.reverse.mkString(" AND ")} " else ""}
         |""".stripMargin
   }
 

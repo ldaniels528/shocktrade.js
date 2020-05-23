@@ -2,6 +2,42 @@ select.font {
   font-family: 'FontAwesome', 'Second Font name'
 }
 
+div.cs_game_card_ACTIVE {
+    background: #e0fffe;
+    border: 1px solid #c0dddc;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 32px;
+}
+
+img.cs_game_card_ACTIVE {
+    border: 1px solid #c0dddc;
+}
+
+div.cs_game_card_QUEUED {
+    background: #e0fffe;
+    border: 1px solid #c0dddc;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 32px;
+}
+
+img.cs_game_card_QUEUED {
+    border: 1px solid #c0dddc;
+}
+
+div.cs_game_card_CLOSED {
+    background: #f0f0aa;
+    border: 1px solid #d0d099;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 32px;
+}
+
+img.cs_game_card_CLOSED {
+    border: 1px solid #d0d099;
+}
+
 .xp {
     color: #0088aa;
     font-size: 8pt;

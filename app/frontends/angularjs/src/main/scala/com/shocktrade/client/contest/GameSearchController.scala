@@ -1,17 +1,16 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client._
+import com.shocktrade.client.contest.ContestSearchOptions.ContestStatus
 import com.shocktrade.client.contest.GameSearchController._
+import com.shocktrade.client.contest.models.Contest
 import com.shocktrade.client.dialogs.NewGameDialogController.NewGameDialogResult
 import com.shocktrade.client.dialogs.{NewGameDialog, PlayerProfileDialog}
 import com.shocktrade.client.users.UserService
-import com.shocktrade.client._
-import com.shocktrade.client.contest.models.Contest
 import com.shocktrade.common.AppConstants
+import com.shocktrade.common.forms.ContestCreationForm
 import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration}
-import com.shocktrade.common.forms.ContestSearchOptions.ContestStatus
-import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchOptions}
-import com.shocktrade.common.models.contest.ContestSearchResult._
 import com.shocktrade.common.models.contest.{ContestRanking, ContestSearchResult}
 import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
@@ -43,7 +42,6 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
   extends Controller with AwardsSupport with ContestCssSupport with ContestEntrySupport with GlobalLoading with PlayerProfilePopupSupport {
 
   // internal variables
-  implicit private val cookies: Cookies = $cookies
   private var searchResults = js.Array[ContestSearchResult]()
 
   $scope.maxPlayers = AppConstants.MaxPlayers
@@ -57,9 +55,9 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   $scope.searchOptions = new ContestSearchOptions(
     userID = gameStateService.getUserID,
-    buyIn = js.undefined,
+    buyIn = ContestCreationForm.StartingBalances.headOption.orUndefined,
     continuousTrading = false,
-    duration = js.undefined,
+    duration = ContestCreationForm.GameDurations.headOption.orUndefined,
     friendsOnly = false,
     invitationOnly = false,
     levelCap = js.undefined,
@@ -85,7 +83,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   private def contestSearch(searchOptions: ContestSearchOptions): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = {
     searchOptions.userID = gameStateService.getUserID
-    val outcome = contestService.contestSearch(searchOptions)
+    val outcome = contestService.contestSearch(searchOptions.toRequest)
     asyncLoading($scope)(outcome) onComplete {
       case Success(contests) =>
         $scope.$apply(() => searchResults = contests.data)

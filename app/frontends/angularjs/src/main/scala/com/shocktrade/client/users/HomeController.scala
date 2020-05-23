@@ -1,10 +1,9 @@
 package com.shocktrade.client.users
 
-import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope}
+import com.shocktrade.client.contest.ContestSearchOptions.ContestStatus
+import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope, ContestSearchOptions}
 import com.shocktrade.client.users.HomeController.HomeControllerScope
 import com.shocktrade.client.{GameStateService, GlobalLoading, GlobalNavigation, RootScope}
-import com.shocktrade.common.forms.ContestSearchOptions
-import com.shocktrade.common.forms.ContestSearchOptions.ContestStatus
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies

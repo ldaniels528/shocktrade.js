@@ -2,9 +2,9 @@ package com.shocktrade.webapp.routes
 package contest
 
 import java.util.UUID
-
+import scala.scalajs.js.JSConverters._
 import com.shocktrade.common.api.ContestAPI
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchOptions, ValidationErrors}
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchRequest, ValidationErrors}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
 import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.vm.VirtualMachine
@@ -43,10 +43,25 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   //////////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Searches for contest via a [[ContestSearchOptions contest search form]]
+   * Searches for contest via a [[ContestSearchRequest contest search form]]
    */
   def contestSearch(request: Request, response: Response, next: NextFunction): Unit = {
-    val form = request.bodyAs[ContestSearchOptions]
+    val form = new ContestSearchRequest(
+      userID =request.query.get("userID").orUndefined,
+      buyIn = request.query.get("buyIn").orUndefined.map(_.toDouble),
+      continuousTrading = request.query.get("continuousTrading").orUndefined.map(_.toBoolean),
+      duration = request.query.get("duration").orUndefined.map(_.toInt),
+      friendsOnly = request.query.get("friendsOnly").orUndefined.map(_.toBoolean),
+      invitationOnly = request.query.get("invitationOnly").orUndefined.map(_.toBoolean),
+      levelCap = request.query.get("levelCap").orUndefined.map(_.toInt),
+      levelCapAllowed = request.query.get("levelCapAllowed").orUndefined.map(_.toBoolean),
+      myGamesOnly = request.query.get("myGamesOnly").orUndefined.map(_.toBoolean),
+      nameLike = request.query.get("nameLike").orUndefined,
+      perksAllowed = request.query.get("perksAllowed").orUndefined.map(_.toBoolean),
+      robotsAllowed = request.query.get("robotsAllowed").orUndefined.map(_.toBoolean),
+      statusID = request.query.get("statusID").orUndefined.map(_.toInt)
+    )
+
     form.validate match {
       case messages if messages.isEmpty =>
         contestDAO.contestSearch(form) onComplete {

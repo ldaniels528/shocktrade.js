@@ -1,8 +1,0 @@
-<span style="margin-left: 40px">
-    <i ng-class="getExpandedTrophyIcon(player)"></i>
-    <avatar id="{{ player.userID }}" class="avatar-20"></avatar>
-    <span ng-click="popupPlayerProfile(player.userID)" class="clickable">{{ player.username }}</span>
-    <span ng-class="player.gainLoss >= 0 ? 'positive' : 'negative'">
-        <changearrow value="{{ player.gainLoss }}"></changearrow> {{ player.gainLoss | abs | number:2 }}%
-    </span>
-</span>

@@ -32,6 +32,7 @@ class ContestCreationForm(var name: js.UndefOr[String] = js.undefined,
 object ContestCreationForm {
 
   val GameDurations: js.Array[GameDuration] = js.Array(
+    new GameDuration(label = "-- Choose a Duration --", value = js.undefined),
     new GameDuration(label = "3 Days", value = 3),
     new GameDuration(label = "1 Week", value = 7),
     new GameDuration(label = "2 Weeks", value = 14),
@@ -45,6 +46,7 @@ object ContestCreationForm {
   val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
 
   val StartingBalances: js.Array[GameBalance] = js.Array(
+    new GameBalance(label = "-- Any --", value = js.undefined),
     new GameBalance(label = "$ 1,000", value = 1000.00),
     new GameBalance(label = "$ 2,500", value = 2500.00),
     new GameBalance(label = "$ 5,000", value = 5000.00),
@@ -58,13 +60,13 @@ object ContestCreationForm {
    * Game Balance
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class GameBalance(val label: String, val value: Double) extends js.Object
+  class GameBalance(val label: String, val value: js.UndefOr[Double]) extends js.Object
 
   /**
    * Game Duration
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class GameDuration(val label: String, val value: Int) extends js.Object
+  class GameDuration(val label: String, val value: js.UndefOr[Int]) extends js.Object
 
   /**
    * Level Cap
@@ -93,9 +95,9 @@ object ContestCreationForm {
       name = form.name,
       userID = form.userID,
       contestID = js.undefined,
-      startingBalance = form.startingBalance.map(_.value),
+      startingBalance = form.startingBalance.flatMap(_.value),
       startAutomatically = form.startAutomatically,
-      duration = form.duration.map(_.value),
+      duration = form.duration.flatMap(_.value),
       friendsOnly = form.friendsOnly,
       invitationOnly = form.invitationOnly,
       levelCapAllowed = form.levelCapAllowed,

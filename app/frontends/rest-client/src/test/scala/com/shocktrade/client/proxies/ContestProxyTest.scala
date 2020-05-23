@@ -1,6 +1,6 @@
 package com.shocktrade.client.proxies
 
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchOptions}
+import com.shocktrade.common.forms.ContestCreationRequest
 import com.shocktrade.remote.proxies.ContestProxy
 import io.scalajs.JSON
 import org.scalatest.funspec.AsyncFunSpec

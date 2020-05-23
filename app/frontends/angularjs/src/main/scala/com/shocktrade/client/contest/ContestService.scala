@@ -2,7 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.ContestAPI
-import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchOptions}
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchRequest}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
@@ -37,7 +37,7 @@ class ContestService($http: Http) extends Service with ContestAPI {
   //          Contest Finders
   ///////////////////////////////////////////////////////////////
 
-  def contestSearch(options: ContestSearchOptions): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = $http.get(contestSearchURL(options))
+  def contestSearch(request: ContestSearchRequest): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = $http.get(contestSearchURL(request))
 
   def findContestByID(contestID: String): js.Promise[HttpResponse[ContestSearchResult]] = $http.get(findContestByIDURL(contestID))
 
