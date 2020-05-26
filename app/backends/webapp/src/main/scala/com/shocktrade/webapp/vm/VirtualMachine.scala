@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.vm
 
-import com.shocktrade.common.Ok
 import com.shocktrade.server.common.LoggerFactory
+import com.shocktrade.webapp.routes.traffic.TrackingDAO
 import com.shocktrade.webapp.vm.VirtualMachine.VmProcess
 import com.shocktrade.webapp.vm.dao._
 import com.shocktrade.webapp.vm.opcodes.{OpCode, OpCodeProperties}
@@ -24,10 +24,10 @@ class VirtualMachine() {
 
   /**
    * Executes the next queued opCode from the pipeline
-   * @param ctx the implicit [[VirtualMachineContext]]
+   * @param opCode the opCode to execute
    * @return the promise of an invocation result
    */
-  def invoke(opCode: OpCode)(implicit ctx: VirtualMachineContext): Future[js.Any] = {
+  def invoke(opCode: OpCode): Future[js.Any] = {
     val promise = Promise[js.Any]()
     pipeline.push(OpCode.Callback(opCode, promise))
     promise.future
@@ -39,7 +39,7 @@ class VirtualMachine() {
    * @param ec      the implicit [[ExecutionContext]]
    * @return the cumulative invocation result
    */
-  def invokeAll()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[js.Array[VmProcess]] = {
+  def invokeAll()(implicit ctx: VirtualMachineContext, trackingDAO: TrackingDAO, ec: ExecutionContext): Future[js.Array[VmProcess]] = {
     if(pipeline.isEmpty) Future.successful(js.Array())
     else {
       // copy the opCodes into our processing array
@@ -74,7 +74,7 @@ class VirtualMachine() {
 object VirtualMachine {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  def waterfall(opCodes: Seq[OpCode])(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[js.Array[VmProcess]] = {
+  def waterfall(opCodes: Seq[OpCode])(implicit ctx: VirtualMachineContext, trackingDAO: TrackingDAO, ec: ExecutionContext): Future[js.Array[VmProcess]] = {
     val promise = Promise[js.Array[VmProcess]]()
     var results: List[VmProcess] = Nil
 
@@ -112,10 +112,10 @@ object VirtualMachine {
                          requestedTime: Double,
                          response: String,
                          responseTimeMillis: Double,
-                         failed: Boolean)(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[Ok] = {
+                         failed: Boolean)(implicit trackingDAO: TrackingDAO): Int = {
     val requestProps = request.decompile
     val responseProps = if (response.startsWith("{") && response.endsWith("}")) JSON.parseAs[js.UndefOr[OpCodeProperties]](response) else js.undefined
-    val outcome = ctx.trackEvent(EventSourceData(
+    trackingDAO.trackEvent(EventSourceData(
       command = JSON.stringify(requestProps),
       `type` = requestProps.`type`,
       contestID = requestProps.contestID ?? responseProps.flatMap(_.contestID),
@@ -135,11 +135,6 @@ object VirtualMachine {
       creationTime = new js.Date(requestedTime),
       failed = failed
     ))
-    outcome onComplete {
-      case Success(_) =>
-      case Failure(e) => logger.error(s"Event source error: ${e.getMessage}")
-    }
-    outcome
   }
 
   private[vm] def unwrap(result: js.UndefOr[Any]): String = {

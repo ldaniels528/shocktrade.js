@@ -14,8 +14,7 @@ import com.shocktrade.webapp.vm.opcodes.{CreateUserAccount, CreateUserIcon}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
+import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -25,7 +24,7 @@ import scala.util.{Failure, Random, Success}
  * User Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
+class UserRoutes(app: Application)(implicit userDAO: UserDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
   extends UserAPI with RemoteEventSupport {
   private val onlineStatuses = js.Dictionary[OnlineStatus]()
 

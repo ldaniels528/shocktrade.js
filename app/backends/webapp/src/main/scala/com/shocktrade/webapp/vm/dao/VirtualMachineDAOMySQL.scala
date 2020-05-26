@@ -207,18 +207,18 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   override def createOrder(portfolioID: String, order: OrderData): Future[OrderRef] = {
     import order._
     val newOrderID = newID
-    val outcome = for {
-      _ <- ensurePortfolioIsOpen(portfolioID)
-      w <- conn.executeFuture(
-        """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
-           |VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-           |""".stripMargin,
-        js.Array(newOrderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)).map(_.affectedRows)
-    } yield w
+    val outcome = conn.executeFuture(
+      """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
+         |SELECT ?, portfolioID, ?, ?, ?, ?, ?, ?
+         |FROM portfolios
+         |WHERE portfolioID = ?
+         |AND closedTime IS NULL
+         |""".stripMargin,
+      js.Array(newOrderID, symbol, exchange, orderType, priceType, price, quantity, portfolioID)).map(_.affectedRows)
 
     outcome map {
       case count if count > 0 => OrderRef(newOrderID)
-      case count => throw UpdateException(s"Order $newOrderID could not be inserted", count)
+      case count => throw UpdateException(s"Order $newOrderID could not be created", count)
     }
   }
 
@@ -315,46 +315,6 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     } yield proceeds
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //    System Functions
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  override def trackEvent(event: EventSourceData): Future[Ok] = {
-    import event._
-    conn.executeFuture(
-      """|INSERT INTO eventsource (
-         |  command, type, contestID, portfolioID, userID, orderID, positionID, orderType, priceType,
-         |  negotiatedPrice, quantity, symbol, exchange, xp, failed, response, responseTimeMillis
-         |)
-         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-         |""".stripMargin, js.Array(
-        command, `type`, contestID, portfolioID, userID, orderID, positionID, orderType, priceType,
-        negotiatedPrice, quantity, symbol, exchange, xp, failed, response, responseTimeMillis)
-    ).map(_.affectedRows) map (Ok(_))
-  }
-
-  override def updateEventLog(): Future[Ok] = {
-    for {
-      // is contestID or userID null?
-      w0 <- conn.executeFuture(
-        """|UPDATE eventsource E
-           |INNER JOIN portfolios P ON P.portfolioID = E.portfolioID
-           |SET E.contestID = P.contestID, E.userID = P.userID
-           |WHERE E.portfolioID IS NOT NULL
-           |AND (E.contestID IS NULL OR E.userID IS NULL)
-           |""".stripMargin).map(_.affectedRows)
-
-      // is portfolioID null?
-      w1 <- conn.executeFuture(
-        """|UPDATE eventsource E
-           |INNER JOIN portfolios P on P.contestID = E.contestID AND P.userID = E.userID
-           |SET E.portfolioID = P.contestID
-           |WHERE E.portfolioID IS NULL
-           |AND (E.contestID IS NOT NULL AND E.userID IS NOT NULL)
-           |""".stripMargin).map(_.affectedRows)
-    } yield Ok(w0 + w1)
-  }
-
   //////////////////////////////////////////////////////////////////
   //    Utility Functions
   //////////////////////////////////////////////////////////////////
@@ -410,17 +370,17 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   }
 
   private def determineAwards(portfolioID: String, rankings: Seq[ContestRanking]): AwardsRecommendation = {
-    var items: List[(String, Int)] = Nil
+    case class Reward(code: String, xp: Double)
     val myRanking = rankings.find(_.portfolioID.contains(portfolioID))
     val userID = myRanking.flatMap(_.userID.toOption).getOrElse(throw js.JavaScriptException("User ID is required"))
-    items = Award.CHKDFLAG -> 5 :: items
-    items = (myRanking collect { case ranking if ranking.rankNum.contains(1) => Award.GLDTRPHY -> 100 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.rankNum.contains(2) => Award.SLVRTRPHY -> 50 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.rankNum.contains(3) => Award.BRNZTRPHY -> 25 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 25.0) => Award.PAYDIRT -> 25 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 50.0) => Award.MADMONEY -> 50 }).toList ::: items
-    items = (myRanking collect { case ranking if ranking.gainLoss.exists(_ >= 100.0) => Award.CRYSTBAL -> 100 }).toList ::: items
-    new AwardsRecommendation(portfolioID, userID, awardCodes = items.map(_._1).toJSArray, xp = items.map(_._2).sum)
+    val rewards = Reward(Award.CHKDFLAG, 15) ::
+      (myRanking collect { case r if r.rankNum.contains(1) => Reward(Award.GLDTRPHY, 100) }).toList :::
+      (myRanking collect { case r if r.rankNum.contains(2) => Reward(Award.SLVRTRPHY, 50) }).toList :::
+      (myRanking collect { case r if r.rankNum.contains(3) => Reward(Award.BRNZTRPHY, 25) }).toList :::
+      (myRanking collect { case r if r.gainLoss.exists(_ >= 25.0) => Reward(Award.PAYDIRT, 25) }).toList :::
+      (myRanking collect { case r if r.gainLoss.exists(_ >= 50.0) => Reward(Award.MADMONEY, 50) }).toList :::
+      (myRanking collect { case r if r.gainLoss.exists(_ >= 100.0) => Reward(Award.CRYSTBAL, 100) }).toList
+    new AwardsRecommendation(portfolioID, userID, awardCodes = rewards.map(_.code).toJSArray, xp = rewards.map(_.xp).sum)
   }
 
   private def ensurePortfolioIsOpen(portfolioID: String): Future[Boolean] = {
@@ -531,6 +491,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
   }
 
   private def insertContest(contestID: String, userID: String, name: String, startingBalance: Double, duration: Int)(request: ContestCreationRequest): Future[String] = {
+    val expirationTime = new js.Date(js.Date.now() + duration * 1.day.toMillis)
     conn.executeFuture(
       """|INSERT INTO contests (
          |  contestID, hostUserID, name, statusID, startingBalance, expirationTime,
@@ -540,8 +501,7 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
          |FROM contest_statuses CS
          |WHERE CS.status = 'ACTIVE'
          |""".stripMargin,
-      js.Array(contestID, userID, name, startingBalance,
-        new js.Date(js.Date.now() + duration * 1.day.toMillis), request.friendsOnly ?? false, request.invitationOnly ?? false,
+      js.Array(contestID, userID, name, startingBalance, expirationTime, request.friendsOnly ?? false, request.invitationOnly ?? false,
         request.levelCap ?? 0, request.perksAllowed ?? true, request.robotsAllowed ?? true)).map(_.affectedRows) map {
       case count if count > 0 => contestID
       case count => throw UpdateException("Contest not created", count)
@@ -599,14 +559,14 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
 
   private def updatePlayerStatistics(portfolioID: String)(stats: PlayerStatistics): Future[Int] = {
     val tuples: List[(Symbol, Any)] = {
-      stats.gamesCompleted.map(v => 'gamesCompleted -> v).toList :::
-        stats.gamesCreated.map(v => 'gamesCreated -> v).toList :::
-        stats.gamesDeleted.map(v => 'gamesDeleted -> v).toList :::
-        stats.gamesJoined.map(v => 'gamesJoined -> v).toList :::
-        stats.gamesWithdrawn.map(v => 'gamesWithdrawn -> v).toList :::
-        stats.trophiesGold.map(v => 'trophiesGold -> v).toList :::
-        stats.trophiesSilver.map(v => 'trophiesSilver -> v).toList :::
-        stats.trophiesBronze.map(v => 'trophiesBronze -> v).toList
+      stats.gamesCompleted.map('gamesCompleted -> _).toList :::
+        stats.gamesCreated.map('gamesCreated -> _).toList :::
+        stats.gamesDeleted.map('gamesDeleted -> _).toList :::
+        stats.gamesJoined.map('gamesJoined -> _).toList :::
+        stats.gamesWithdrawn.map('gamesWithdrawn -> _).toList :::
+        stats.trophiesGold.map('trophiesGold -> _).toList :::
+        stats.trophiesSilver.map('trophiesSilver -> _).toList :::
+        stats.trophiesBronze.map('trophiesBronze -> _).toList
     }
 
     // build the SQL statement

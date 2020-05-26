@@ -9,6 +9,7 @@ import com.shocktrade.webapp.routes.contest.{VirtualMachineRoutes, _}
 import com.shocktrade.webapp.routes.discover._
 import com.shocktrade.webapp.routes.research.ResearchRoutes
 import com.shocktrade.webapp.routes.social.{PostAttachmentRoutes, PostRoutes, SocialRoutes}
+import com.shocktrade.webapp.routes.traffic.{TrackingDAO, TrafficData}
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
 import com.shocktrade.webapp.vm.proccesses.cqm.ContestQualificationModule
@@ -18,6 +19,7 @@ import io.scalajs.npm.express.fileupload.{ExpressFileUpload, FileUploadOptions}
 import io.scalajs.npm.express.{Application, Express, Request, Response}
 import io.scalajs.npm.expressws.{ExpressWS, WebSocket, WsInstance, WsRouterExtensions, WsRouting}
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
@@ -58,6 +60,7 @@ object WebServerJsApp {
     logger.info("Loading Express modules...")
     implicit val app: Application with WsRouting = Express().withWsRouting
     implicit val wss: WsInstance = ExpressWS(app)
+    implicit val trafficDAO: TrackingDAO = new TrackingDAO()
 
     // setup the routes for serving static files
     logger.info("Setting up middleware...")
@@ -76,8 +79,12 @@ object WebServerJsApp {
       next()
       response.onFinish { () =>
         val elapsedTime = js.Date.now() - startTime
-        val query = if (request.query.nonEmpty) (request.query map { case (k, v) => s"$k=$v" } mkString ",").limitTo(120) else "..."
-        logger.info("[node] application - %s %s (%s) ~> %d [%d ms]", request.method, request.path, query, response.statusCode, elapsedTime)
+        val query: js.UndefOr[String] = if (request.query.nonEmpty) request.query map { case (k, v) => s"$k=$v" } mkString "&" else js.undefined
+        logger.info("%s %s (%s) ~> %d [%d ms]", request.method, request.path, query.map(_.limitTo(120)).getOrElse(""), response.statusCode, elapsedTime)
+        trafficDAO.trackRequest(new TrafficData(
+          method = request.method, path = request.path, query = query, statusCode = response.statusCode,
+          statusMessage = response.statusMessage, responseTimeMillis = elapsedTime,
+          requestTime = new js.Date(startTime), creationTime = new js.Date()))
       }
     }: js.Function)
 
@@ -87,6 +94,10 @@ object WebServerJsApp {
     // setup all routes
     setupWebSocket(app)
     setupRoutes(app)
+
+    // schedule continuous event persistence
+    trafficDAO.continuouslySaveEvents(frequency = 5.seconds)
+    trafficDAO.continuouslySaveTraffic(frequency = 5.seconds)
     app
   }
 
@@ -94,7 +105,7 @@ object WebServerJsApp {
    * Setup all application routes
    * @param app the given [[Application]]
    */
-  private def setupRoutes(app: Application with WsRouting): Unit = {
+  private def setupRoutes(app: Application with WsRouting)(implicit trackingDAO: TrackingDAO): Unit = {
     import routes.dao._
 
     logger.info("Setting up Virtual Machine routes...")

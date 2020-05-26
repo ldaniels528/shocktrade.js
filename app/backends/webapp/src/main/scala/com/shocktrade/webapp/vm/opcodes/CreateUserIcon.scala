@@ -21,7 +21,7 @@ case class CreateUserIcon(icon: UserIconData) extends OpCode {
     }
   }
 
-  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties("icon" -> icon)
+  override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties("userID" -> icon.userID)
 
 }
 

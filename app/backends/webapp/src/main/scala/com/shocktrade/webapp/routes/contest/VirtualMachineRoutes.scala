@@ -2,6 +2,7 @@ package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.Ok
 import com.shocktrade.webapp.routes._
+import com.shocktrade.webapp.routes.traffic.TrackingDAO
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
 import com.shocktrade.webapp.vm.proccesses.cqm.ContestQualificationModule
 import com.shocktrade.webapp.vm.proccesses.cqm.dao.QualificationDAO
@@ -9,13 +10,12 @@ import com.shocktrade.webapp.vm.{VirtualMachine, VirtualMachineSupport}
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
-import scala.language.postfixOps
 
 /**
  * Virtual Machine Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class VirtualMachineRoutes(app: Application)(implicit ec: ExecutionContext, cqmDAO: QualificationDAO, cqm: ContestQualificationModule, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
+class VirtualMachineRoutes(app: Application)(implicit ec: ExecutionContext, cqmDAO: QualificationDAO, cqm: ContestQualificationModule, trackingDAO: TrackingDAO, vmDAO: VirtualMachineDAO, vm: VirtualMachine)
 extends VirtualMachineSupport {
 
   // API routes

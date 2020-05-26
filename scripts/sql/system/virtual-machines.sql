@@ -1,6 +1,23 @@
 USE shocktrade;
 
 -- ------------------------------------------------------------
+-- Traffic table
+-- ------------------------------------------------------------
+
+DROP TABLE IF EXISTS traffic;
+CREATE TABLE traffic (
+    uid BIGINT AUTO_INCREMENT PRIMARY KEY,
+    method VARCHAR(255),
+    path VARCHAR(255),
+    query TEXT,
+    statusCode SMALLINT,
+    statusMessage TEXT,
+    responseTimeMillis INTEGER,
+    requestTime DATETIME NOT NULL,
+    creationTime DATETIME NOT NULL DEFAULT now()
+);
+
+-- ------------------------------------------------------------
 -- Virtual Machine table
 -- ------------------------------------------------------------
 

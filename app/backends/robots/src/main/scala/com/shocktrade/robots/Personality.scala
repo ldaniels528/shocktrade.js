@@ -58,7 +58,7 @@ object Personality {
     }
 
     override def onFindStocksToBuy(implicit state: RobotContext): js.UndefOr[ResearchOptions] = {
-      val limit = 50
+      val limit = 20
       state.robotName match {
         case "daisy" => new ResearchOptions(priceMax = 1.00, changeMax = 0.0, spreadMin = 25.0, volumeMin = 1e+6, maxResults = limit)
         case "gadget" => new ResearchOptions(priceMax = 5.00, maxResults = limit)
