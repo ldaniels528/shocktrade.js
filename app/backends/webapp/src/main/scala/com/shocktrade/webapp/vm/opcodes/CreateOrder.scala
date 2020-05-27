@@ -10,20 +10,19 @@ import scala.scalajs.js
 
 /**
  * Create Order
- * @param portfolioID the given portfolio ID
- * @param order       the given [[OrderData]]
+ * @param order the given [[OrderData]]
  */
-case class CreateOrder(portfolioID: String, order: OrderData) extends OpCode {
+case class CreateOrder(order: OrderData) extends OpCode {
 
   override def invoke()(implicit ctx: VirtualMachineContext, ec: ExecutionContext): Future[OrderRef] = {
-    try ctx.createOrder(portfolioID, order) catch {
+    try ctx.createOrder(order) catch {
       case e: Exception =>
         Future.failed(e)
     }
   }
 
   override val decompile: OpCodeProperties = super.decompile ++ OpCodeProperties(
-    "portfolioID" -> portfolioID,
+    "portfolioID" -> order.portfolioID,
     "order" -> order,
     "symbol" -> order.symbol,
     "exchange" -> order.exchange,
@@ -45,7 +44,7 @@ object CreateOrder extends OpCodeCompiler {
     for {
       portfolioID <- index.portfolioID
       order <- index.getAs[OrderData]("order")
-    } yield CreateOrder(portfolioID, order)
+    } yield CreateOrder(order)
   }
 
 }

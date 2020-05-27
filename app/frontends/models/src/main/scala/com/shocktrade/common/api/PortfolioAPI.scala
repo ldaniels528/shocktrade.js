@@ -34,6 +34,8 @@ trait PortfolioAPI extends BaseAPI {
 
   def createOrderURL(contestID: String, userID: String) = s"$baseURL/api/order/$contestID/user/$userID"
 
+  def createOrdersURL(portfolioID: String) = s"$baseURL/api/orders/$portfolioID"
+
   def findOrderByIDURL(orderID: String) = s"$baseURL/api/order/$orderID"
 
   def findOrdersURL(contestID: String, userID: String) = s"$baseURL/api/orders/$contestID/user/$userID"

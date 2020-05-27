@@ -7,7 +7,8 @@ import com.shocktrade.webapp.routes.contest.PortfolioHelper._
 import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
-import com.shocktrade.webapp.vm.opcodes.{CancelOrder, CreateOrder, PurchasePerks}
+import com.shocktrade.webapp.vm.opcodes.{CancelOrder, CreateOrder, CreateOrders, PurchasePerks}
+import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,6 +39,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   app.get(findOrderByIDURL(":orderID"), (request: Request, response: Response, next: NextFunction) => findOrderByID(request, response, next))
   app.get(findOrdersURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
   app.post(createOrderURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
+  app.post(createOrdersURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => createOrders(request, response, next))
 
   // portfolios
   app.get(findPortfolioByUserURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => findPortfolioByUser(request, response, next))
@@ -72,10 +74,24 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
             case Some(portfolioID) => Future.successful(portfolioID)
             case None => Future.failed(js.JavaScriptException(s"Portfolio for user $userID, contest $contestID"))
           }
-          result <- vm.invoke(CreateOrder(portfolioID, form.toOrder))
+          result <- vm.invoke(CreateOrder(form.toOrder(portfolioID)))
         } yield result
 
         outcome onComplete {
+          case Success(result) => response.send(result); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
+        }
+    }
+  }
+
+  def createOrders(request: Request, response: Response, next: NextFunction): Unit = {
+    val portfolioID = request.params("portfolioID")
+    val forms = request.bodyAs[js.Array[NewOrderForm]]
+    forms.foreach(_.portfolioID = portfolioID)
+    forms.flatMap(_.validate) match {
+      case messages if messages.nonEmpty => response.badRequest(messages); next()
+      case _ =>
+        vm.invoke(CreateOrders(forms.map(_.toOrder(portfolioID)))) onComplete {
           case Success(result) => response.send(result); next()
           case Failure(e) => response.showException(e).internalServerError(e); next()
         }

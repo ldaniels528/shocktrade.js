@@ -204,12 +204,12 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
       .map(w => new OrderOutcome(orderID, fulfilled = fulfilled, w = w, negotiatedPrice = negotiatedPrice, message = message))
   }
 
-  override def createOrder(portfolioID: String, order: OrderData): Future[OrderRef] = {
+  override def createOrder(order: OrderData): Future[OrderRef] = {
     import order._
     val newOrderID = newID
     val outcome = conn.executeFuture(
-      """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
-         |SELECT ?, portfolioID, ?, ?, ?, ?, ?, ?
+      """|INSERT INTO orders (portfolioID, orderID, symbol, exchange, orderType, priceType, price, quantity)
+         |SELECT portfolioID, ?, ?, ?, ?, ?, ?, ?
          |FROM portfolios
          |WHERE portfolioID = ?
          |AND closedTime IS NULL
@@ -219,6 +219,26 @@ class VirtualMachineDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execu
     outcome map {
       case count if count > 0 => OrderRef(newOrderID)
       case count => throw UpdateException(s"Order $newOrderID could not be created", count)
+    }
+  }
+
+  def createOrders(orders: js.Array[OrderData]): Future[js.Array[OrderRef]] = {
+    val newOrderIDs = orders map (_ => newID)
+    val outcome = conn.executeFuture(
+      """|INSERT INTO orders (portfolioID, orderID, symbol, exchange, orderType, priceType, price, quantity)
+         |SELECT portfolioID, ?, ?, ?, ?, ?, ?, ?
+         |FROM portfolios
+         |WHERE portfolioID = ?
+         |AND closedTime IS NULL
+         |""".stripMargin,
+      orders zip newOrderIDs flatMap { case (order, newOrderID) =>
+        import order._
+        Seq(newOrderID, symbol, exchange, orderType, priceType, price, quantity, portfolioID)
+      }).map(_.affectedRows)
+
+    outcome map {
+      case count if count > 0 => newOrderIDs.map(newOrderID => new OrderRef(orderID = newOrderID)).toJSArray
+      case count => throw UpdateException(s"Orders could not be created", count)
     }
   }
 

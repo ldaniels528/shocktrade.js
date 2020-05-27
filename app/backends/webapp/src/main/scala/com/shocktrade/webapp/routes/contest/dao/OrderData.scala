@@ -9,7 +9,8 @@ import scala.scalajs.js
  * Represents an Order data model
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class OrderData(val orderID: js.UndefOr[String],
+class OrderData(val portfolioID: js.UndefOr[String],
+                val orderID: js.UndefOr[String],
                 val symbol: js.UndefOr[String],
                 val exchange: js.UndefOr[String],
                 val orderType: js.UndefOr[String],
@@ -29,7 +30,8 @@ class OrderData(val orderID: js.UndefOr[String],
  */
 object OrderData {
 
-  def apply(orderID: js.UndefOr[String] = js.undefined,
+  def apply(portfolioID: js.UndefOr[String] = js.undefined,
+            orderID: js.UndefOr[String] = js.undefined,
             symbol: js.UndefOr[String] = js.undefined,
             exchange: js.UndefOr[String] = js.undefined,
             orderType: js.UndefOr[String] = js.undefined,
@@ -43,8 +45,8 @@ object OrderData {
             fulfilled: js.UndefOr[Int] = js.undefined,
             closed: js.UndefOr[Int] = js.undefined): OrderData = {
     new OrderData(
-      orderID, symbol, exchange, orderType, priceType, price, quantity, creationTime, expirationTime,
-      processedTime, message, fulfilled, closed)
+      portfolioID, orderID, symbol, exchange, orderType, priceType, price, quantity,
+      creationTime, expirationTime, processedTime, message, fulfilled, closed)
   }
 
   /**
@@ -54,7 +56,8 @@ object OrderData {
   final implicit class OrderEnrichment(val order: OrderData) extends AnyVal {
 
     @inline
-    def copy(orderID: js.UndefOr[String] = js.undefined,
+    def copy(portfolioID: js.UndefOr[String] = js.undefined,
+             orderID: js.UndefOr[String] = js.undefined,
              symbol: js.UndefOr[String] = js.undefined,
              exchange: js.UndefOr[String] = js.undefined,
              orderType: js.UndefOr[String] = js.undefined,
@@ -68,6 +71,7 @@ object OrderData {
              fulfilled: js.UndefOr[Int] = js.undefined,
              closed: js.UndefOr[Int] = js.undefined): OrderData = {
       new OrderData(
+        portfolioID = portfolioID ?? order.portfolioID,
         orderID = orderID ?? order.orderID,
         symbol = symbol ?? order.symbol,
         exchange = exchange ?? order.exchange,

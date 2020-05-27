@@ -21,7 +21,8 @@ object PortfolioHelper {
   final implicit class NewOrderFormExtensions(val form: NewOrderForm) extends AnyVal {
 
     @inline
-    def toOrder: OrderData = OrderData(
+    def toOrder(portfolioID: String): OrderData = OrderData(
+      portfolioID = portfolioID,
       orderID = js.undefined,
       symbol = form.symbol,
       exchange = form.exchange,

@@ -8,7 +8,8 @@ import scala.scalajs.js
  * New Order Form
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class NewOrderForm(var symbol: js.UndefOr[String],
+class NewOrderForm(var portfolioID: js.UndefOr[String],
+                   var symbol: js.UndefOr[String],
                    var exchange: js.UndefOr[String],
                    var orderType: js.UndefOr[String],
                    var orderTerm: js.UndefOr[String],
@@ -24,7 +25,8 @@ class NewOrderForm(var symbol: js.UndefOr[String],
  */
 object NewOrderForm {
 
-  def apply(symbol: js.UndefOr[String] = js.undefined,
+  def apply(portfolioID: js.UndefOr[String] = js.undefined,
+            symbol: js.UndefOr[String] = js.undefined,
             exchange: js.UndefOr[String] = js.undefined,
             orderType: js.UndefOr[String] = js.undefined,
             orderTerm: js.UndefOr[String] = js.undefined,
@@ -34,6 +36,7 @@ object NewOrderForm {
             perks: js.UndefOr[js.Array[String]] = js.undefined,
             emailNotify: js.UndefOr[Boolean] = js.undefined): NewOrderForm = {
     new NewOrderForm(
+      portfolioID = portfolioID,
       symbol = symbol,
       exchange = exchange,
       orderType = orderType,

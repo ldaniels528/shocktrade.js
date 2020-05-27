@@ -24,7 +24,7 @@ CREATE TABLE traffic (
 DROP TABLE IF EXISTS eventsource;
 CREATE TABLE eventsource (
     uid BIGINT AUTO_INCREMENT PRIMARY KEY,
-    command TEXT NOT NULL,
+    command MEDIUMTEXT NOT NULL,
     type VARCHAR(64) NOT NULL,
     contestID CHAR(36),
     portfolioID CHAR(36),
@@ -44,4 +44,4 @@ CREATE TABLE eventsource (
     creationTime DATETIME NOT NULL DEFAULT now()
 );
 
-CREATE INDEX eventsource_xp ON eventsource (contestID, portfolioID, userID );
+CREATE INDEX eventsource_xp ON eventsource (contestID, portfolioID, userID);

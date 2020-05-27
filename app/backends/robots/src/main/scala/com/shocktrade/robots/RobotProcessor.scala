@@ -136,11 +136,7 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
 
   private def saveOrders(orders: js.Array[NewOrderForm])(implicit personality: Personality, state: RobotContext): Future[js.Array[OrderRef]] = {
     import state._
-    Future.sequence(
-      for {
-        order <- orders.toList
-        outcome = portfolioProxy.createOrder(contestID = contestID, userID = userID, order)
-      } yield outcome).map(_.toJSArray)
+    portfolioProxy.createOrders(portfolioID, orders)
   }
 
   private def sendChatMessage(message: String)(implicit state: RobotContext): Future[Unit] = {

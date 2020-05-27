@@ -54,7 +54,9 @@ trait VirtualMachineDAO {
 
   def completeOrder(orderID: String, fulfilled: Boolean, negotiatedPrice: js.UndefOr[Double], message: js.UndefOr[String]): Future[OrderOutcome]
 
-  def createOrder(portfolioID: String, order: OrderData): Future[OrderRef]
+  def createOrder(order: OrderData): Future[OrderRef]
+
+  def createOrders(orders: js.Array[OrderData]): Future[js.Array[OrderRef]]
 
   def decreasePosition(portfolioID: String, orderID: String, priceType: String, symbol: String, exchange: String, quantity: Double): Future[OrderOutcome]
 

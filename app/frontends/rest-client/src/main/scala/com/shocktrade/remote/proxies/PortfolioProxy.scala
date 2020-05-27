@@ -64,6 +64,8 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
 
   def createOrder(contestID: String, userID: String, order: NewOrderForm): Future[OrderRef] = post(createOrderURL(contestID, userID), data = order)
 
+  def createOrders(portfolioID: String, orders: js.Array[NewOrderForm]): Future[js.Array[OrderRef]] = post(createOrdersURL(portfolioID), data = orders)
+
   def findOrderByID(orderID: String): Future[OrderLike] = get(findOrderByIDURL(orderID))
 
   def findOrders(contestID: String, userID: String): Future[js.Array[OrderLike]] = get(findOrdersURL(contestID, userID))

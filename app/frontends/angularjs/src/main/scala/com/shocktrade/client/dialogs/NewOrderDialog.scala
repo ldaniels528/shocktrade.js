@@ -111,18 +111,14 @@ object NewOrderDialog {
           $scope.isCreatingOrder = true
           val outcome = for {
             messages <- validate(form)
-            portfolio <- portfolioService.createOrder(contestID(), userID(), $scope.form)
-          } yield (messages, portfolio)
+            response <- portfolioService.createOrder(contestID(), userID(), $scope.form)
+          } yield (messages, response.data)
 
+          outcome onComplete (_ => $timeout(() => $scope.isCreatingOrder = false, 0.5.seconds))
           outcome onComplete {
-            case Success((_, portfolio)) =>
-              $timeout(() => $scope.isCreatingOrder = false, 0.5.seconds)
-              $uibModalInstance.close(portfolio.data)
-            case Success((errors, _)) =>
-              $timeout(() => $scope.isCreatingOrder = false, 0.5.seconds)
-              messages.push(errors: _*)
+            case Success((_, response)) => $uibModalInstance.close(response)
+            case Success((errors, _)) => messages.push(errors: _*)
             case Failure(e) =>
-              $timeout(() => $scope.isCreatingOrder = false, 0.5.seconds)
               messages.push(s"The order could not be processed")
               console.error(s"order processing error: userID = $userID, contestID = $contestID, form = ${angular.toJson(form)}")
               e.printStackTrace()
