@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.contest.dao
+package com.shocktrade.common.forms
 
 import scala.scalajs.js
 

@@ -1,7 +1,7 @@
 package com.shocktrade.remote.proxies
 
 import com.shocktrade.common.api.PortfolioAPI
-import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
+import com.shocktrade.common.forms.{NewOrderForm, OrderSearchOptions, PerksResponse}
 import com.shocktrade.common.models.contest._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -68,7 +68,7 @@ class PortfolioProxy(host: String, port: Int)(implicit ec: ExecutionContext) ext
 
   def findOrderByID(orderID: String): Future[OrderLike] = get(findOrderByIDURL(orderID))
 
-  def findOrders(contestID: String, userID: String): Future[js.Array[OrderLike]] = get(findOrdersURL(contestID, userID))
+  def orderSearch(options: OrderSearchOptions): Future[js.Array[OrderLike]] = get(orderSearchURL(options))
 
   ///////////////////////////////////////////////////////////////
   //          Positions

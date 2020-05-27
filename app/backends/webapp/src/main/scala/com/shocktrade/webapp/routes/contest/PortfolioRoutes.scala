@@ -1,14 +1,14 @@
 package com.shocktrade.webapp.routes.contest
 
+import scala.scalajs.js.JSConverters._
 import com.shocktrade.common.api.PortfolioAPI
-import com.shocktrade.common.forms.NewOrderForm
+import com.shocktrade.common.forms.{NewOrderForm, OrderSearchOptions, PortfolioSearchOptions, PositionSearchOptions}
 import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.contest.PortfolioHelper._
 import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.vm.VirtualMachine
 import com.shocktrade.webapp.vm.dao.VirtualMachineDAO
 import com.shocktrade.webapp.vm.opcodes.{CancelOrder, CreateOrder, CreateOrders, PurchasePerks}
-import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +37,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   // orders
   app.delete(cancelOrderURL(":orderID"), (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
   app.get(findOrderByIDURL(":orderID"), (request: Request, response: Response, next: NextFunction) => findOrderByID(request, response, next))
-  app.get(findOrdersURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
+  app.get(orderSearchURL(), (request: Request, response: Response, next: NextFunction) => orderSearch(request, response, next))
   app.post(createOrderURL(":contestID", ":userID"), (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
   app.post(createOrdersURL(":portfolioID"), (request: Request, response: Response, next: NextFunction) => createOrders(request, response, next))
 
@@ -111,7 +111,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
    */
   def findHeldSecurities(request: Request, response: Response, next: NextFunction): Unit = {
     val portfolioID = request.params("portfolioID")
-    portfolioDAO.search(PositionSearchOptions(portfolioID = portfolioID)) onComplete {
+    portfolioDAO.positionSearch(PositionSearchOptions(portfolioID = portfolioID)) onComplete {
       case Success(tickers) => response.send(tickers); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
@@ -132,9 +132,16 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
   /**
    * Retrieves all orders by portfolio ID
    */
-  def findOrders(request: Request, response: Response, next: NextFunction): Unit = {
-    val (contestID, userID) = (request.params("contestID"), request.params("userID"))
-    portfolioDAO.search(OrderSearchOptions(contestID = contestID, userID = userID)) onComplete {
+  def orderSearch(request: Request, response: Response, next: NextFunction): Unit = {
+    val options = OrderSearchOptions(
+      contestID = request.query.get("contestID").orUndefined,
+      userID = request.query.get("userID").orUndefined,
+      orderID = request.query.get("orderID").orUndefined,
+      portfolioID = request.query.get("portfolioID").orUndefined,
+      orderType = request.query.get("orderType").orUndefined,
+      status = request.query.get("status").orUndefined.map(_.toInt)
+    )
+    portfolioDAO.orderSearch(options) onComplete {
       case Success(orders) => response.send(orders); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
@@ -198,7 +205,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
    */
   def findPositions(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("contestID"), request.params("userID"))
-    portfolioDAO.search(PositionSearchOptions(contestID, userID)) onComplete {
+    portfolioDAO.positionSearch(PositionSearchOptions(contestID, userID)) onComplete {
       case Success(positions) => response.send(positions); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
@@ -221,7 +228,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
    */
   def findPortfoliosByContest(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("contestID")
-    portfolioDAO.search(PortfolioSearchOptions(contestID = contestID)) onComplete {
+    portfolioDAO.portfolioSearch(PortfolioSearchOptions(contestID = contestID)) onComplete {
       case Success(portfolios) => response.send(portfolios); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
@@ -232,7 +239,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
    */
   def findPortfoliosByUser(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    portfolioDAO.search(PortfolioSearchOptions(userID = userID)) onComplete {
+    portfolioDAO.portfolioSearch(PortfolioSearchOptions(userID = userID)) onComplete {
       case Success(portfolios) => response.send(portfolios); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }

@@ -1,7 +1,7 @@
 package com.shocktrade.robots
 
 import com.shocktrade.common.OrderConstants._
-import com.shocktrade.common.forms.NewOrderForm
+import com.shocktrade.common.forms.{NewOrderForm, OrderSearchOptions}
 import com.shocktrade.common.models.contest._
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.remote.proxies.{ContestProxy, PortfolioProxy, ResearchProxy, UserProxy}
@@ -75,11 +75,11 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
       robotUser <- userProxy.findUserByName(state.robotName)
       portfolios <- portfolioProxy.findPortfoliosByUser(robotUser.userID_!).map(_.filter(_.closedTime.flat.isEmpty))
       buyOrders <- Future.sequence(portfolios.toList collect { case portfolio if portfolio.funds.orZero > 100 =>
+        val options = OrderSearchOptions(portfolioID = portfolio.portfolioID_!, orderType = BUY, status = OrderSearchOptions.ACTIVE_ORDERS)
         for {
-          allOrders <- portfolioProxy.findOrders(portfolio.contestID_!, robotUser.userID_!).map(_.map(_.asInstanceOf[RobotOrder]))
+          outstandingOrders <- portfolioProxy.orderSearch(options).map(_.map(_.asInstanceOf[RobotOrder]))
           stocks <- findSecurities
         } yield {
-          val outstandingOrders = allOrders.filter(o => o.closed.contains(0) && o.orderType.contains(BUY))
           val outstandingOrderTotal = outstandingOrders.flatMap(o => (for {price <- o.price ?? o.lastTrade; qty <- o.quantity} yield price * qty).toOption).sum
           val orderedSymbols = outstandingOrders.flatMap(_.symbol.toOption).distinct
           val filteredStocks = stocks.filterNot(_.symbol.exists(orderedSymbols.contains))
@@ -98,11 +98,11 @@ class RobotProcessor(host: String = "localhost", port: Int = 9000)(implicit ec: 
         }
       })
       sellOrders <- Future.sequence(portfolios.toList map { portfolio =>
+        val options = OrderSearchOptions(portfolioID = portfolio.portfolioID_!, orderType = SELL, status = OrderSearchOptions.ACTIVE_ORDERS)
         for {
           positions <- portfolioProxy.findPositions(portfolio.contestID_!, robotUser.userID_!)
-          allOrders <- portfolioProxy.findOrders(portfolio.contestID_!, robotUser.userID_!)
+          outstandingOrders <- portfolioProxy.orderSearch(options)
         } yield {
-          val outstandingOrders = allOrders.filter(o => o.closed.contains(0) && o.orderType.contains(SELL))
           val orderedSymbols = outstandingOrders.flatMap(_.symbol.toOption).distinct
           produceSellOrders(positions, orderedSymbols)
         } toList

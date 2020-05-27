@@ -1,5 +1,9 @@
 package com.shocktrade.common.api
 
+import com.shocktrade.common.forms.OrderSearchOptions
+
+import scala.scalajs.js
+
 /**
  * Portfolio API
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
@@ -38,7 +42,10 @@ trait PortfolioAPI extends BaseAPI {
 
   def findOrderByIDURL(orderID: String) = s"$baseURL/api/order/$orderID"
 
-  def findOrdersURL(contestID: String, userID: String) = s"$baseURL/api/orders/$contestID/user/$userID"
+  def orderSearchURL(options: js.UndefOr[OrderSearchOptions] = js.undefined): String = {
+    val uri = s"$baseURL/api/orders"
+    options.map(opts => s"$uri?${opts.toQueryString}") getOrElse uri
+  }
 
   ///////////////////////////////////////////////////////////////
   //          Positions

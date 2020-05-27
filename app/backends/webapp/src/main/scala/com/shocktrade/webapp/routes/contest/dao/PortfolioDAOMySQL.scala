@@ -1,6 +1,8 @@
 package com.shocktrade.webapp.routes.contest.dao
 
+import com.shocktrade.common.forms._
 import com.shocktrade.common.models.contest.{ChartData, PortfolioBalance}
+import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -12,19 +14,28 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with PortfolioDAO {
+  private val logger = LoggerFactory.getLogger(getClass)
 
   ///////////////////////////////////////////////////////////////////////
   //  Order Management
   ///////////////////////////////////////////////////////////////////////
 
-  override def findOne(options: OrderSearchOptions): Future[Option[OrderData]] = search(options).map(_.headOption)
+  override def findOne(options: OrderSearchOptions): Future[Option[OrderData]] = orderSearch(options).map(_.headOption)
 
-  override def search(options: OrderSearchOptions): Future[js.Array[OrderData]] = {
+  override def orderSearch(options: OrderSearchOptions): Future[js.Array[OrderData]] = {
     val dict: List[(String, Any)] = {
-      options.contestID.map(id => "P.contestID = ?" -> id).toList :::
+        options.contestID.map(id => "P.contestID = ?" -> id).toList :::
         options.userID.map(id => "P.userID = ?" -> id).toList :::
         options.portfolioID.map(id => "P.portfolioID = ?" -> id).toList :::
-        options.orderID.map(id => "O.orderID = ?" -> id).toList
+        options.orderID.map(id => "O.orderID = ?" -> id).toList :::
+        options.orderType.map(id => "O.orderType = ?" -> id).toList :::
+        (options.status.toList flatMap {
+          case OrderSearchOptions.ACTIVE_ORDERS => List("O.closed = ?" -> 0)
+          case OrderSearchOptions.COMPLETED_ORDERS => List("O.closed = ?" -> 1)
+          case OrderSearchOptions.FAILED_ORDERS => List("O.closed = ?" -> 1, "O.fulfilled = ?" -> 0)
+          case OrderSearchOptions.FULFILLED_ORDERS => List("O.fulfilled = ?" -> 1)
+          case _ => Nil
+        })
     }
     val sql: String = {
       val sb = new StringBuilder(
@@ -32,10 +43,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
            |FROM orders O
            |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
            |LEFT JOIN mock_stocks S ON S.symbol = O.symbol
-           |WHERE (O.closed = 0 OR now() < DATE_ADD(O.processedTime, INTERVAL 1 DAY))
            |""".stripMargin
       )
-      if (dict.nonEmpty) sb.append(" AND ")
+      if (dict.nonEmpty) sb.append(" WHERE ")
       sb.append(dict.map(_._1).mkString(" AND "))
       sb.toString()
     }
@@ -82,9 +92,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
     conn.queryFuture[PerkData]("SELECT * FROM perks WHERE portfolioID = ?", js.Array(portfolioID)).map(_._1)
   }
 
-  override def findOne(options: PortfolioSearchOptions): Future[Option[PortfolioData]] = search(options).map(_.headOption)
+  override def findOne(options: PortfolioSearchOptions): Future[Option[PortfolioData]] = portfolioSearch(options).map(_.headOption)
 
-  override def search(options: PortfolioSearchOptions): Future[js.Array[PortfolioData]] = {
+  override def portfolioSearch(options: PortfolioSearchOptions): Future[js.Array[PortfolioData]] = {
     val dict: List[(String, Any)] = {
       options.contestID.map(id => "contestID = ?" -> id).toList :::
         options.userID.map(id => "userID = ?" -> id).toList :::
@@ -141,9 +151,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
           |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map(_._1)
   }
 
-  override def findOne(options: PositionSearchOptions): Future[Option[PositionView]] = search(options).map(_.headOption)
+  override def findOne(options: PositionSearchOptions): Future[Option[PositionView]] = positionSearch(options).map(_.headOption)
 
-  override def search(options: PositionSearchOptions): Future[js.Array[PositionView]] = {
+  override def positionSearch(options: PositionSearchOptions): Future[js.Array[PositionView]] = {
     val dict: List[(String, Any)] = {
       options.contestID.map(id => "P.contestID = ?" -> id).toList :::
         options.userID.map(id => "P.userID = ?" -> id).toList :::

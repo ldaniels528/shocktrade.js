@@ -6,12 +6,12 @@
             <span ng-show="getOrders().length > 1">{{ getOrders().length }} orders found</span>
         </span>
         <span class="col-md-4">
-            <span class="clickable" ng-click="hideShowOpenOrders()">
-                Open Orders <i ng-class="showOpenOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
-            </span>
-            <span class="clickable" ng-click="hideShowClosedOrders()">
-                Closed Orders <i ng-class="showClosedOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
-            </span>
+            Status: <select ng-model="orderInputs.status"
+                            ng-options="f.label for f in orderFilters"
+                            ng-change="loadOrders(contest.contestID, userProfile.userID)"
+                            style="font-weight: normal; color: #000000">
+                    </select>
+                    <img ng-show="isLoadingOrders" src="/images/status/loading16.gif">
         </span>
         <span class="col-md-4">
             <span ng-click="popupNewOrderDialog(contest.contestID, userProfile.userID, selectedSymbol)" class="clickable pull-right" style="padding-right: 16px">

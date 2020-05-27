@@ -3,7 +3,7 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.contest.models.{Order, Portfolio}
 import com.shocktrade.common.Ok
 import com.shocktrade.common.api.PortfolioAPI
-import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
+import com.shocktrade.common.forms.{NewOrderForm, OrderSearchOptions, PerksResponse}
 import com.shocktrade.common.models.contest.{ChartData, _}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
@@ -86,9 +86,7 @@ class PortfolioService($http: Http) extends Service with PortfolioAPI {
 
   def findOrderByID(orderID: String): js.Promise[HttpResponse[Order]] = $http.get(findOrderByIDURL(orderID))
 
-  def findOrders(contestID: String, userID: String): js.Promise[HttpResponse[js.Array[Order]]] = {
-    $http.get(findOrdersURL(contestID, userID))
-  }
+  def orderSearch(options: OrderSearchOptions): js.Promise[HttpResponse[js.Array[Order]]] = $http.get(orderSearchURL(options))
 
   /////////////////////////////////////////////////////////////////////////////
   //			Positions

@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
+import com.shocktrade.common.forms.{OrderSearchOptions, PortfolioSearchOptions, PositionSearchOptions}
 import com.shocktrade.common.models.contest.{ChartData, PortfolioBalance}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -19,7 +20,7 @@ trait PortfolioDAO {
 
   def findOne(options: OrderSearchOptions): Future[Option[OrderData]]
 
-  def search(options: OrderSearchOptions): Future[js.Array[OrderData]]
+  def orderSearch(options: OrderSearchOptions): Future[js.Array[OrderData]]
 
   ///////////////////////////////////////////////////////////////////////
   //  Portfolio Management
@@ -35,7 +36,7 @@ trait PortfolioDAO {
 
   def findOne(options: PortfolioSearchOptions): Future[Option[PortfolioData]]
 
-  def search(options: PortfolioSearchOptions): Future[js.Array[PortfolioData]]
+  def portfolioSearch(options: PortfolioSearchOptions): Future[js.Array[PortfolioData]]
 
   ///////////////////////////////////////////////////////////////////////
   //  Position Management
@@ -45,7 +46,7 @@ trait PortfolioDAO {
 
   def findOne(options: PositionSearchOptions): Future[Option[PositionView]]
 
-  def search(options: PositionSearchOptions): Future[js.Array[PositionView]]
+  def positionSearch(options: PositionSearchOptions): Future[js.Array[PositionView]]
 
 }
 

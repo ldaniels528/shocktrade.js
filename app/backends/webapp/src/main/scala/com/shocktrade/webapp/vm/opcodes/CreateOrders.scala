@@ -7,10 +7,9 @@ import com.shocktrade.webapp.vm.opcodes.OpCode.OpCodeCompiler
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 
 /**
- * Create Order
+ * Create Orders
  * @param orders the given collection of [[OrderData]]
  */
 case class CreateOrders(orders: js.Array[OrderData]) extends OpCode {
@@ -27,15 +26,11 @@ case class CreateOrders(orders: js.Array[OrderData]) extends OpCode {
 }
 
 /**
- * Create Order Companion
+ * Create Orders Companion
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object CreateOrders extends OpCodeCompiler {
 
-  override def compile(index: OpCodeProperties): js.UndefOr[CreateOrders] = {
-    for {
-      orders <- index.asInstanceOf[js.Dictionary[js.Array[OrderData]]].get("orders").orUndefined
-    } yield CreateOrders(orders)
-  }
+  override def compile(index: OpCodeProperties): js.UndefOr[CreateOrders] = index.orders.map(CreateOrders.apply)
 
 }

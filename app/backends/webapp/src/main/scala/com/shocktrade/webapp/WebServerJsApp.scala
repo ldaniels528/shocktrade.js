@@ -5,7 +5,7 @@ import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.account._
-import com.shocktrade.webapp.routes.contest.{VirtualMachineRoutes, _}
+import com.shocktrade.webapp.routes.contest._
 import com.shocktrade.webapp.routes.discover._
 import com.shocktrade.webapp.routes.research.ResearchRoutes
 import com.shocktrade.webapp.routes.social.{PostAttachmentRoutes, PostRoutes, SocialRoutes}

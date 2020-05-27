@@ -1,5 +1,7 @@
 package com.shocktrade.webapp.vm.opcodes
 
+import com.shocktrade.webapp.routes.contest.dao.OrderData
+
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
@@ -20,6 +22,8 @@ trait OpCodeProperties extends js.Object {
   def userID: js.UndefOr[String]
 
   def orderID: js.UndefOr[String]
+
+  def orders: js.UndefOr[js.Array[OrderData]]
 
   def symbol: js.UndefOr[String]
 

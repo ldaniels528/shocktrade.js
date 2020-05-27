@@ -1,6 +1,7 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.contest.models.{Contest, Portfolio}
+import com.shocktrade.common.forms.OrderSearchOptions
 import io.scalajs.npm.angularjs.{Factory, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
@@ -54,7 +55,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
     for {
       portfolio <- portfolioService.findPortfolioByUser(contestID, userID)
       balance <- portfolioService.findPortfolioBalance(contestID, userID)
-      orders <- portfolioService.findOrders(contestID, userID)
+      orders <- portfolioService.orderSearch(OrderSearchOptions(contestID = contestID, userID = userID, status = OrderSearchOptions.ACTIVE_ORDERS))
       positions <- portfolioService.findPositions(contestID, userID)
     } yield {
       new Portfolio(

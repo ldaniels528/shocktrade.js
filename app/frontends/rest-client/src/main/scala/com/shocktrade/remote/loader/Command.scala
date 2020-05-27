@@ -31,7 +31,7 @@ class Command(val name: String, val args: List[String], val lineNumber: Int, val
       case "createOrder" => args.twoIdsAndJSON map p.createOrder
       case "findContestByID" => c.findContestByID(args.oneId)
       case "findContestRankings" => c.findContestRankings(args.oneId)
-      case "findOrders" => args.twoIds map p.findOrders
+      case "findOrders" => p.orderSearch(args.oneJSON)
       case "findPortfolioBalance" => args.twoIds map p.findPortfolioBalance
       case "findPortfolioByID" => p.findPortfolioByID(args.oneId)
       case "findPositions" => args.twoIds map p.findPositions
